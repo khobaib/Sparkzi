@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_snow2" >
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Find your best match easier!"
+        android:textColor="@color/app_theme"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="280dp"
+        android:layout_height="2dp"
+        android:layout_below="@+id/tv_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray70_transparent_back" />
+    
+        <TextView
+        android:id="@+id/tv_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Let us know more about you."
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+    
+        <RelativeLayout
+        android:id="@+id/rl_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_body"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" >
+
+        <Button
+            android:id="@+id/b_later"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="10dp"
+            android:onClick="onClickTakePic"
+            android:text="Later"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/b_try_out"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/b_later"
+            android:layout_toRightOf="@+id/b_later"
+            android:onClick="onClickGoToGallery"
+            android:text="Try out"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

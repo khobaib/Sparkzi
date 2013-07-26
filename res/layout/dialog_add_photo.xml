@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_snow2" >
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Upload Photo"
+        android:textColor="@color/app_theme"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="280dp"
+        android:layout_height="2dp"
+        android:layout_below="@+id/tv_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray70_transparent_back" />
+
+    <RelativeLayout
+        android:id="@+id/rlTopButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" >
+
+        <Button
+            android:id="@+id/b_take_pic"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="10dp"
+            android:onClick="onClickTakePic"
+            android:text="Take Picture"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/b_go_gallery"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignTop="@+id/b_take_pic"
+            android:layout_toRightOf="@+id/b_take_pic"
+            android:onClick="onClickGoToGallery"
+            android:text="Go to Gallery"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_profile_pic"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_below="@+id/rlTopButtons"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:src="@drawable/profile_default" />
+    
+    <Button
+            android:id="@+id/b_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_profile_pic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:onClick="onClickUpload"
+            android:padding="15dp"
+            android:text="Upload"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    
+        <TextView
+        android:id="@+id/tv_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/b_upload"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="* You must upload your real picture to activate your account."
+        android:textColor="@color/red"
+        android:textSize="14dp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
