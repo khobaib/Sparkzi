@@ -54,7 +54,7 @@
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/s_i_am"
+            android:id="@+id/s_who_i_am"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_below="@+id/tv_i_am_title"
@@ -66,7 +66,7 @@
             android:id="@+id/tv_age_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/s_i_am"
+            android:layout_below="@+id/s_who_i_am"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="1dp"
             android:text="Between ages"
@@ -87,7 +87,7 @@
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/s_min_age"
+            android:id="@+id/s_start_age"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignBottom="@+id/tv_to"
@@ -97,7 +97,7 @@
             android:textSize="16dp" />
 
         <Spinner
-            android:id="@+id/s_max_age"
+            android:id="@+id/s_end_age"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignBottom="@+id/tv_to"
@@ -212,7 +212,7 @@
             android:layout_below="@+id/view2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:onClick="onClickRegister"
+            android:onClick="onClickNext"
             android:padding="15dp"
             android:text="Next"
             android:textColor="@color/white"
