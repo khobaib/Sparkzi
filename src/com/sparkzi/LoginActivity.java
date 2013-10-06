@@ -1,22 +1,21 @@
 package com.sparkzi;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,7 +27,7 @@ import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
 public class LoginActivity extends Activity {
-    
+
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     // Progress Dialog
@@ -40,32 +39,33 @@ public class LoginActivity extends Activity {
 
     SparkziApplication appInstance;
     String userName, password;
+    String imageUrl;
 
     JsonParser jsonParser;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        
+
         pDialog = new ProgressDialog(LoginActivity.this);
         appInstance = (SparkziApplication) getApplication();
         jsonParser = new JsonParser();
 
         Username = (EditText) findViewById(R.id.et_user_name);
         Password = (EditText) findViewById(R.id.et_password);   
-        
+
         ForgetPassword = (TextView) findViewById(R.id.tv_click_here);
         ForgetPassword.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 onClickForgetPassword();
-                
+
             }
         });
-        
+
         RememberMe = (CheckBox) findViewById(R.id.cb_remember_me);
         RememberMe.setOnClickListener(new OnClickListener() {
 
@@ -73,21 +73,21 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 if(((CheckBox)v).isChecked()){
                     Log.d(TAG, "Remember Me checked");
-//                    appInstance.setRememberMe(true);
+                    //                    appInstance.setRememberMe(true);
                 }
                 else{
                     Log.d(TAG, "Remember Me unchecked");
-//                    appInstance.setRememberMe(false);
+                    //                    appInstance.setRememberMe(false);
                 }               
             }
         });
     }
-    
-    
+
+
     public void onClickLogin(View v){
         userName = Username.getText().toString().trim();
         password = Password.getText().toString().trim();
-        
+
         if(userName == null || userName.equals(""))
             Toast.makeText(LoginActivity.this, "Please enter user name.", Toast.LENGTH_SHORT).show();
         else if(password == null || password.equals(""))
@@ -102,89 +102,69 @@ public class LoginActivity extends Activity {
     }
 
     public void onClickForgetPassword(){
-                
-//        LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-//        View textEntryView = inflater.inflate(R.layout.dialog_forget_password, null);
-//        final AlertDialog alert = new AlertDialog.Builder(LoginActivity.this).create();
-//        alert.setView(textEntryView, 0, 0, 0, 0);
-//                
-//        final EditText EmailAddress = (EditText) textEntryView.findViewById(R.id.et_email);
-//        
-//        
-//        Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
-//        OK.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                String email = EmailAddress.getText().toString();
-//                alert.dismiss(); 
-//                new SendForgetPassRequest().execute(email);
-//            }
-//
-//        });
-//        
-//        alert.show();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+        startActivity(browserIntent);
     }
-    
-    
-//    public class SendForgetPassRequest extends AsyncTask<String, Void, String> {
-//        
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            pDialog.setMessage("Loading...");
-//            pDialog.setIndeterminate(true);
-//            pDialog.setCancelable(true);
-//            pDialog.show();
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            String rootUrl = Constants.URL_ROOT;
-//
-//            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
-//            urlParam.add(new BasicNameValuePair("method", Constants.METHOD_FORGET_PASSWORD));
-//            
-//            try {
-//                JSONObject emailObj = new JSONObject();
-//                emailObj.put("email", params[0]);
-//                String emailData = emailObj.toString();
-//
-//                ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, rootUrl,
-//                        urlParam, emailData, null);
-//                if(response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS){
-//                    Log.d(">>>><<<<", "RESPONSE_STATUS_CODE_SUCCESS");
-//                    JSONObject responsObj = response.getjObj();
-//                    String login = responsObj.getString("response");
-//                    return login;
-//                }
-//                return "false";
-//            } catch (JSONException e) {                
-//                e.printStackTrace();
-//                return "false";
-//            }
-//        }
-//        
-//        
-//        @Override
-//        protected void onPostExecute(String result) {
-//            if(pDialog.isShowing())
-//                pDialog.dismiss();
-//            if(result.equals("success")){
-//                alert("Your password is sent to your email adderess.");
-//            }
-//            else if(result.equals("email doesn't exist")){
-//                alert("This email address doesn't exist.");
-//            }
-//            else{
-//                alert("Request Failure.");
-//            }
-//
-//        }
-//        
-//    }
-    
-    private class Login extends AsyncTask<Void, Void, Boolean> {
+
+
+    //    public class SendForgetPassRequest extends AsyncTask<String, Void, String> {
+    //        
+    //        @Override
+    //        protected void onPreExecute() {
+    //            super.onPreExecute();
+    //            pDialog.setMessage("Loading...");
+    //            pDialog.setIndeterminate(true);
+    //            pDialog.setCancelable(true);
+    //            pDialog.show();
+    //        }
+    //
+    //        @Override
+    //        protected String doInBackground(String... params) {
+    //            String rootUrl = Constants.URL_ROOT;
+    //
+    //            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
+    //            urlParam.add(new BasicNameValuePair("method", Constants.METHOD_FORGET_PASSWORD));
+    //            
+    //            try {
+    //                JSONObject emailObj = new JSONObject();
+    //                emailObj.put("email", params[0]);
+    //                String emailData = emailObj.toString();
+    //
+    //                ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, rootUrl,
+    //                        urlParam, emailData, null);
+    //                if(response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS){
+    //                    Log.d(">>>><<<<", "RESPONSE_STATUS_CODE_SUCCESS");
+    //                    JSONObject responsObj = response.getjObj();
+    //                    String login = responsObj.getString("response");
+    //                    return login;
+    //                }
+    //                return "false";
+    //            } catch (JSONException e) {                
+    //                e.printStackTrace();
+    //                return "false";
+    //            }
+    //        }
+    //        
+    //        
+    //        @Override
+    //        protected void onPostExecute(String result) {
+    //            if(pDialog.isShowing())
+    //                pDialog.dismiss();
+    //            if(result.equals("success")){
+    //                alert("Your password is sent to your email adderess.");
+    //            }
+    //            else if(result.equals("email doesn't exist")){
+    //                alert("This email address doesn't exist.");
+    //            }
+    //            else{
+    //                alert("Request Failure.");
+    //            }
+    //
+    //        }
+    //        
+    //    }
+
+    private class Login extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
         protected void onPreExecute() {
@@ -196,66 +176,119 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected JSONObject doInBackground(Void... params) {
             Log.d("MARKER", "reached this point");
-            String url = Constants.URL_ROOT + "session.php";
-
-            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
-            urlParam.add(new BasicNameValuePair("user", userName));
+            String url = Constants.URL_ROOT + "session/" + userName;
 
             try {
                 JSONObject loginObj = new JSONObject();
-                loginObj.put("pass", password);
+                loginObj.put("password", password);
                 String loginData = loginObj.toString();
 
                 ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
-                        urlParam, loginData, null);
+                        null, loginData, null);
                 if(response.getStatus() == 200){
-                    Log.d(">>>><<<<", "success in login");
-//                    JSONObject responsObj = response.getjObj();
-//                    String login = responsObj.getString("login");
-//                    if(login.equals("success")){
-//                        String token = responsObj.getString("token");
-//                        String imageUrl = responsObj.getString("image_url");
-//                        Long userId = responsObj.getLong("user_id");
-//                        appInstance.setAccessToken(token);
-//                        appInstance.setProfileImageUrl(imageUrl);
-//                        return true;
-//                    }
-//                    else{
-//                        return false;
-//                    }
+                    Log.d(">>>><<<<", "success in retrieving response in login");
+                    JSONObject responseObj = response.getjObj();
+                    return responseObj;
                 }
-
-                return false;
+                else
+                    return null;
             } catch (JSONException e) {                
                 e.printStackTrace();
-                return false;
+                return null;
             }
         }
 
 
         @Override
-        protected void onPostExecute(Boolean success) {
-            pDialog.dismiss();
-            if(success){
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                finish();
+        protected void onPostExecute(JSONObject responseObj) {
+            if(pDialog.isShowing())
+                pDialog.dismiss();                                
+            if(responseObj != null){
+                try {
+                    String status = responseObj.getString("status");
+                    if(status.equals("OK")){
+                        String token = responseObj.getString("token");
+                        imageUrl = responseObj.getString("pic");
+                        Log.d("??????????", "image url = " + imageUrl);
+
+                        if (!imageUrl.equals("null") && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://"))
+                            imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
+                        Log.d("??????????", "image url = " + imageUrl);
+
+                        appInstance.setAccessToken(token);
+                        appInstance.setProfileImageUrl(imageUrl);
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+
+                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(Username.getWindowToken(), 0);
+                                imm.hideSoftInputFromWindow(Password.getWindowToken(), 0);
+
+                                if(RememberMe.isChecked()){
+                                    appInstance.setRememberMe(true);
+                                    appInstance.setCredentials(userName, password);
+                                }
+
+                                Intent i = new Intent();
+                                if(imageUrl.equals("null"))
+                                    i = new Intent(LoginActivity.this, UploadPicActivity.class);
+                                else
+                                    i = new Intent(LoginActivity.this, MainActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+
+                        //                        alert("Registration Successful.", true);
+                    }
+                    else{
+                        alert("Invalid username/password.");
+                    }
+                } catch (JSONException e) {
+                    alert("Registration Exception.");
+                    e.printStackTrace();
+                }
+
             }
             else{
-                alert("Login error, please try again");                
+                alert("Registration error, please try again.");
             }
 
         }
     }
-    
-    
+
+
     void alert(String message) {
         AlertDialog.Builder bld = new AlertDialog.Builder(LoginActivity.this);
         bld.setMessage(message);
-        bld.setNeutralButton("OK", null);
-        //      Log.d(TAG, "Showing alert dialog: " + message);
+        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //                Intent i = null;
+                //                if(success){
+                //                    i = new Intent(LoginActivity.this, HomeActivity.class);
+                //                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //                    startActivity(i);
+                //                    finish();
+                //                }
+            }
+        });
         bld.create().show();
     }
+
+
+    //    void alert(String message) {
+    //        AlertDialog.Builder bld = new AlertDialog.Builder(LoginActivity.this);
+    //        bld.setMessage(message);
+    //        bld.setNeutralButton("OK", null);
+    //        //      Log.d(TAG, "Showing alert dialog: " + message);
+    //        bld.create().show();
+    //    }
 
 }

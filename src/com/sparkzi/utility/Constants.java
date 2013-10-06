@@ -6,6 +6,7 @@ import android.os.Environment;
 
 public class Constants {
     
+    
     public static final int REQUEST_TYPE_GET = 1;
     public static final int REQUEST_TYPE_POST = 2;
     public static final int REQUEST_TYPE_PUT = 3;
@@ -19,7 +20,7 @@ public class Constants {
     public static final String PROFILE_PIC_URL = "profile_pic_url";
     
     
-    public static final String URL_ROOT = "http://sparkzi.com/api/";
+    public static final String URL_ROOT = "http://sparkzi.com/api/apinew/";
     
 //    public static final String METHOD_LOGIN = "user_login";
 //    public static final String METHOD_REGISTRATION = "registration";

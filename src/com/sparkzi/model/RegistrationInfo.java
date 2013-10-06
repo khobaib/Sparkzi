@@ -11,6 +11,7 @@ public class RegistrationInfo {
     private String bDate;
     private String country;
     private String city;
+    private String userName;
     private String firstName;
     private String lastName;
     private String email;
@@ -23,13 +24,14 @@ public class RegistrationInfo {
 
 
     public RegistrationInfo(String gender, String lowerAge, String upperAge, String dob, String country, String city,
-            String firstName, String lastName, String email, String password) {
+            String userName, String firstName, String lastName, String email, String password) {
         this.gender = gender;
         this.lowerAge = lowerAge;
         this.upperAge = upperAge;
         this.dob = dob;
         this.country = country;
         this.city = city;
+        this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -128,17 +130,23 @@ public class RegistrationInfo {
     public void setCity(String city) {
         this.city = city;
     }
+    
+    public String getUserName() {
+        return userName;
+    }
 
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getFirstName() {
         return firstName;
     }
 
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
 
     public String getLastName() {
         return lastName;

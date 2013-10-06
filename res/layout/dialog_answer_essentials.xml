@@ -23,8 +23,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:background="@color/gray70_transparent_back" />
-    
-        <TextView
+
+    <TextView
         android:id="@+id/tv_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,8 +35,8 @@
         android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold" />
-    
-        <RelativeLayout
+
+    <RelativeLayout
         android:id="@+id/rl_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,7 +53,8 @@
             android:onClick="onClickTakePic"
             android:text="Later"
             android:textColor="@color/white"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/b_try_out"
@@ -64,8 +65,8 @@
             android:onClick="onClickGoToGallery"
             android:text="Try out"
             android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </RelativeLayout>

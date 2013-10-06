@@ -24,5 +24,11 @@
     <color name="magenta">#ffff00ff</color>
     <color name="indigo">#ff4B0082</color>
     <color name="app_theme">#ff9a3393</color>
+    <color name="app_theme_orange">#ffff5a22</color>
+    <color name="app_theme_yellow">#ffffd400</color>
+    <color name="app_theme_pink">#ffde2f92</color>
+    <color name="app_theme_purple">#ff9a3393</color>
+    <color name="app_theme_blue">#ff380982</color>
+    <color name="app_theme_purple_transparent">#a59a3393</color>
 
 </resources>

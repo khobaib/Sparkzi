@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,10 +27,10 @@ import com.sparkzi.utility.Constants;
 
 public class RegistrationActivity extends Activity {
     
-    EditText etFirstName, etLastName, etEmail, etPassword, etConfirmPass;
+    EditText etUserName, etFirstName, etLastName, etEmail, etPassword, etConfirmPass;
     
     String whoAmI, startAge, endAge, countryName, cityName, dob;
-    String firstname, lastName, email, password, confirmPass;
+    String userName, firstname, lastName, email, password, confirmPass;
     
     Bundle b;
     RegistrationInfo regInfo;
@@ -48,6 +49,7 @@ public class RegistrationActivity extends Activity {
         
         b = getIntent().getExtras();
         
+        etUserName = (EditText) findViewById(R.id.et_user_name);
         etFirstName = (EditText) findViewById(R.id.et_first_name);
         etLastName = (EditText) findViewById(R.id.et_last_name);
         etEmail = (EditText) findViewById(R.id.et_email);
@@ -68,13 +70,17 @@ public class RegistrationActivity extends Activity {
         
         regInfo = new RegistrationInfo();
         
+        userName = etUserName.getText().toString().trim();
         firstname = etFirstName.getText().toString().trim();
         lastName = etLastName.getText().toString().trim();
         email = etEmail.getText().toString().trim();
         password = etPassword.getText().toString().trim();
         confirmPass = etConfirmPass.getText().toString().trim();
 
-        if(firstname == null || firstname.equals("")){
+        if(userName == null || userName.equals("")){
+            Toast.makeText(RegistrationActivity.this, "Please choose a username.", Toast.LENGTH_SHORT).show();
+        }
+        else if(firstname == null || firstname.equals("")){
             Toast.makeText(RegistrationActivity.this, "Please insert your first name.", Toast.LENGTH_SHORT).show();
         }
         else if(lastName == null || lastName.equals("")){
@@ -97,12 +103,11 @@ public class RegistrationActivity extends Activity {
             regInfo.setCountry(countryName);
             regInfo.setCity(cityName);
             
+            regInfo.setUserName(userName);
             regInfo.setFirstName(firstname);
             regInfo.setLastName(lastName);
             regInfo.setEmail(email);
             regInfo.setPassword(password);
-
-
 
 
             new SendRegistrationRequest().execute();
@@ -110,7 +115,7 @@ public class RegistrationActivity extends Activity {
     }
     
     
-    public class SendRegistrationRequest extends AsyncTask<Void, Void, Boolean> {
+    public class SendRegistrationRequest extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
         protected void onPreExecute() {
@@ -120,64 +125,82 @@ public class RegistrationActivity extends Activity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "account.php";
+        protected JSONObject doInBackground(Void... params) {
+            String url = Constants.URL_ROOT + "user/" + regInfo.getUserName();
 
-            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
-            urlParam.add(new BasicNameValuePair("user", email.substring(0, email.lastIndexOf("@"))));
+//            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
+//            urlParam.add(new BasicNameValuePair("user", email.substring(0, email.lastIndexOf("@"))));
 
 
             try {
                 JSONObject regObj = new JSONObject();
-                regObj.put("pass", regInfo.getPassword());
+                regObj.put("password", regInfo.getPassword());
+                regObj.put("email", regInfo.getEmail());
                 regObj.put("gender", regInfo.getGender());
                 regObj.put("lowerage", regInfo.getGender());
                 regObj.put("upperage", regInfo.getGender());
                 regObj.put("country", regInfo.getCountry());
-                regObj.put("city", regInfo.getCity());
+                regObj.put("hometown", regInfo.getCity());
                 regObj.put("bdate", regInfo.getbDate());
                 regObj.put("bmonth", regInfo.getbMonth());
                 regObj.put("byear", regInfo.getbYear());                
-                regObj.put("email", regInfo.getEmail());
+
                 regObj.put("firstname", regInfo.getFirstName());
                 regObj.put("lastname", regInfo.getLastName());
 
                 String regData = regObj.toString();
 //                Log.d("<<>>", "req data = " + regData);
                 ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
-                        urlParam, regData, null);
+                        null, regData, null);
                 if(response.getStatus() == 200){
                     JSONObject responseObj = response.getjObj();
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){
-                        String desc = responseObj.getString("description");
-                        String token = responseObj.getString("token");
-                        return true;
-                    }
-                    return false;
+//                    String status = responseObj.getString("status");
+//                    Log.d(">>>>>", "status = " + status);
+//                    if(status.equals("OK")){
+//                        String desc = responseObj.getString("description");
+//                        return true;
+//                    }
+//                    return false;
+                    return responseObj;
                 }
                 else{
-                    return false;
+                    return null;
                 }
             } catch (JSONException e) {                
                 e.printStackTrace();
-                return false;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if(pDialog != null)
+        protected void onPostExecute(JSONObject responseObj) {
+            super.onPostExecute(responseObj);
+            if(pDialog.isShowing())
                 pDialog.dismiss();
-            if(result){
-                alert("Registration Successful.", true);
+            if(responseObj != null){
+                try {
+                    String status = responseObj.getString("status");
+                    if(status.equals("OK")){
+                        alert("Registration Successful.", true);
+                    }
+                    else{
+                        String desc = responseObj.getString("description");
+                        if(desc.equals("User already exists"))
+                            alert("This user already exists, please choose another username.", false);
+                        else
+                            alert("Please check all the info & try again.", false);
+                    }
+                } catch (JSONException e) {
+                    alert("Registration Exception.", false);
+                    e.printStackTrace();
+                }
+                
             }
             else{
                 alert("Registration error, please try again.", false);
             }
-            //                updateUI();
-        }        
+        }               
+     
     }
     
     void alert(String message, final Boolean success) {
@@ -188,7 +211,9 @@ public class RegistrationActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(success){
-                    startActivity(new Intent(RegistrationActivity.this, HomeActivity.class));
+                    Intent i = new Intent(RegistrationActivity.this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
                     finish();
                 }
                 

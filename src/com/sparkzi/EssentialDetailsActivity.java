@@ -11,10 +11,13 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.sparkzi.model.ServerResponse;
@@ -58,7 +61,7 @@ public class EssentialDetailsActivity extends Activity {
         etLanguages = (EditText) findViewById(R.id.et_languages);
     }
     
-    public void onCLickDone(View v){
+    public void onClickDone(View v){
         education = etEducation.getText().toString().trim();
         ethnicity = etEthnicity.getText().toString().trim();
         diet = etDiet.getText().toString().trim();
@@ -76,7 +79,7 @@ public class EssentialDetailsActivity extends Activity {
     }
     
     
-    public class SendRegistrationRequest extends AsyncTask<Void, Void, Boolean> {
+    public class SendRegistrationRequest extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
         protected void onPreExecute() {
@@ -86,11 +89,11 @@ public class EssentialDetailsActivity extends Activity {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "account.php";
+        protected JSONObject doInBackground(Void... params) {
+            String url = Constants.URL_ROOT + "user";
 
-            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
-            urlParam.add(new BasicNameValuePair("user", appInstance.getUserName()));
+//            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
+//            urlParam.add(new BasicNameValuePair("user", appInstance.getUserName()));
 
 
             try {
@@ -102,45 +105,65 @@ public class EssentialDetailsActivity extends Activity {
                 essentialObj.put("drinks", drinks);
                 essentialObj.put("smokes", smokes);
                 essentialObj.put("kids", kids);
-                essentialObj.put("sign", sign);
+                essentialObj.put("starsign", sign);
                 essentialObj.put("hometown", hometown);                
                 essentialObj.put("profession", profession);
                 essentialObj.put("religion", religion);
                 essentialObj.put("languages", languages);
 
-                JSONObject reqObj = new JSONObject();
-                reqObj.put("essentials", essentialObj);
-                String reqData = reqObj.toString();
+//                JSONObject reqObj = new JSONObject();
+//                reqObj.put("essentials", essentialObj);
+                String reqData = essentialObj.toString();
 //                Log.d("<<>>", "req data = " + regData);
                 ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, url,
-                        urlParam, reqData, appInstance.getAccessToken());
+                        null, reqData, appInstance.getAccessToken());
                 if(response.getStatus() == 200){
                     JSONObject responseObj = response.getjObj();
-//                    if(responseObj.has("success"))
-//                        return true;
-                    return false;
+                    return responseObj;
                 }
                 else{
-                    return false;
+                    return null;
                 }
             } catch (JSONException e) {                
                 e.printStackTrace();
-                return false;
+                return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if(pDialog != null)
+        protected void onPostExecute(JSONObject responseObj) {
+            super.onPostExecute(responseObj);
+            if(pDialog.isShowing())
                 pDialog.dismiss();
-            if(result){
-                alert("Update Successful.", true);
+            if(responseObj != null){
+                try {
+                    String status = responseObj.getString("status");
+                    if(status.equals("OK")){
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+
+                                Intent i = new Intent(EssentialDetailsActivity.this, MainActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+
+                        //                        alert("Registration Successful.", true);
+                    }
+                    else{
+                        alert("Update failed.", false);
+                    }
+                } catch (JSONException e) {
+                    alert("Update failed.", false);
+                    e.printStackTrace();
+                }
+
             }
             else{
-                alert("Update error, please try again.", false);
+                alert("Update failed.", false);
             }
-            //                updateUI();
         }        
     }
     

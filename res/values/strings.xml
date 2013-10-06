@@ -21,4 +21,17 @@
     <string name="options_register">Register</string>
     <string name="options_unregister">Unregister</string>
 
+    <string-array name="drawer_menu_array">
+        <item>Home</item>
+        <item>Conversations</item>
+        <item>Last Night</item>
+        <item>Search</item>
+        <item>Favorites</item>
+        <item>Settings</item>
+        <item>Log out</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>

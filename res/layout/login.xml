@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:src="@drawable/sparkzi_logo" />
 
@@ -26,10 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/iv_app_logo"
             android:text="Sparkzi"
-            android:textColor="@color/red"
-            android:textSize="25dp"
+            android:textColor="@color/app_theme"
+            android:textSize="22dp"
             android:textStyle="bold" />
 
         <EditText
@@ -67,7 +67,7 @@
             android:layout_marginTop="10dp"
             android:checked="false"
             android:text="Remember Me"
-            android:textColor="@color/red" />
+            android:textColor="@color/app_theme" />
 
         <Button
             android:id="@+id/b_login"
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="@string/forget_password"
-                android:textColor="@color/red"
+                android:textColor="@color/app_theme"
                 android:textSize="18dp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don&apos;t have Account?"
-                android:textColor="@color/red"
+                android:textColor="@color/app_theme"
                 android:textSize="18dp" />
 
             <Button

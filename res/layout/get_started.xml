@@ -11,213 +11,222 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:src="@drawable/sparkzi_logo" />
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@+id/iv_app_logo"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_login" >
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Let&apos;s Get Started"
-            android:textColor="@color/app_theme"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="280dp"
-            android:layout_height="2dp"
-            android:layout_below="@+id/tv_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/gray70_transparent_back" />
-
-        <TextView
-            android:id="@+id/tv_i_am_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/view1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="I&apos;m a"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/s_who_i_am"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/tv_i_am_title"
-            android:layout_centerHorizontal="true"
-            android:singleLine="true"
-            android:textSize="16dp" />
+            android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/tv_age_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/s_who_i_am"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="1dp"
-            android:text="Between ages"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Let&apos;s Get Started"
+                android:textColor="@color/app_theme"
+                android:textSize="22dp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_age_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="to"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            <View
+                android:id="@+id/view1"
+                android:layout_width="280dp"
+                android:layout_height="2dp"
+                android:layout_below="@+id/tv_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray70_transparent_back" />
 
-        <Spinner
-            android:id="@+id/s_start_age"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/tv_to"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/tv_to"
-            android:singleLine="true"
-            android:textSize="16dp" />
+            <TextView
+                android:id="@+id/tv_i_am_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="I&apos;m a"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/s_end_age"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/tv_to"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/tv_to"
-            android:singleLine="true"
-            android:textSize="16dp" />
+            <Spinner
+                android:id="@+id/s_who_i_am"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/tv_i_am_title"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:textSize="16dp" />
 
-        <TextView
-            android:id="@+id/tv_dob_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_to"
-            android:layout_marginTop="10dp"
-            android:text="My Birthday:"
-            android:textColor="@color/black"
-            android:textSize="18dp" />
+            <TextView
+                android:id="@+id/tv_age_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/s_who_i_am"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="Between ages"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_dob"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/tv_dob_title"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/b_calendar"
-            android:layout_toRightOf="@+id/tv_dob_title"
-            android:background="@color/gray70_transparent_back"
-            android:padding="5dp"
-            android:singleLine="true"
-            android:textColor="@color/red"
-            android:textSize="18dp" />
+            <TextView
+                android:id="@+id/tv_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_age_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="to"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/b_calendar"
-            android:layout_width="46dp"
-            android:layout_height="42dp"
-            android:layout_alignBottom="@+id/tv_dob_title"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_calendar"
-            android:onClick="onClickCalendar" />
+            <Spinner
+                android:id="@+id/s_start_age"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/tv_to"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/tv_to"
+                android:singleLine="true"
+                android:textSize="15dp" />
 
-        <TextView
-            android:id="@+id/tv_live_in"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_dob_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="1dp"
-            android:text="I live in"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            <Spinner
+                android:id="@+id/s_end_age"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/tv_to"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/tv_to"
+                android:singleLine="true"
+                android:textSize="16dp" />
 
-        <TextView
-            android:id="@+id/tv_country"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_live_in"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
-            android:text="Country:"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_dob_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_to"
+                android:layout_marginTop="20dp"
+                android:text="My Birthday:"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
 
-        <Spinner
-            android:id="@+id/s_country"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/tv_country"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/tv_country"
-            android:singleLine="true"
-            android:textSize="16dp" />
+            <TextView
+                android:id="@+id/tv_dob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_dob_title"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/b_calendar"
+                android:layout_toRightOf="@+id/tv_dob_title"
+                android:background="@color/gray70_transparent_back"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:gravity="center_horizontal"
+                android:textColor="@color/app_theme"
+                android:textSize="18dp" />
 
-        <TextView
-            android:id="@+id/tv_city"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_country"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
-            android:text="City:"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            <Button
+                android:id="@+id/b_calendar"
+                android:layout_width="40dp"
+                android:layout_height="37dp"
+                android:layout_alignBottom="@+id/tv_dob_title"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/button_calendar"
+                android:onClick="onClickCalendar" />
 
-        <Spinner
-            android:id="@+id/s_city"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/tv_city"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/tv_city"
-            android:singleLine="true"
-            android:textSize="16dp" />
+            <TextView
+                android:id="@+id/tv_live_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_dob_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="I live in"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="280dp"
-            android:layout_height="2dp"
-            android:layout_below="@+id/tv_city"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/gray70_transparent_back" />
+            <TextView
+                android:id="@+id/tv_country"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_live_in"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:text="Country:"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/b_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/view2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:onClick="onClickNext"
-            android:padding="15dp"
-            android:text="Next"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            <Spinner
+                android:id="@+id/s_country"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/tv_country"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/tv_country"
+                android:singleLine="true"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_country"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:text="City:"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/s_city"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_alignBottom="@+id/tv_city"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/tv_city"
+                android:singleLine="true"
+                android:textSize="16dp" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="280dp"
+                android:layout_height="2dp"
+                android:layout_below="@+id/tv_city"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray70_transparent_back" />
+
+            <Button
+                android:id="@+id/b_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:onClick="onClickNext"
+                android:padding="15dp"
+                android:text="Next"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
