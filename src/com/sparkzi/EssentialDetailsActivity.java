@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.sparkzi.model.ServerResponse;
+import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
@@ -36,6 +37,8 @@ public class EssentialDetailsActivity extends Activity {
     ProgressDialog pDialog;
     SparkziApplication appInstance;
     
+    String token;
+    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,9 @@ public class EssentialDetailsActivity extends Activity {
         jsonParser = new JsonParser();        
         pDialog = new ProgressDialog(EssentialDetailsActivity.this);
         appInstance = (SparkziApplication) getApplication();
+        
+        UserCred userCred = appInstance.getUserCred();
+        token = userCred.getToken();
         
         etEducation = (EditText) findViewById(R.id.et_education);
         etEthnicity = (EditText) findViewById(R.id.et_ethnicity);
@@ -116,7 +122,7 @@ public class EssentialDetailsActivity extends Activity {
                 String reqData = essentialObj.toString();
 //                Log.d("<<>>", "req data = " + regData);
                 ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, url,
-                        null, reqData, appInstance.getAccessToken());
+                        null, reqData, token);
                 if(response.getStatus() == 200){
                     JSONObject responseObj = response.getjObj();
                     return responseObj;

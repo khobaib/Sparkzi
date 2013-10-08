@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white" >
+
+    <TextView
+        android:id="@+id/tv_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/iv_edit"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="5dp"
+        android:text="You come into possesion of a comically oversized bag of money. How do you spend it?"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_edit"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginRight="3dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tv_question"
+        android:background="@drawable/icon_edit" />
+
+    <TextView
+        android:id="@+id/tv_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_question"
+        android:layout_alignRight="@+id/tv_question"
+        android:layout_below="@+id/tv_question"
+        android:text="Buy my dream house"
+        android:textColor="@color/app_theme"
+        android:textSize="14dp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_below="@+id/tv_answer"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>

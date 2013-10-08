@@ -17,6 +17,7 @@ import com.sparkzi.R;
 import com.sparkzi.adapter.HomeFeedAdapter;
 import com.sparkzi.loader.HomeFeedLoader;
 import com.sparkzi.model.HomeFeed;
+import com.sparkzi.model.UserCred;
 import com.sparkzi.utility.SparkziApplication;
 
 public class HomeFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<HomeFeed>> {
@@ -42,7 +43,8 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
 
         activity = getActivity();
 
-        token = ((SparkziApplication) activity.getApplication()).getAccessToken();     
+        UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
+        token = userCred.getToken();
 
         ListView lv = getListView();
         lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));

@@ -9,6 +9,14 @@ public class DummyFragment extends ListFragment {
     
     private Activity activity;
     
+    public DummyFragment() {
+    }
+
+    public static DummyFragment newInstance() {
+        final DummyFragment fragment = new DummyFragment();
+        return fragment;
+    }
+    
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

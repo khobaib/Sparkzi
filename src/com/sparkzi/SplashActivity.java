@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.sparkzi.model.ServerResponse;
+import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
@@ -52,8 +53,10 @@ public class SplashActivity extends Activity {
         Boolean rememberMeFlag = appInstance.isRememberMe();
         Log.d("login remember me", "" + rememberMeFlag);
         if(rememberMeFlag){
-            userName = appInstance.getUserName();
-            password = appInstance.getPassword();
+            UserCred userCred = appInstance.getUserCred();
+            userName = userCred.getUsername();
+            password = userCred.getPassword();
+            Log.d(">>>>>>>>>>", "pass = " + password);
             new Login().execute();
         } 
 
@@ -137,15 +140,23 @@ public class SplashActivity extends Activity {
                 try {
                     String status = responseObj.getString("status");
                     if(status.equals("OK")){
-                        String token = responseObj.getString("token");
-                        
-                        imageUrl = responseObj.getString("pic");
-                        if (!imageUrl.equals("null") && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://"))
+                        UserCred userCred = UserCred.parseUserCred(responseObj);
+                        //                        String token = responseObj.getString("token");
+                        //                        imageUrl = responseObj.getString("pic");
+                        //                        Log.d("??????????", "image url = " + imageUrl);
+                        imageUrl = userCred.getPic();
+                        if (!imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
+                                !imageUrl.startsWith("https://")){
                             imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
-                        Log.d("??????????", "image url = " + imageUrl);
+                            //                        Log.d("??????????", "image url = " + imageUrl);
+                            userCred.setPic(imageUrl);
+                        }
+                        userCred.setPassword(password);
                         
-                        appInstance.setAccessToken(token);
-                        appInstance.setProfileImageUrl(imageUrl);
+                        appInstance.setUserCred(userCred);
+
+                        //                        appInstance.setAccessToken(token);
+                        //                        appInstance.setProfileImageUrl(imageUrl);
                         
                         
                         runOnUiThread(new Runnable() {

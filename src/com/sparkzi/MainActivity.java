@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.sparkzi.fragment.DummyFragment;
 import com.sparkzi.fragment.HomeFragment;
 import com.sparkzi.lazylist.ImageLoader;
+import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.SparkziApplication;
 
@@ -75,8 +76,9 @@ public class MainActivity extends FragmentActivity {
         ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
         tvUserName = (TextView) findViewById(R.id.tv_name);
         
-        String userName = appInstance.getUserName();
-        String imageUrl = appInstance.getProfileImageUrl();
+        UserCred userCred = appInstance.getUserCred();
+        String userName = userCred.getUsername();
+        String imageUrl = userCred.getPic();
         
         imageLoader.DisplayImage(imageUrl, ivProfilePic);
         tvUserName.setText(userName);
@@ -177,7 +179,7 @@ public class MainActivity extends FragmentActivity {
     public void onClickMenuProfile(View v){
         mDrawerLayout.closeDrawer(mDrawerLinear);
         
-        Intent i = new Intent(MainActivity.this, EssentialDetailsActivity.class);
+        Intent i = new Intent(MainActivity.this, ProfileActivity.class);
         startActivity(i);
     }
 

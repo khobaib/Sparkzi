@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.sparkzi.model.ServerResponse;
+import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Base64;
 import com.sparkzi.utility.Constants;
@@ -47,6 +48,8 @@ public class UploadPicActivity extends Activity {
 
     private ProgressDialog pDialog;
     JsonParser jsonParser;
+    
+    String token;
 
     //    ImageLoader imageLoader;
 
@@ -79,7 +82,10 @@ public class UploadPicActivity extends Activity {
         Update = (Button) findViewById(R.id.b_update);
         Update.setVisibility(View.GONE);
 
-        String imageUrl = appInstance.getProfileImageUrl();
+        UserCred userCred = appInstance.getUserCred();
+        String imageUrl = userCred.getPic();
+        
+        token = userCred.getToken();
         //        imageLoader = new ImageLoader(UploadPicActivity.this);
         //        imageLoader.DisplayImage(imageUrl, ProfilePic);
 
@@ -288,7 +294,6 @@ public class UploadPicActivity extends Activity {
             //            urlParam.add(new BasicNameValuePair("method", Constants.METHOD_UPLOAD_PROFILE_PICTURE));
 
             String url = Constants.URL_ROOT + "pic";
-            String token = appInstance.getAccessToken();
 
             try {           
                 JSONObject contentObj = new JSONObject();
@@ -297,7 +302,7 @@ public class UploadPicActivity extends Activity {
                 String contentData = contentObj.toString();
                 Log.d(">>>><<<<<", "content = " + contentData);
 
-                String appToken = appInstance.getAccessToken(); 
+//                String appToken = appInstance.getAccessToken(); 
                 ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
                         null, contentData, token);            
 
