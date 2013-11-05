@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/tv_education"
-                android:layout_width="140dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
@@ -60,11 +60,11 @@
                 android:gravity="right"
                 android:text="Education:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_education"
+            <Spinner
+                android:id="@+id/s_education"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_education"
@@ -73,10 +73,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/tv_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_ethnicity"
@@ -89,21 +86,18 @@
                 android:gravity="right"
                 android:text="Ethnicity:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_ethnicity"
+            <Spinner
+                android:id="@+id/s_ethnicity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_ethnicity"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_diet"
@@ -116,21 +110,18 @@
                 android:gravity="right"
                 android:text="Diet:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_diet"
+            <Spinner
+                android:id="@+id/s_diet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_diet"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_drinks"
@@ -143,21 +134,18 @@
                 android:gravity="right"
                 android:text="Drinks:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_drinks"
+            <Spinner
+                android:id="@+id/s_drinks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_drinks"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_smokes"
@@ -170,21 +158,18 @@
                 android:gravity="right"
                 android:text="Smokes:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_smokes"
+            <Spinner
+                android:id="@+id/s_smokes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_smokes"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_religion"
@@ -197,21 +182,18 @@
                 android:gravity="right"
                 android:text="Religion:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_religion"
+            <Spinner
+                android:id="@+id/s_religion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_religion"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_kids"
@@ -224,21 +206,18 @@
                 android:gravity="right"
                 android:text="Kids:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_kids"
+            <Spinner
+                android:id="@+id/s_kids"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_kids"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_politics"
@@ -251,21 +230,18 @@
                 android:gravity="right"
                 android:text="Politics:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_politics"
+            <Spinner
+                android:id="@+id/s_politics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_politics"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_sign"
@@ -278,21 +254,18 @@
                 android:gravity="right"
                 android:text="Sign:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/et_sign"
+            <Spinner
+                android:id="@+id/s_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_sign"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:inputType="text" />
 
             <TextView
                 android:id="@+id/tv_profession"
@@ -305,7 +278,7 @@
                 android:gravity="right"
                 android:text="Profession:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -313,13 +286,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_profession"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/tv_hometown"
@@ -332,7 +305,7 @@
                 android:gravity="right"
                 android:text="Hometown:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -340,13 +313,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_hometown"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/tv_languages"
@@ -359,7 +332,7 @@
                 android:gravity="right"
                 android:text="Languages:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="17dp"
                 android:textStyle="bold" />
 
             <EditText
@@ -367,13 +340,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_languages"
-                android:layout_alignLeft="@+id/et_education"
-                android:layout_alignRight="@+id/et_education"
+                android:layout_alignLeft="@+id/s_education"
+                android:layout_alignRight="@+id/s_education"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
         </RelativeLayout>
     </ScrollView>
 

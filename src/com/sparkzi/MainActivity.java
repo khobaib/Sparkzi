@@ -21,11 +21,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sparkzi.fragment.DummyFragment;
+import com.sparkzi.fragment.FavoriteFragment;
 import com.sparkzi.fragment.HomeFragment;
+import com.sparkzi.fragment.LastNightFragment;
+import com.sparkzi.fragment.ProfileFragment;
 import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.SparkziApplication;
+import com.sparkzi.utility.Utility;
 
 public class MainActivity extends FragmentActivity {
 
@@ -162,13 +166,22 @@ public class MainActivity extends FragmentActivity {
         //            return super.onOptionsItemSelected(item);
         //        }
     }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        UserCred userCred = appInstance.getUserCred();
+        String imageUrl = userCred.getPic();
+        
+        imageLoader.DisplayImage(imageUrl, ivProfilePic);
+    }
 
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if(currentFragmentIndex != position){
-                currentFragmentIndex = position;
+            if(currentFragmentIndex != position){             
                 selectItem(position);
             }
             else
@@ -177,30 +190,29 @@ public class MainActivity extends FragmentActivity {
     }
     
     public void onClickMenuProfile(View v){
-        mDrawerLayout.closeDrawer(mDrawerLinear);
-        
-        Intent i = new Intent(MainActivity.this, ProfileActivity.class);
-        startActivity(i);
+        mDrawerLayout.closeDrawer(mDrawerLinear);        
     }
 
-    private void selectItem(int position) {
-        switch (position){
-            case 0:
+    public void selectItem(int position) {
+        currentFragmentIndex = position;
+        switch (Utility.SLIDING_MENU_OPTION.values()[position]){
+            case HOME:
                 myFragment = new HomeFragment();
+                break;
+            case LASTNIGHT:
+                myFragment = new LastNightFragment();
+                break;
+            case PROFILE:
+                myFragment = new ProfileFragment();
+                break;
+            case FAVORITES:
+                myFragment = new FavoriteFragment();
                 break;
             default:
                 Log.e("????????", "DUMMY FRAGMENT");
                 myFragment = new DummyFragment();
                 break;
         }
-        // update the main content by replacing fragments
-        //        Fragment fragment = new PlanetFragment();
-        //        Bundle args = new Bundle();
-        //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        //        fragment.setArguments(args);
-        //
-        //        FragmentManager fragmentManager = getFragmentManager();
-        //        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // update selected item and title, then close the drawer
 

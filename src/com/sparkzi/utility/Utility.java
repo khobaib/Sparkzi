@@ -23,15 +23,26 @@ public class Utility {
     
     public static final String[] WHO_I_AM = {"Man looking for a woman", "Woman looking for a man"};
     
+    public static final String[] ACTIVITY_TEMPLATE = {
+      "saw a movie", "listened to music", "watched television", "ate at a restaurant",
+      "went to a bar", "attended an event", "read a book", "something else"  
+    };
+    
+    public static final String[] ACTIVITY_QUESTION = {
+        "Which movie did you see?", "Which music did you listen to?", "What did you watch?",
+        "Which restaurant?",
+        "Which bar?", "Which event?", "Which book?", "What did you do?"  
+      };
+    
     public static final String[] COUNTRY_LIST = {"Australia", "Canada", "India", "UK", "US"};
     
-    public static final City[] CITY_LIST = {
-        new City(0, "Adelaide"), new City(0, "Brisbane"), new City(0, "Canberra"), new City(0, "Goal Coast"),
-        new City(1, "Calgari"), new City(1, "Cambridge"), new City(1, "Edmonton"), new City(1, "Halifax"),
-        new City(2, "Ahmedabad"), new City(2, "Bangalore"), new City(2, "Bhopal"), new City(2, "Chandrigarh"),
-        new City(3, "Edinburg"), new City(3, "Glassgow"), new City(3, "Greater London Urban"), new City(3, "Belfast"),
-        new City(4, "Alabama"),new City(4, "Alaska"), new City(4, "Austin"), new City(4, "Boston")
-    };
+//    public static final City[] CITY_LIST = {
+//        new City(0, "Adelaide"), new City(0, "Brisbane"), new City(0, "Canberra"), new City(0, "Goal Coast"),
+//        new City(1, "Calgari"), new City(1, "Cambridge"), new City(1, "Edmonton"), new City(1, "Halifax"),
+//        new City(2, "Ahmedabad"), new City(2, "Bangalore"), new City(2, "Bhopal"), new City(2, "Chandrigarh"),
+//        new City(3, "Edinburg"), new City(3, "Glassgow"), new City(3, "Greater London Urban"), new City(3, "Belfast"),
+//        new City(4, "Alabama"),new City(4, "Alaska"), new City(4, "Austin"), new City(4, "Boston")
+//    };
     
     public static final String[] QUESTION_TEXTS = {
         "Two truths and a lie about me are ...",
@@ -48,9 +59,9 @@ public class Utility {
     
     
     public static final String[] ESSENTIAL_TEXTS = {
-        "Education", "Ethnicity", "Diet", "Drinks",
-        "Smokes", "Religion", "Kids", "Politics",
-        "Sign", "Profession", "Hometown", "Languages"
+        "education", "ethnicity", "diet", "drinks",
+        "smokes", "religion", "kids", "politics",
+        "starsign", "profession", "hometown", "languages"
     };
     
 //    public static final Question[] questionList = {
@@ -112,16 +123,35 @@ public class Utility {
        "Capricorn", "Aquarius", "Pisces", "Don't know, don't care"
     };
     
+    public enum SLIDING_MENU_OPTION {
+      HOME(0), CONVERSATIONS(1), LASTNIGHT(2), SEARCH(3), FAVORITES(4), PROFILE(5), SETTINGS(6), LOGOUT(7);
+      
+      private int value;
+      private SLIDING_MENU_OPTION(int value) {
+          this.value = value;
+      }
+
+      public int getValue() {
+          return value;
+      }
+      
+//      public static SLIDING_MENU_OPTION getStatus(int status){
+//          return SLIDING_MENU_OPTION.
+//      }
+    };
     
-    public static List<String> getCityList(int countryId){
-        List<String> cityList = new ArrayList<String>();
-        
-        for(City city : CITY_LIST){
-            if(city.getCountryId() == countryId)
-                cityList.add(city.getCityName());
-        }
-        return cityList;
-    }
+    
+    
+    
+//    public static List<String> getCityList(int countryId){
+//        List<String> cityList = new ArrayList<String>();
+//        
+//        for(City city : CITY_LIST){
+//            if(city.getCountryId() == countryId)
+//                cityList.add(city.getCityName());
+//        }
+//        return cityList;
+//    }
 
 
 
@@ -170,6 +200,12 @@ public class Utility {
             }
         }
         return false;
+    }
+    
+    public static String capitalizeString(String str){
+        if(str == null || str.equals("") || str.length() == 0)
+            return str;
+        return (str.substring(0, 1).toUpperCase() + str.substring(1, str.length()));
     }
 
     public static void displayMessage(Context context, String message) {

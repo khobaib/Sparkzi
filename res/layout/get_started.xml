@@ -137,7 +137,7 @@
                 android:singleLine="true"
                 android:gravity="center_horizontal"
                 android:textColor="@color/app_theme"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
 
             <Button
                 android:id="@+id/b_calendar"

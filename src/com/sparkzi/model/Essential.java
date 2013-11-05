@@ -1,92 +1,78 @@
 package com.sparkzi.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sparkzi.EssentialDetailsActivity;
+import com.sparkzi.db.SparkziDatabase;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.Utility;
 
 public class Essential {
-
-    private String essentialText;
-    private int ansIndex;
-    private String answerText;
-
+    private int id;
+    private String value;
+    
     public Essential() {
         // TODO Auto-generated constructor stub
     }
 
-    public Essential(String essentialText, int ansIndex, String answerText) {
-        this.essentialText = essentialText;
-        this.ansIndex = ansIndex;
-        this.answerText = answerText;
+    public Essential(int id, String value) {
+        this.id = id;
+        this.value = value;
     }
-
-    public static List<Essential> parseEssentialList(JSONObject userObj){
-        Essential[] eList = new Essential[Utility.ESSENTIAL_TEXTS.length];
-
-        for(int i = 0; i < Utility.ESSENTIAL_TEXTS.length; i++){
-            eList[i] = new Essential();
-            eList[i].setEssentialText(Utility.ESSENTIAL_TEXTS[i]);
-        }
-
+    
+    public static List<Essential> parseStaticEssentialList(JSONArray essentialArray){
+        List<Essential> essentialList = new ArrayList<Essential>(); 
+                
+        GsonBuilder gsonb = new GsonBuilder();
+        Gson gson = gsonb.create();
+        
         try {
-            int educationIndex = Integer.parseInt(userObj.getString("education"));
-            eList[Constants.ESSENTIAL_EDUCATION_INDEX].setAnsIndex(educationIndex);
-            eList[Constants.ESSENTIAL_EDUCATION_INDEX].setAnswerText(Utility.education_spinner_options[educationIndex]);
+            for(int i=0; i<essentialArray.length(); i++){
 
-
-            int ethnicityIndex = Integer.parseInt(userObj.getString("ethnicity"));
-            eList[Constants.ESSENTIAL_ETHNICITY_INDEX].setAnsIndex(ethnicityIndex);
-            eList[Constants.ESSENTIAL_ETHNICITY_INDEX].setAnswerText(Utility.ethnicity_spinner_options[ethnicityIndex]);
-
-            int dietIndex = Integer.parseInt(userObj.getString("diet"));
-            eList[Constants.ESSENTIAL_DIET_INDEX].setAnsIndex(dietIndex);
-            eList[Constants.ESSENTIAL_DIET_INDEX].setAnswerText(Utility.diet_spinner_options[dietIndex]);
-
-            int drinksIndex = Integer.parseInt(userObj.getString("drinks"));
-            eList[Constants.ESSENTIAL_DRINKS_INDEX].setAnsIndex(drinksIndex);
-            eList[Constants.ESSENTIAL_DRINKS_INDEX].setAnswerText(Utility.drinks_spinner_options[drinksIndex]);
-
-            int smokesIndex = Integer.parseInt(userObj.getString("smokes"));
-            eList[Constants.ESSENTIAL_SMOKES_INDEX].setAnsIndex(smokesIndex);
-            eList[Constants.ESSENTIAL_SMOKES_INDEX].setAnswerText(Utility.smokes_spinner_options[smokesIndex]);
-
-            String religion = userObj.getString("religion");
-            eList[Constants.ESSENTIAL_RELIGION_INDEX].setAnsIndex(0);
-            eList[Constants.ESSENTIAL_RELIGION_INDEX].setAnswerText(religion);
-
-            //            String religion = userObj.getString("religion");
-            //            eList[Constants.ESSENTIAL_RELIGION_INDEX].setAnsIndex(educationIndex);
-            //            eList[Constants.ESSENTIAL_RELIGION_INDEX].setAnswerText(Utility.education_spinner_options[educationIndex]);
-
-            int kidsIndex = Integer.parseInt(userObj.getString("kids"));
-            eList[Constants.ESSENTIAL_KIDS_INDEX].setAnsIndex(kidsIndex);
-            eList[Constants.ESSENTIAL_KIDS_INDEX].setAnswerText(Utility.kids_spinner_options[kidsIndex]);
-
-            int politicsIndex = Integer.parseInt(userObj.getString("politics"));
-            eList[Constants.ESSENTIAL_POLITICS_INDEX].setAnsIndex(politicsIndex);
-            eList[Constants.ESSENTIAL_POLITICS_INDEX].setAnswerText(Utility.politics_spinner_options[politicsIndex]);
-
-            int signIndex = Integer.parseInt(userObj.getString("starsign"));
-            eList[Constants.ESSENTIAL_SIGN_INDEX].setAnsIndex(signIndex);
-            eList[Constants.ESSENTIAL_SIGN_INDEX].setAnswerText(Utility.sign_spinner_options[signIndex]);
-
-            String profession = userObj.getString("profession");
-            eList[Constants.ESSENTIAL_PROFESSION_INDEX].setAnsIndex(0);
-            eList[Constants.ESSENTIAL_PROFESSION_INDEX].setAnswerText(profession);
-
-            String hometown = userObj.getString("hometown");
-            eList[Constants.ESSENTIAL_HOMETOWN_INDEX].setAnsIndex(0);
-            eList[Constants.ESSENTIAL_HOMETOWN_INDEX].setAnswerText(hometown);
-
-            String languages = userObj.getString("languages");
-            eList[Constants.ESSENTIAL_LANGUAGES_INDEX].setAnsIndex(0);
-            eList[Constants.ESSENTIAL_LANGUAGES_INDEX].setAnswerText(languages);
-
+                JSONObject thisEssential = essentialArray.getJSONObject(i);
+                if(thisEssential != null){
+                    String jsonString = thisEssential.toString();
+                    Essential essential = gson.fromJson(jsonString, Essential.class);
+                    essentialList.add(essential);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+         
+        return essentialList;
+    }
+    
+    
+    public static List<Essential> parseUserEssential(JSONObject userObj, Context context){
+        Essential[] eList = new Essential[Utility.ESSENTIAL_TEXTS.length];
+        
+        try {
+            SparkziDatabase dbInstance = new SparkziDatabase(context);
+            dbInstance.open();
+            for(int i = 0; i < Constants.ESSENTIAL_STATIC_FIELD_COUNT; i++){
+                int id = userObj.getInt(Utility.ESSENTIAL_TEXTS[i]);
+                Essential essential = dbInstance.retrieveEssential(i, id);
+                eList[i] = essential;
+            }
+            dbInstance.close();
+            
+            // for last 3 element
+            for(int i = Constants.ESSENTIAL_STATIC_FIELD_COUNT; i < Utility.ESSENTIAL_TEXTS.length; i++){
+                String value = userObj.getString(Utility.ESSENTIAL_TEXTS[i]);
+                Essential essential = new Essential(0, value);
+                eList[i] = essential;
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -95,28 +81,22 @@ public class Essential {
         
         return Arrays.asList(eList);
     }
+    
 
-    public String getEssentialText() {
-        return essentialText;
+    public int getId() {
+        return id;
     }
 
-    public void setEssentialText(String essentialText) {
-        this.essentialText = essentialText;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getAnsIndex() {
-        return ansIndex;
+    public String getValue() {
+        return value;
     }
 
-    public void setAnsIndex(int ansIndex) {
-        this.ansIndex = ansIndex;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public String getAnswerText() {
-        return answerText;
-    }
-
-    public void setAnswerText(String answerText) {
-        this.answerText = answerText;
-    }   
 }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <TextView
+        android:id="@+id/tv_what_did_you_do"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="What did you do last night?"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/s_what_did_you_do"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tv_what_did_you_do"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/tv_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_what_did_you_do"
+        android:layout_below="@+id/s_what_did_you_do"
+        android:layout_marginTop="10dp"
+        android:text="What movie did you see?"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_what_did_you_do"
+        android:layout_below="@+id/tv_activity"
+        android:layout_marginTop="2dp"
+        android:text="This field cannot be left blank."
+        android:textColor="@color/red"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/et_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_warning"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:textColor="@color/app_theme"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/tv_elaborate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_what_did_you_do"
+        android:layout_below="@+id/et_activity"
+        android:layout_marginTop="10dp"
+        android:text="Care to elaborate on that?"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_elaborate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_elaborate"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:textColor="@color/app_theme"
+        android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/bShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_elaborate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:padding="15dp"
+        android:text="Share"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

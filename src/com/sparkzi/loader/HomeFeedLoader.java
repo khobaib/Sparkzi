@@ -6,15 +6,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.sparkzi.MainActivity;
 import com.sparkzi.model.HomeFeed;
 import com.sparkzi.model.ServerResponse;
+import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
+import com.sparkzi.utility.SparkziApplication;
 
 public class HomeFeedLoader extends AsyncTaskLoader<List<HomeFeed>> {
 
@@ -24,19 +28,25 @@ public class HomeFeedLoader extends AsyncTaskLoader<List<HomeFeed>> {
 
 //    private List<HomeFeed> homeFeeds;
     private String token;
+    private String username;
 
     private List<HomeFeed> mFeeds;                  // holder to keep previous feeds while copying new ones
 
     public HomeFeedLoader(Context context, String token) {
         super(context);
         jsonParser = new JsonParser();
-        this.token = token;
+//        this.token = token;
+        
+        SparkziApplication appInstance = (SparkziApplication) ((MainActivity) context).getApplication();
+        UserCred userCred = appInstance.getUserCred();
+        this.username = userCred.getUsername();
+        this.token = userCred.getToken();
     }
 
     @Override
     public List<HomeFeed> loadInBackground() {
-        String rootUrl = Constants.URL_ROOT + "user/kh/feeds";
-//        String rootUrl = "http://sparkzi.com/api/" + "feeds";
+        
+        String rootUrl = Constants.URL_ROOT + "user/" + username + "/feeds";
         Log.d(TAG, "token - " + token);
 
         ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET,

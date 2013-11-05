@@ -215,45 +215,55 @@ public class LoginActivity extends Activity {
                         //                        imageUrl = responseObj.getString("pic");
                         //                        Log.d("??????????", "image url = " + imageUrl);
                         imageUrl = userCred.getPic();
-                        if (!imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
+                        Log.d(">>>>", "imageUrl = " + ((userCred.getPic() == null) ? "null" : userCred.getPic()));
+                        if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
                                 !imageUrl.startsWith("https://")){
                             imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
                             //                        Log.d("??????????", "image url = " + imageUrl);
                             userCred.setPic(imageUrl);
                         }
-                        
+
                         appInstance.setUserCred(userCred);
 
                         //                        appInstance.setAccessToken(token);
                         //                        appInstance.setProfileImageUrl(imageUrl);
 
-                        runOnUiThread(new Runnable() {
-                            public void run() {
+                        //                        runOnUiThread(new Runnable() {
+                        //                            public void run() {
 
-                                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(Username.getWindowToken(), 0);
-                                imm.hideSoftInputFromWindow(Password.getWindowToken(), 0);
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(Username.getWindowToken(), 0);
+                        imm.hideSoftInputFromWindow(Password.getWindowToken(), 0);
 
-                                if(RememberMe.isChecked()){
-                                    appInstance.setRememberMe(true);
-                                    
-                                    UserCred userCred = appInstance.getUserCred();
-                                    userCred.setUsername(userName);
-                                    userCred.setPassword(password);
-                                    appInstance.setUserCred(userCred);
-//                                    appInstance.setCredentials(userName, password);
-                                }
+                        if(RememberMe.isChecked()){
+                            appInstance.setRememberMe(true);
 
-                                Intent i = new Intent();
-                                if(imageUrl.equals("null"))
-                                    i = new Intent(LoginActivity.this, UploadPicActivity.class);
-                                else
-                                    i = new Intent(LoginActivity.this, MainActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(i);
-                                finish();
-                            }
-                        });
+                            userCred = appInstance.getUserCred();
+                            userCred.setUsername(userName);
+                            userCred.setPassword(password);
+                            appInstance.setUserCred(userCred);
+                            //                                    appInstance.setCredentials(userName, password);
+                        }
+
+                        Intent i = new Intent();
+                        //                        imageUrl = null;            // TEST PURPOSE
+                        if(imageUrl == null){
+                            //                            i = new Intent(LoginActivity.this, EssentialDetailsActivity.class);
+
+                            i = new Intent(LoginActivity.this, UploadPicActivity.class);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_LOGIN);                
+                            i.putExtras(bundle);
+                        }
+                        else{
+                            i = new Intent(LoginActivity.this, MainActivity.class);
+                        }
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                        //                            }
+                        //                        });
 
                         //                        alert("Registration Successful.", true);
                     }

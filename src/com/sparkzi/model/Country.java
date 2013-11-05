@@ -10,23 +10,21 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class City {
+public class Country {
     private int id;
-    private int country_id;
-    private String city_name;
+    private String value;
     
-    public City() {
-        // TODO Auto-generated constructor stub
-    }   
+    public Country() {
+    }
 
-    public City(int id, int countryId, String cityName) {
+    public Country(int id, String value) {
         this.id = id;
-        this.country_id = countryId;
-        this.city_name = cityName;
+        this.value = value;
     }
     
-    public static List<City> parseCity(JSONArray ctyArray){
-        List<City> ctyList = new ArrayList<City>(); 
+    
+    public static List<Country> parseCountry(JSONArray ctyArray){
+        List<Country> ctyList = new ArrayList<Country>(); 
                 
         GsonBuilder gsonb = new GsonBuilder();
         Gson gson = gsonb.create();
@@ -37,18 +35,17 @@ public class City {
                 JSONObject thisCty = ctyArray.getJSONObject(i);
                 if(thisCty != null){
                     String jsonString = thisCty.toString();
-                    City city = gson.fromJson(jsonString, City.class);
-                    ctyList.add(city);
+                    Country country = gson.fromJson(jsonString, Country.class);
+                    ctyList.add(country);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }        
+        }
+         
         return ctyList;
     }
-    
 
-    
     public int getId() {
         return id;
     }
@@ -57,22 +54,11 @@ public class City {
         this.id = id;
     }
 
-    public int getCountryId() {
-        return country_id;
+    public String getValue() {
+        return value;
     }
 
-    public void setCountryId(int countryId) {
-        this.country_id = countryId;
+    public void setValue(String value) {
+        this.value = value;
     }
-
-    public String getCityName() {
-        return city_name;
-    }
-
-    public void setCityName(String cityName) {
-        this.city_name = cityName;
-    }
-    
-    
-
 }

@@ -37,6 +37,10 @@ public class Constants {
     public static final int ESSENTIAL_HOMETOWN_INDEX = 10;
     public static final int ESSENTIAL_LANGUAGES_INDEX = 11;
     
+    public static final int ESSENTIAL_STATIC_FIELD_COUNT = 9;
+    
+    public static final int TEMPLATE_ID_SOMETHING_ELSE = 8;
+    
     
     public static final String URL_ROOT = "http://sparkzi.com/api/apinew/";
 
@@ -68,6 +72,10 @@ public class Constants {
     
     public static final File APP_DIRECTORY =
             new File(Environment.getExternalStorageDirectory(),"sparkzi");
+    
+    public static final String FROM_ACTIVITY = "from_activity";
+    public static final int PARENT_ACTIVITY_LOGIN = 101;
+    public static final int PARENT_ACTIVITY_PROFILE = 102;
     
 
 }

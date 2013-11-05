@@ -2,7 +2,7 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
@@ -29,23 +29,24 @@
         <item name="android:listViewStyle">@style/ListViewAppTheme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewAppTheme.White</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemAppTheme</item>
+        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
         <item name="android:activatedBackgroundIndicator">@drawable/listitem_background</item>
     </style>
-    
-    
-        <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
+
+    <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
         <item name="android:background">@drawable/tab_indicator_holo</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/app_theme</item>
         <item name="android:textStyle">bold</item>
         <item name="android:divider">@drawable/custom_tab_indicator_divider</item>
-                <item name="android:dividerPadding">10dp</item>
+        <item name="android:dividerPadding">10dp</item>
         <item name="android:showDividers">middle</item>
-<!-- 		<item name="android:paddingBottom">10dp</item> -->
-		
-<!--         <item name="android:paddingLeft">8dp</item> -->
-<!--         <item name="android:paddingRight">8dp</item> -->
-<!--         <item name="android:fadingEdgeLength">8dp</item> -->
+        <!-- <item name="android:paddingBottom">10dp</item> -->
+
+
+        <!-- <item name="android:paddingLeft">8dp</item> -->
+        <!-- <item name="android:paddingRight">8dp</item> -->
+        <!-- <item name="android:fadingEdgeLength">8dp</item> -->
     </style>
 
     <style name="MyActionBar" parent="Widget.Sherlock.ActionBar">

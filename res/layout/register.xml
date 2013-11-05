@@ -18,11 +18,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/iv_app_logo"
-        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_login" >
 
         <RelativeLayout
@@ -46,9 +46,11 @@
                 android:layout_below="@+id/tv_title"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/gray70_transparent_back" />
 
-            <TextView
+            <!--
+                 <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
@@ -58,9 +60,98 @@
                 android:gravity="right"
                 android:text="Select Username:"
                 android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textSize="16dp" />
+            -->
 
-            <TextView
+            <EditText
+                android:id="@+id/et_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/view1"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:hint="Username"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/et_first_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_user_name"
+                android:layout_alignRight="@+id/et_user_name"
+                android:layout_below="@+id/et_user_name"
+                android:hint="First Name"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/et_last_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_first_name"
+                android:layout_alignRight="@+id/et_first_name"
+                android:layout_below="@+id/et_first_name"
+                android:hint="Last Name"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_first_name"
+                android:layout_alignRight="@+id/et_first_name"
+                android:layout_below="@+id/et_last_name"
+                android:hint="Email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_first_name"
+                android:layout_alignRight="@+id/et_first_name"
+                android:layout_below="@+id/et_email"
+                android:hint="Password"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/et_first_name"
+                android:layout_alignRight="@+id/et_first_name"
+                android:layout_below="@+id/et_password"
+                android:hint="Confirm Password"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="@color/app_theme"
+                android:textSize="15dp" />
+
+            <!--
+                 <TextView
                 android:id="@+id/tv_first_name"
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
@@ -118,106 +209,30 @@
                 android:gravity="right"
                 android:text="Confirm Password:"
                 android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textSize="16dp" />
+            -->
 
-            <EditText
-                android:id="@+id/et_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_user_name"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="1dp"
-                android:layout_toRightOf="@+id/tv_user_name"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/app_theme"
-                android:textSize="16dp" />
 
-            <EditText
-                android:id="@+id/et_first_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_first_name"
-                android:layout_alignLeft="@+id/et_user_name"
-                android:layout_alignRight="@+id/et_user_name"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/app_theme"
-                android:textSize="16dp" />
-
-            <EditText
-                android:id="@+id/et_last_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_last_name"
-                android:layout_alignLeft="@+id/et_first_name"
-                android:layout_alignRight="@+id/et_first_name"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textColor="@color/app_theme"
-                android:textSize="16dp" />
-
-            <EditText
-                android:id="@+id/et_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_email"
-                android:layout_alignLeft="@+id/et_first_name"
-                android:layout_alignRight="@+id/et_first_name"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:singleLine="true"
-                android:textColor="@color/app_theme"
-                android:textSize="16dp" />
-
-            <EditText
-                android:id="@+id/et_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_password"
-                android:layout_alignLeft="@+id/et_first_name"
-                android:layout_alignRight="@+id/et_first_name"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:textColor="@color/app_theme"
-                android:textSize="16dp" />
-
-            <EditText
-                android:id="@+id/et_confirm_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_Confirm_password"
-                android:layout_alignLeft="@+id/et_first_name"
-                android:layout_alignRight="@+id/et_first_name"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:textColor="@color/app_theme"
-                android:textSize="16dp" />
-
-            <View
+            <!--
+                 <View
                 android:id="@+id/view2"
                 android:layout_width="280dp"
                 android:layout_height="2dp"
-                android:layout_below="@+id/tv_Confirm_password"
+                android:layout_below="@+id/et_confirm_password"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:background="@color/gray70_transparent_back" />
+            -->
 
             <Button
                 android:id="@+id/b_enter_sparkzi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view2"
+                android:layout_below="@+id/et_confirm_password"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:onClick="onClickRegister"
-                android:padding="15dp"
+                android:padding="20dp"
                 android:text="Enter Sparkzi"
                 android:textColor="@color/white"
                 android:textSize="20dp"

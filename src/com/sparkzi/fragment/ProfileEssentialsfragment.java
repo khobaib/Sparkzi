@@ -1,23 +1,27 @@
 package com.sparkzi.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.sparkzi.EssentialDetailsActivity;
 import com.sparkzi.adapter.ProfileEssentialAdapter;
 import com.sparkzi.model.Essential;
-import com.sparkzi.model.Question;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -25,29 +29,31 @@ import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
 public class ProfileEssentialsfragment extends ListFragment {
-    
+
     private Activity activity;
     JsonParser jsonParser;
 
     private String token;
-    
+
     private ProfileEssentialAdapter pEssentialAdapter;
-    
+
+    public static List<Essential> eList;
+
     public ProfileEssentialsfragment() {
         // TODO Auto-generated constructor stub
     }
-    
+
     public static ProfileEssentialsfragment newInstance(){
         ProfileEssentialsfragment fragment = new ProfileEssentialsfragment();
         return fragment;
     }
-    
-    
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        
+
         activity = getActivity();
         jsonParser = new JsonParser();
 
@@ -55,17 +61,36 @@ public class ProfileEssentialsfragment extends ListFragment {
         token = userCred.getToken();
         ListView lv = getListView();
         lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
-        lv.setDividerHeight(3);
+        lv.setDividerHeight(0);
+
+
+        lv.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                if(eList.size() > 0){
+                    Intent i = new Intent(activity, EssentialDetailsActivity.class);  
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_PROFILE);                
+                    i.putExtras(bundle);
+
+                    startActivity(i);
+                }
+
+            }
+        });
 
         pEssentialAdapter = new ProfileEssentialAdapter(activity, null);
         //        setEmptyText("No feeds");
         setListAdapter(pEssentialAdapter);
         setListShown(false);
 
+        eList = new ArrayList<Essential>();
         new GetEssentialInfo().execute();
     }
-    
-    
+
+
     private class GetEssentialInfo extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
@@ -91,8 +116,9 @@ public class ProfileEssentialsfragment extends ListFragment {
                     String status = responseObj.getString("status");
                     if(status.equals("OK")){
                         JSONObject userObj= responseObj.getJSONObject("user");
-                        final List<Essential> eList = Essential.parseEssentialList(userObj);
-                        
+                        //                        final List<Essential> eList = Essential.parseEssentialList(userObj);
+                        eList = Essential.parseUserEssential(userObj, activity);
+
                         activity.runOnUiThread(new Runnable() {
 
                             @Override
@@ -104,7 +130,7 @@ public class ProfileEssentialsfragment extends ListFragment {
                                     setListShownNoAnimation(true);
                                 }                               
                             }
-                            
+
                         });
                     }
                     else{
@@ -133,6 +159,6 @@ public class ProfileEssentialsfragment extends ListFragment {
         });
         bld.create().show();
     }
-    
+
 
 }

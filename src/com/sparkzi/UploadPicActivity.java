@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,11 +14,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,11 +30,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -46,9 +49,11 @@ public class UploadPicActivity extends Activity {
     private static final int CAMERA_REQ_CODE = 901;
     private static final int GALLERY_REQ_CODE = 902;
 
+    private static final String TAG = UploadPicActivity.class.getSimpleName();
+
     private ProgressDialog pDialog;
     JsonParser jsonParser;
-    
+
     String token;
 
     //    ImageLoader imageLoader;
@@ -60,6 +65,8 @@ public class UploadPicActivity extends Activity {
 
     Bitmap bitmap;
     Bitmap scaledBmp;
+
+    int fromActivity;
 
     //    private Boolean isPicassaImage;
 
@@ -75,8 +82,13 @@ public class UploadPicActivity extends Activity {
         //        BugSenseHandler.initAndStartSession(UploadPicActivity.this, "e8ecd3f1");
         setContentView(R.layout.upload_pic);
 
+        fromActivity = getIntent().getExtras().getInt(Constants.FROM_ACTIVITY);
+        Log.e(TAG, "fromActivity = " + fromActivity);
+
         appInstance = (SparkziApplication) getApplication();
         jsonParser = new JsonParser();
+
+        scaledBmp = null;
 
         ProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
         Update = (Button) findViewById(R.id.b_update);
@@ -84,7 +96,13 @@ public class UploadPicActivity extends Activity {
 
         UserCred userCred = appInstance.getUserCred();
         String imageUrl = userCred.getPic();
-        
+
+        if(fromActivity == Constants.PARENT_ACTIVITY_PROFILE){
+            ImageLoader imageLoader = new ImageLoader(UploadPicActivity.this);
+            imageLoader.DisplayImage(imageUrl, ProfilePic);
+            Update.setVisibility(View.VISIBLE);
+        }
+
         token = userCred.getToken();
         //        imageLoader = new ImageLoader(UploadPicActivity.this);
         //        imageLoader.DisplayImage(imageUrl, ProfilePic);
@@ -122,31 +140,71 @@ public class UploadPicActivity extends Activity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_REQ_CODE:
-                    //                    imageUriToString = imageUri.toString();
-                    //                    Intent returnIntent = new Intent();
-                    //                    returnIntent.putExtra("image_uri", imageUriToString);
-                    //                    returnIntent.putExtra("user_photo_type", iSchoolConstant.USER_PHOTO_TYPE_TAKE_PIC);
-                    //                    setResult(iSchoolConstant.RESULT_CODE_PHOTO_TYPE_TAKE_PIC, returnIntent);     
-                    //                    finish();
-                    getContentResolver().notifyChange(imageUri, null);
-                    //                    final ImageView Preview = (ImageView) findViewById(R.id.ivPhoto);
-                    ContentResolver cr = getContentResolver();
 
-                    try {
-                        if(bitmap != null)
-                            bitmap.recycle();
-                        bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
-                        Log.d("BITMAP SIZE", "bitmap size = " + bitmap.getByteCount());
-                        scaledBmp = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-                        Log.d("scaled BITMAP SIZE", "bitmap size = " + scaledBmp.getByteCount());
+                    File directory = Constants.APP_DIRECTORY;
+                    String mainDir = directory.toString();
+                    try{
+                        File f = new File(mainDir, "profile_pic.png");
+                        ExifInterface exif = new ExifInterface(f.getPath());
+                        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                        int angle = 0;
+
+                        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                            angle = 90;
+                        } 
+                        else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                            angle = 180;
+                        } 
+                        else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                            angle = 270;
+                        }
+                        Log.d(TAG, "angle = " + angle);
+
+                        Matrix mat = new Matrix();
+                        mat.postRotate(angle);
+
+//                        Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f), null, null);
+                        Bitmap bmp = decodeFile(f, 500);
+
+                        if(angle == 0){
+                            scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200, true);
+                        }
+                        else{
+                            Bitmap correctBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true); 
+                            scaledBmp = Bitmap.createScaledBitmap(correctBmp, 200, 200, true);
+                        }
+
 
                         ProfilePic.setImageBitmap(scaledBmp);
                         Update.setVisibility(View.VISIBLE);
-
-                    } catch (Exception e) {
-                        Toast.makeText(UploadPicActivity.this, "Failed to load", Toast.LENGTH_SHORT).show();
-                        Log.e("Camera", e.toString());
                     }
+                    catch (IOException e) {
+                        Toast.makeText(UploadPicActivity.this, "IOException - Failed to load", Toast.LENGTH_SHORT).show();
+                        Log.e("Camera", e.toString());
+                    }   
+                    catch(OutOfMemoryError oom) {
+                        Toast.makeText(UploadPicActivity.this, "OOM error - Failed to load", Toast.LENGTH_SHORT).show();
+                        Log.e("Camera", oom.toString());
+                    }
+
+                    //                    getContentResolver().notifyChange(imageUri, null);
+                    //                    ContentResolver cr = getContentResolver();
+                    //                    try {
+                    //                        if(bitmap != null)
+                    //                            bitmap.recycle();
+                    //                        bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
+                    //                        Log.d("BITMAP SIZE", "bitmap size = " + bitmap.getByteCount());
+                    //                        scaledBmp = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+                    //                        Log.d("scaled BITMAP SIZE", "bitmap size = " + scaledBmp.getByteCount());
+                    //
+                    //                        ProfilePic.setImageBitmap(scaledBmp);
+                    //                        Update.setVisibility(View.VISIBLE);
+                    //
+                    //                    } catch (Exception e) {
+                    //                        Toast.makeText(UploadPicActivity.this, "Failed to load", Toast.LENGTH_SHORT).show();
+                    //                        Log.e("Camera", e.toString());
+                    //                    }
 
                     break;
 
@@ -241,6 +299,10 @@ public class UploadPicActivity extends Activity {
 
 
     public void onClickUpdate(View v){
+        if(scaledBmp == null){
+            alert("Please update image first.");
+            return;
+        }
         new UploadProfilePicture().execute();
         //        finish();
         //        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
@@ -302,7 +364,7 @@ public class UploadPicActivity extends Activity {
                 String contentData = contentObj.toString();
                 Log.d(">>>><<<<<", "content = " + contentData);
 
-//                String appToken = appInstance.getAccessToken(); 
+                //                String appToken = appInstance.getAccessToken(); 
                 ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
                         null, contentData, token);            
 
@@ -350,17 +412,33 @@ public class UploadPicActivity extends Activity {
                     String status = responseObj.getString("status");
                     if(status.equals("OK")){
 
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                showUpdateEssentialsDialog();
-                                // show dialog answer dialog
+                        String imageUrl = responseObj.getString("pic_url");
+                        if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
+                                !imageUrl.startsWith("https://")){
+                            imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
+                            Log.d(TAG, "imageUrl after uploading in UploadPicActivity = " + imageUrl);
+                            //                        Log.d("??????????", "image url = " + imageUrl);
+                            UserCred userCred = appInstance.getUserCred();
+                            userCred.setPic(imageUrl);
+                            appInstance.setUserCred(userCred);
+                        }
 
-//                                Intent i = new Intent(LoginActivity.this, UploadPicActivity.class);
-//                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(i);
-//                                finish();
-                            }
-                        });
+                        if(fromActivity == Constants.PARENT_ACTIVITY_LOGIN){
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    showUpdateEssentialsDialog();
+                                    // show dialog answer dialog
+
+                                    //                                Intent i = new Intent(LoginActivity.this, UploadPicActivity.class);
+                                    //                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    //                                startActivity(i);
+                                    //                                finish();
+                                }
+                            });
+                        }
+                        else{
+                            finish();
+                        }
                     }
                     else{
                         alert("Upload failed. Please try again.");
@@ -376,30 +454,30 @@ public class UploadPicActivity extends Activity {
 
         }
     }
-    
-    
-    
+
+
+
     private void showUpdateEssentialsDialog(){
         LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
         View addDIalogView = inflater.inflate(R.layout.dialog_answer_essentials, null);
         final AlertDialog alert = new AlertDialog.Builder(UploadPicActivity.this).create();
         alert.setView(addDIalogView);
         alert.setCancelable(false);
-        
+
         Button bLater = (Button) addDIalogView.findViewById(R.id.b_later);
         bLater.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 alert.dismiss();    
-              Intent i = new Intent(UploadPicActivity.this, MainActivity.class);
-              i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-              startActivity(i);
-              finish();
+                Intent i = new Intent(UploadPicActivity.this, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
             }
 
         });
-        
+
         Button bTryOut = (Button) addDIalogView.findViewById(R.id.b_try_out);
         bTryOut.setOnClickListener(new OnClickListener() {
 
@@ -408,6 +486,11 @@ public class UploadPicActivity extends Activity {
                 alert.dismiss(); 
                 Intent i = new Intent(UploadPicActivity.this, EssentialDetailsActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_LOGIN);                
+                i.putExtras(bundle);
+
                 startActivity(i);
                 finish();
             }
@@ -422,6 +505,45 @@ public class UploadPicActivity extends Activity {
         bld.setMessage(message);
         bld.setNeutralButton("OK", null);
         bld.create().show();
+    }
+    
+    
+    private Bitmap decodeFile(File f, int imageQuality){
+        try {
+            //decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            FileInputStream stream1=new FileInputStream(f);
+            BitmapFactory.decodeStream(stream1,null,o);
+            stream1.close();
+
+            //Find the correct scale value. It should be the power of 2.
+            final int REQUIRED_SIZE = imageQuality;
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
+            int scale=1;
+
+            while(true){
+                if(width_tmp/2 < REQUIRED_SIZE || height_tmp/2 < REQUIRED_SIZE)
+                    break;
+                width_tmp/=2;
+                height_tmp/=2;
+                scale*=2;
+            }
+            Log.i("SCALE", "scale = " + scale);
+
+            //decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            FileInputStream stream2 = new FileInputStream(f);
+            Bitmap bitmap = BitmapFactory.decodeStream(stream2, null, o2);
+            stream2.close();
+            return bitmap;
+        } catch (FileNotFoundException e) {
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

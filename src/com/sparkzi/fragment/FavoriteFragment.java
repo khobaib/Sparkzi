@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +16,8 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.widget.ListView;
 
-import com.sparkzi.adapter.ProfileQuestionsAdapter;
+import com.sparkzi.adapter.FavoriteAdapter;
+import com.sparkzi.model.Favorite;
 import com.sparkzi.model.Question;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
@@ -23,50 +25,42 @@ import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
-public class ProfileQuestionsFragment extends ListFragment {
-
-    private Activity activity;
+public class FavoriteFragment extends ListFragment {
+    
+    private static final String TAG = FavoriteFragment.class.getSimpleName();
+    private Activity activity;   
     JsonParser jsonParser;
+    
+    private FavoriteAdapter favAdapter;
 
     private String token;
-
-    private ProfileQuestionsAdapter pQuestionAdapter;
-
-    public ProfileQuestionsFragment() {
-        // TODO Auto-generated constructor stub
-    }
-
-    public static ProfileQuestionsFragment newInstance(){
-        ProfileQuestionsFragment fragment = new ProfileQuestionsFragment();
-        return fragment;
-    }
-
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
 
         activity = getActivity();
         jsonParser = new JsonParser();
-
+        
         UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
         token = userCred.getToken();
         ListView lv = getListView();
         lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
         lv.setDividerHeight(3);
-
-        pQuestionAdapter = new ProfileQuestionsAdapter(activity, null);
-        setListAdapter(pQuestionAdapter);
+        
+        favAdapter = new FavoriteAdapter(activity, null);
+        setListAdapter(favAdapter);
         setListShown(false);
-
-        new GetQuestionInfo().execute();
+        
+        new GetFavoriteInfo().execute();
     }
-
-    private class GetQuestionInfo extends AsyncTask<Void, Void, JSONObject> {
+    
+    
+    private class GetFavoriteInfo extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
         protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "user";
+            String url = Constants.URL_ROOT + "favs";
             ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url,
                     null, null, token);
             if(response.getStatus() == 200){
@@ -86,15 +80,15 @@ public class ProfileQuestionsFragment extends ListFragment {
                 try {
                     String status = responseObj.getString("status");
                     if(status.equals("OK")){
-                        JSONObject userObj = responseObj.getJSONObject("user");
-                        JSONArray questionArray = userObj.getJSONArray("questions");
-                        final List<Question> qList = Question.parseQList(questionArray);
+                        JSONObject favObj = responseObj.getJSONObject("favs");
+                        JSONArray addedFavArray = favObj.getJSONArray("favs");
+                        final List<Favorite> fList = Favorite.parseFavorite(addedFavArray);
                         
-                        activity.runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                pQuestionAdapter.setData(qList);
+//                        activity.runOnUiThread(new Runnable() {
+//
+//                            @Override
+//                            public void run() {
+                                favAdapter.setData(fList);
                                 if (isResumed()) {
                                     setListShown(true);
                                 } else {
@@ -102,8 +96,8 @@ public class ProfileQuestionsFragment extends ListFragment {
                                 }                               
                             }
                             
-                        });
-                    }
+//                        });
+//                    }
                     else{
                         alert("Invalid token.");
                     }
@@ -115,8 +109,8 @@ public class ProfileQuestionsFragment extends ListFragment {
         }
 
     }
-
-
+    
+    
     void alert(String message) {
         AlertDialog.Builder bld = new AlertDialog.Builder(activity);
         bld.setMessage(message);

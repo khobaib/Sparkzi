@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sparkzi.R;
 import com.sparkzi.model.Essential;
-import com.sparkzi.model.Question;
+import com.sparkzi.utility.Utility;
 
 public class ProfileEssentialAdapter extends ArrayAdapter<Essential> {
     
@@ -50,8 +50,8 @@ public class ProfileEssentialAdapter extends ArrayAdapter<Essential> {
         
         Essential item = getItem(position);
 
-        holder.qText.setText(item.getEssentialText());
-        holder.ansText.setText(item.getAnswerText());
+        holder.qText.setText(Utility.capitalizeString(Utility.ESSENTIAL_TEXTS[position]));
+        holder.ansText.setText(item.getValue());
 
         return convertView;
     }

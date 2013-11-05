@@ -27,6 +27,7 @@
         <item>Last Night</item>
         <item>Search</item>
         <item>Favorites</item>
+        <item>Profile</item>
         <item>Settings</item>
         <item>Log out</item>
     </string-array>

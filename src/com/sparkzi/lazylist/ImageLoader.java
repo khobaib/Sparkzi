@@ -18,7 +18,14 @@ import java.util.concurrent.Executors;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
@@ -362,10 +369,13 @@ public class ImageLoader {
             if(imageViewReused(photoToLoad))
                 return;
             if(bitmap != null){
+                Bitmap circleBitmap = bitmap;
+//                Bitmap circleBitmap = getRoundedCornerBitmap(bitmap, 10); 
+                
                 if(imageWidth == 0)
-                    photoToLoad.imageView.setImageBitmap(bitmap);
+                    photoToLoad.imageView.setImageBitmap(circleBitmap);
                 else{
-                    Bitmap resizedBitmap = getResizedBannerBitmapWidth(bitmap, imageWidth);
+                    Bitmap resizedBitmap = getResizedBannerBitmapWidth(circleBitmap, imageWidth);
                     photoToLoad.imageView.setImageBitmap(resizedBitmap);
                     //                    resizedBitmap = null;
                 }
@@ -389,5 +399,29 @@ public class ImageLoader {
     public void clearCache() {
         memoryCache.clear();
         fileCache.clear();
+    }
+    
+    
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+//        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+        canvas.drawCircle(bitmap.getWidth()/2, bitmap.getHeight()/2, bitmap.getWidth()/2, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }

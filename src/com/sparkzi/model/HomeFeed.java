@@ -50,6 +50,14 @@ public class HomeFeed {
                 if(thisFeed != null){
                     String jsonString = thisFeed.toString();
                     HomeFeed feed = gson.fromJson(jsonString, HomeFeed.class);
+                    
+                    String imageUrl = feed.getPicUrl();
+                    if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
+                            !imageUrl.startsWith("https://")){
+                        imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
+                    }
+                    feed.setPicUrl(imageUrl);
+                    
                     feedList.add(feed);
                 }
             }
