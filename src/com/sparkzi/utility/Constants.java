@@ -77,5 +77,8 @@ public class Constants {
     public static final int PARENT_ACTIVITY_LOGIN = 101;
     public static final int PARENT_ACTIVITY_PROFILE = 102;
     
+    
+    public static final int RETRIEVE_ALL_CONVERSATIONS = 201;
+    public static final int RETRIEVE_SPECIFIC_USER_CONVERSATIONS = 202;
 
 }

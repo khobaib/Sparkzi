@@ -60,11 +60,11 @@ public class FavoriteFragment extends ListFragment {
 
         @Override
         protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "favs";
+            String url = Constants.URL_ROOT + "favs/all/1";
             ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url,
                     null, null, token);
             if(response.getStatus() == 200){
-                Log.d(">>>><<<<", "success in retrieving user info");
+                Log.d(">>>><<<<", "success in retrieving favorite info");
                 JSONObject responseObj = response.getjObj();
                 return responseObj;
             }

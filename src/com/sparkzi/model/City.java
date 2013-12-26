@@ -13,16 +13,16 @@ import com.google.gson.GsonBuilder;
 public class City {
     private int id;
     private int country_id;
-    private String city_name;
+    private String value;
     
     public City() {
         // TODO Auto-generated constructor stub
     }   
 
-    public City(int id, int countryId, String cityName) {
+    public City(int id, int countryId, String value) {
         this.id = id;
         this.country_id = countryId;
-        this.city_name = cityName;
+        this.value = value;
     }
     
     public static List<City> parseCity(JSONArray ctyArray){
@@ -65,12 +65,12 @@ public class City {
         this.country_id = countryId;
     }
 
-    public String getCityName() {
-        return city_name;
+    public String getvalue() {
+        return value;
     }
 
-    public void setCityName(String cityName) {
-        this.city_name = cityName;
+    public void setValue(String value) {
+        this.value = value;
     }
     
     

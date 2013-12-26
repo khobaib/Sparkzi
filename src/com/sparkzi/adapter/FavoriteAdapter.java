@@ -59,11 +59,11 @@ public class FavoriteAdapter extends ArrayAdapter<Favorite>{
         
         Favorite item = getItem(position);
         
-        String imageUrl = item.getPic();
+        String imageUrl = item.getPicUrl();
         imageLoader.DisplayImage(imageUrl, holder.UserImage);
 
         holder.userName.setText(item.getUsername());
-        holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender()].substring(0, 1));
+        holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender() - 1].substring(0, 1));
         
         return convertView;
     }

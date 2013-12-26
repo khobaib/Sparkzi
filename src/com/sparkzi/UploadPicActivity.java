@@ -95,7 +95,7 @@ public class UploadPicActivity extends Activity {
         Update.setVisibility(View.GONE);
 
         UserCred userCred = appInstance.getUserCred();
-        String imageUrl = userCred.getPic();
+        String imageUrl = userCred.getPicUrl();
 
         if(fromActivity == Constants.PARENT_ACTIVITY_PROFILE){
             ImageLoader imageLoader = new ImageLoader(UploadPicActivity.this);
@@ -412,14 +412,14 @@ public class UploadPicActivity extends Activity {
                     String status = responseObj.getString("status");
                     if(status.equals("OK")){
 
-                        String imageUrl = responseObj.getString("pic_url");
+                        String imageUrl = responseObj.getString("picUrl");
                         if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
                                 !imageUrl.startsWith("https://")){
                             imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
                             Log.d(TAG, "imageUrl after uploading in UploadPicActivity = " + imageUrl);
                             //                        Log.d("??????????", "image url = " + imageUrl);
                             UserCred userCred = appInstance.getUserCred();
-                            userCred.setPic(imageUrl);
+                            userCred.setPicUrl(imageUrl);
                             appInstance.setUserCred(userCred);
                         }
 

@@ -45,7 +45,7 @@ public class ProfileActivity extends FragmentActivity {
         
         appInstance = (SparkziApplication) getApplication();
         UserCred userCred = appInstance.getUserCred();
-        String imageUrl = userCred.getPic();
+        String imageUrl = userCred.getPicUrl();
         
         ImageLoader imageLoader = new ImageLoader(ProfileActivity.this);
         imageLoader.DisplayImage(imageUrl, ProfilePic);

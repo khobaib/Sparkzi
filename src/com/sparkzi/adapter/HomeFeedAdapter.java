@@ -71,8 +71,8 @@ public class HomeFeedAdapter extends ArrayAdapter<HomeFeed> {
         imageLoader.DisplayImage(imageUrl, holder.UserImage);
 
         holder.userName.setText(item.getUsername());
-        holder.timestamp.setText(item.getTimestamp());
-        holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender()].substring(0, 1));
+        holder.timestamp.setText(Utility.getFormattedTime(item.getTimestamp()));
+        holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender() - 1].substring(0, 1));
         
         if(item.getTemplate() == Constants.TEMPLATE_ID_SOMETHING_ELSE)
             holder.templateVerb.setText("");

@@ -90,9 +90,11 @@ public class JsonParser {
                     httpPut.setHeader("token", appToken);
                 }
 
-                StringEntity se = new StringEntity(content);
-                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                httpPut.setEntity(se);
+                if(content != null){
+                    StringEntity se = new StringEntity(content);
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    httpPut.setEntity(se);
+                }
 
                 httpResponse = httpClient.execute(httpPut);                
             }

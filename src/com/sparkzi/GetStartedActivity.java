@@ -44,7 +44,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
     Calendar calendar;
 
     JsonParser jsonParser;
-    private ProgressDialog pDialog;
+    ProgressDialog pDialog;
 
     List<Country> countryList;
     List<City> cityList;
@@ -130,6 +130,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
                 selectedCountryName = (String)parent.getItemAtPosition(position);
                 List<String> cityList = getCityList(countryList.get(position).getId());
+                Log.e(">>>", "city list size = " + cityList);
                 generateSpinner(sCity, cityList.toArray(new String[cityList.size()]));
             }
 
@@ -149,14 +150,14 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 
         for(City city : cityList){
             if(city.getCountryId() == countryId)
-                ctyList.add(city.getCityName());
+                ctyList.add(city.getvalue());
         }
         return ctyList;
     }
 
     private int getCityId(String cityName){
         for(City city : cityList){
-            if(city.getCityName().equals(cityName))
+            if(city.getvalue().equals(cityName))
                 return city.getId();
         }
         return -1;
@@ -291,19 +292,11 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
                         JSONArray ctyArray = responseObj.getJSONArray("feeds");
                         cityList = City.parseCity(ctyArray);
                         
-                        final List<String> ctyList = new ArrayList<String>();
+                        final List<String> cntryList = new ArrayList<String>();
                         for(Country country : countryList){
-                            ctyList.add(country.getValue());
+                            cntryList.add(country.getValue());
                         }
-                        generateSpinner(sCountry, ctyList.toArray(new String[ctyList.size()]));
-
-                        //                        runOnUiThread(new Runnable() {
-                        //
-                        //                            @Override
-                        //                            public void run() {                              
-                        //                            }
-                        //                            
-                        //                        });
+                        generateSpinner(sCountry, cntryList.toArray(new String[cntryList.size()]));
                     }
                     else{
                         alert("Invalid token.");

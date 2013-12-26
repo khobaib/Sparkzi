@@ -72,7 +72,7 @@ public class SparkziApplication extends Application {
         editor.putString(Constants.HOME_TOWN, userCred.getHometown());
         editor.putInt(Constants.COUNTRY, userCred.getCountry());
         editor.putInt(Constants.AGE, userCred.getAge());
-        editor.putString(Constants.PROFILE_PIC_URL, userCred.getPic());
+        editor.putString(Constants.PROFILE_PIC_URL, userCred.getPicUrl());
         editor.commit();
     }
     

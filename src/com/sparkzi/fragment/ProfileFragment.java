@@ -88,9 +88,9 @@ public class ProfileFragment extends Fragment {
             UserCred userCred = appInstance.getUserCred();
             
             UserName.setText(userCred.getUsername());
-            LookingFor.setText("looking for " + looking_for[userCred.getGender()]);
+            LookingFor.setText("looking for " + looking_for[userCred.getGender() - 1]);
             LivesIn.setText("lives in " + userCred.getHometown() + ", " + Utility.COUNTRY_LIST[userCred.getCountry()]);
-            AgeGender.setText(userCred.getAge() + " | " + Utility.Gender[userCred.getGender()].substring(0, 1));
+            AgeGender.setText(userCred.getAge() + " | " + Utility.Gender[userCred.getGender() - 1].substring(0, 1));
             
             FragmentPagerAdapter adapter = new ProfileAdapter(getChildFragmentManager());
 
@@ -106,7 +106,7 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "ProfileFragment onResume");
         UserCred userCred = appInstance.getUserCred();
-        String imageUrl = userCred.getPic();
+        String imageUrl = userCred.getPicUrl();
         Log.d(TAG, "imageUrl = " + imageUrl);
         imageLoader.DisplayImage(imageUrl, ProfilePic);
     }

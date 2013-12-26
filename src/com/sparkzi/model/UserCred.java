@@ -14,7 +14,7 @@ public class UserCred {
     private String hometown;
     private int country;
     private int age;
-    private String pic;
+    private String picUrl;
     
     public UserCred() {
         // TODO Auto-generated constructor stub
@@ -23,7 +23,7 @@ public class UserCred {
 
     
     public UserCred(String token, int uid, String username, String password, int gender, String hometown, int country,
-            int age, String pic) {
+            int age, String picUrl) {
         this.token = token;
         this.uid = uid;
         this.username = username;
@@ -32,7 +32,7 @@ public class UserCred {
         this.hometown = hometown;
         this.country = country;
         this.age = age;
-        this.pic = pic;
+        this.picUrl = picUrl;
     }
 
 
@@ -113,11 +113,11 @@ public class UserCred {
         this.age = age;
     }
 
-    public String getPic() {
-        return pic;
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public void setPic(String pic) {
-        this.pic = pic;
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
 }

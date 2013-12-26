@@ -16,19 +16,19 @@ public class Favorite {
     private int gender;
     private String hometown;
     private int country;
-    private String pic;
+    private String picUrl;
     private int age;
     
     public Favorite() {
     }
 
-    public Favorite(int uid, String username, int gender, String hometown, int country, String pic, int age) {
+    public Favorite(int uid, String username, int gender, String hometown, int country, String picUrl, int age) {
         this.uid = uid;
         this.username = username;
         this.gender = gender;
         this.hometown = hometown;
         this.country = country;
-        this.pic = pic;
+        this.picUrl = picUrl;
         this.age = age;
     }
     
@@ -47,12 +47,12 @@ public class Favorite {
                     String jsonString = thisFav.toString();
                     Favorite fav = gson.fromJson(jsonString, Favorite.class);
                     
-                    String imageUrl = fav.getPic();
+                    String imageUrl = fav.getPicUrl();
                     if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
                             !imageUrl.startsWith("https://")){
                         imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
                     }
-                    fav.setPic(imageUrl);
+                    fav.setPicUrl(imageUrl);
                     
                     favList.add(fav);
                 }
@@ -104,12 +104,12 @@ public class Favorite {
         this.country = country;
     }
 
-    public String getPic() {
-        return pic;
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public void setPic(String pic) {
-        this.pic = pic;
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
 
     public int getAge() {

@@ -6,12 +6,10 @@
 
     <ImageView
         android:id="@+id/iv_pic"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
         android:background="@drawable/nopic"
         android:scaleType="fitXY" />
 
@@ -19,29 +17,28 @@
         android:id="@+id/tv_age_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/iv_pic"
-        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/tv_name"
+        android:layout_alignLeft="@+id/tv_name"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="34 | F"
         android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tv_age_gender"
+        android:layout_alignTop="@+id/iv_pic"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="1dp"
         android:layout_toRightOf="@+id/iv_pic"
         android:ellipsize="end"
         android:maxLines="1"
         android:minLines="1"
         android:text="Khobaib"
         android:textColor="@color/black"
-        android:textSize="18dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
 
 </RelativeLayout>

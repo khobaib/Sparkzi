@@ -5,8 +5,7 @@
 
     <!--
          As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions.
-    -->
+         space available using match_parent in both dimensions.   -->
 
     <FrameLayout
         android:id="@+id/content_frame"
@@ -19,7 +18,7 @@
          languages and on the right side for right-to-left languages.
          The drawer is given a fixed width in dp and extends the full height of
          the container. A solid background is used for contrast
-         with the content view.
+         with the content view.
     -->
 
     <LinearLayout
@@ -33,8 +32,9 @@
         <RelativeLayout
             android:id="@+id/rl_menu_profile"
             android:layout_width="match_parent"
-            android:onClick="onClickMenuProfile"
             android:layout_height="150dp"
+            android:background="@drawable/back_drawer_top2"
+            android:onClick="onClickMenuProfile"
             android:orientation="vertical" >
 
             <ImageView
@@ -68,7 +68,7 @@
             android:id="@+id/left_drawer_child"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/white"
             android:choiceMode="singleChoice"
             android:divider="@color/app_theme"
             android:dividerHeight="1dp" />

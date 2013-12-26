@@ -144,12 +144,12 @@ public class SplashActivity extends Activity {
                         //                        String token = responseObj.getString("token");
                         //                        imageUrl = responseObj.getString("pic");
                         //                        Log.d("??????????", "image url = " + imageUrl);
-                        imageUrl = userCred.getPic();
+                        imageUrl = userCred.getPicUrl();
                         if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://") &&
                                 !imageUrl.startsWith("https://")){
                             imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
                             //                        Log.d("??????????", "image url = " + imageUrl);
-                            userCred.setPic(imageUrl);
+                            userCred.setPicUrl(imageUrl);
                         }
                         userCred.setPassword(password);
 
