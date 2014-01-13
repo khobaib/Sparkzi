@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.fragment.DatePickerFragment;
 import com.sparkzi.model.City;
 import com.sparkzi.model.Country;
@@ -51,8 +52,8 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.get_started);
 
         jsonParser = new JsonParser();
@@ -141,9 +142,22 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
         });
 
         new GetCountryList().execute();
-
-
     }
+    
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
+    }
+    
 
     private List<String> getCityList(int countryId){
         List<String> ctyList = new ArrayList<String>();

@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
@@ -77,9 +78,8 @@ public class UploadPicActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        //        BugSenseHandler.initAndStartSession(UploadPicActivity.this, "e8ecd3f1");
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.upload_pic);
 
         fromActivity = getIntent().getExtras().getInt(Constants.FROM_ACTIVITY);
@@ -107,6 +107,19 @@ public class UploadPicActivity extends Activity {
         //        imageLoader = new ImageLoader(UploadPicActivity.this);
         //        imageLoader.DisplayImage(imageUrl, ProfilePic);
 
+    }
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
     }
 
 
@@ -317,14 +330,6 @@ public class UploadPicActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //        BugSenseHandler.closeSession(UploadPicActivity.this);
     }
 
 

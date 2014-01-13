@@ -22,6 +22,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
@@ -46,8 +47,8 @@ public class NewConversationActivity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.new_conversation);
 
         appInstance = (SparkziApplication) getApplication();
@@ -69,6 +70,21 @@ public class NewConversationActivity extends Activity{
 
         new GetFavoriteList().execute();
     }
+    
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
+    }
+    
 
     public void onClickSend(View v){
         msgBody = etMsgBody.getText().toString().trim();

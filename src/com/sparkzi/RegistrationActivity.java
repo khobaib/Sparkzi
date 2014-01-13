@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.model.RegistrationInfo;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.parser.JsonParser;
@@ -40,8 +41,8 @@ public class RegistrationActivity extends Activity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.register);
         
         jsonParser = new JsonParser();        
@@ -55,6 +56,20 @@ public class RegistrationActivity extends Activity {
         etEmail = (EditText) findViewById(R.id.et_email);
         etPassword = (EditText) findViewById(R.id.et_password);
         etConfirmPass = (EditText) findViewById(R.id.et_confirm_password);       
+    }
+    
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
     }
     
 

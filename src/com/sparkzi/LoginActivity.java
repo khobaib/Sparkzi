@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -46,8 +47,8 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.login);
 
         pDialog = new ProgressDialog(LoginActivity.this);
@@ -82,6 +83,20 @@ public class LoginActivity extends Activity {
                 }               
             }
         });
+    }
+    
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
     }
 
 

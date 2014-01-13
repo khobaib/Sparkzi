@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.adapter.ThreadMessageAdapter;
 import com.sparkzi.loader.ConversationListLoader;
 import com.sparkzi.model.Conversation;
@@ -43,7 +44,7 @@ public class ThreadMessageActivity extends FragmentActivity implements LoaderMan
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.thread_message);
         
         UserCred userCred = ((SparkziApplication) getApplication()).getUserCred();
@@ -66,6 +67,19 @@ public class ThreadMessageActivity extends FragmentActivity implements LoaderMan
         getSupportLoaderManager().initLoader(LOADER_ID, null, ThreadMessageActivity.this);
         if(!pDialog.isShowing())
             pDialog.show();
+    }
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
     }
     
     

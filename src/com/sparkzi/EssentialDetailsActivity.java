@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.db.SparkziDatabase;
 import com.sparkzi.fragment.ProfileEssentialsfragment;
 import com.sparkzi.model.Essential;
@@ -60,8 +61,8 @@ public class EssentialDetailsActivity extends Activity implements OnItemSelected
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.essential_details);
 
         //        Bundle b = getIntent().getExtras();
@@ -433,5 +434,17 @@ public class EssentialDetailsActivity extends Activity implements OnItemSelected
     }
 
 
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
+    }
 
 }

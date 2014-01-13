@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.adapter.LeftDrawerAdapter;
 import com.sparkzi.fragment.ConversationsFragment;
 import com.sparkzi.fragment.DummyFragment;
@@ -64,8 +65,8 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.home);
 
         appInstance = (SparkziApplication) getApplication();
@@ -134,8 +135,20 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
+    }
+    
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
     }
 
 
@@ -311,7 +324,7 @@ public class MainActivity extends FragmentActivity {
         
         leftDrawerItem = new DrawerItem();
         leftDrawerItem.setName("Log out");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_home));
+        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_logout));
         drawerItemList.add(leftDrawerItem);
         
     }

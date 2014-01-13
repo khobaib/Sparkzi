@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -38,6 +39,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.splash_new);
 
         appInstance = (SparkziApplication) getApplication();
@@ -76,6 +78,19 @@ public class SplashActivity extends Activity {
             };
             timer.start();
         }
+    }
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
     }
 
 

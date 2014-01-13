@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.fragment.DummyFragment;
 import com.sparkzi.fragment.ProfileEssentialsfragment;
 import com.sparkzi.fragment.ProfileQuestionsFragment;
@@ -33,8 +34,8 @@ public class ProfileActivity extends FragmentActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
         setContentView(R.layout.profile);
         
         ProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
@@ -63,6 +64,21 @@ public class ProfileActivity extends FragmentActivity {
         final TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(pager);
     }
+    
+    
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        BugSenseHandler.startSession(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BugSenseHandler.closeSession(this);
+    }
+    
     
     
     class ProfileAdapter extends FragmentPagerAdapter{
