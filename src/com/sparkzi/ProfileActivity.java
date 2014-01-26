@@ -35,7 +35,7 @@ public class ProfileActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
+        BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.profile);
         
         ProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);

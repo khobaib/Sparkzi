@@ -41,7 +41,8 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
     Spinner sWhoIAm, sStartAge, sEndAge, sCountry, sCity;
     TextView tvDoB;
 
-    String whoAmI, startAge, endAge, selectedCountryName, selectedCityName;
+    String whoAmI, startAge, endAge, selectedCityName;
+    int countryId;
     Calendar calendar;
 
     JsonParser jsonParser;
@@ -53,7 +54,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
+        BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.get_started);
 
         jsonParser = new JsonParser();
@@ -129,7 +130,8 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedCountryName = (String)parent.getItemAtPosition(position);
+//                selectedCountryName = (String)parent.getItemAtPosition(position);
+                countryId = countryList.get(position).getId();
                 List<String> cityList = getCityList(countryList.get(position).getId());
                 Log.e(">>>", "city list size = " + cityList);
                 generateSpinner(sCity, cityList.toArray(new String[cityList.size()]));
@@ -215,7 +217,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
             i.putExtra("min_age", startAge);
             i.putExtra("max_age", endAge);
             i.putExtra("dob", tvDoB.getText().toString());
-            i.putExtra("country", selectedCountryName);
+            i.putExtra("country", countryId);
             i.putExtra("city", selectedCityName);
             startActivity(i);
         }
@@ -262,8 +264,8 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
                 try {
                     String status = responseObj.getString("status");
                     if(status.equals("OK")){
-                        JSONArray ctyArray = responseObj.getJSONArray("feeds");
-                        countryList = Country.parseCountry(ctyArray);
+                        JSONArray countryArray = responseObj.getJSONArray("feeds");
+                        countryList = Country.parseCountry(countryArray);
                     }
                     else{
                         alert("Invalid token.");

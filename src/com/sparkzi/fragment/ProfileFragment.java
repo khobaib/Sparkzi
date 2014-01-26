@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
             
             UserName.setText(userCred.getUsername());
             LookingFor.setText("looking for " + looking_for[userCred.getGender() - 1]);
-            LivesIn.setText("lives in " + userCred.getHometown() + ", " + Utility.COUNTRY_LIST[userCred.getCountry()]);
+            LivesIn.setText("lives in " + userCred.getHometown() + ", " + Utility.COUNTRY_LIST[userCred.getCountry() - 1]);
             AgeGender.setText(userCred.getAge() + " | " + Utility.Gender[userCred.getGender() - 1].substring(0, 1));
             
             FragmentPagerAdapter adapter = new ProfileAdapter(getChildFragmentManager());

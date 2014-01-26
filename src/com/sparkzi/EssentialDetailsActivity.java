@@ -62,7 +62,7 @@ public class EssentialDetailsActivity extends Activity implements OnItemSelected
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
+        BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.essential_details);
 
         //        Bundle b = getIntent().getExtras();

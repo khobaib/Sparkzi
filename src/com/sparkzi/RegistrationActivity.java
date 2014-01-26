@@ -30,8 +30,9 @@ public class RegistrationActivity extends Activity {
     
     EditText etUserName, etFirstName, etLastName, etEmail, etPassword, etConfirmPass;
     
-    String whoAmI, startAge, endAge, countryName, cityName, dob;
+    String whoAmI, startAge, endAge, cityName, dob;
     String userName, firstname, lastName, email, password, confirmPass;
+    int countryId;
     
     Bundle b;
     RegistrationInfo regInfo;
@@ -42,7 +43,7 @@ public class RegistrationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
+        BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.register);
         
         jsonParser = new JsonParser();        
@@ -79,7 +80,7 @@ public class RegistrationActivity extends Activity {
         whoAmI = b.getString("who_am_i");
         startAge = b.getString("min_age");
         endAge = b.getString("max_age");
-        countryName = b.getString("country");
+        countryId = b.getInt("country");
         cityName = b.getString("city");
         dob = b.getString("dob");
         
@@ -111,11 +112,11 @@ public class RegistrationActivity extends Activity {
             Toast.makeText(RegistrationActivity.this, "Password mismatch.", Toast.LENGTH_SHORT).show();
         }
         else{
-            regInfo.setGender((whoAmI.startsWith("M"))? "male" : "female");
+            regInfo.setGender((whoAmI.startsWith("M"))? 1 : 2);
             regInfo.setLowerAge(startAge);
             regInfo.setUpperAge(endAge);
             regInfo.setDob(dob);
-            regInfo.setCountry(countryName);
+            regInfo.setCountry(countryId);
             regInfo.setCity(cityName);
             
             regInfo.setUserName(userName);

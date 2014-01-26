@@ -2,14 +2,14 @@ package com.sparkzi.model;
 
 public class RegistrationInfo {
 
-    private String gender;
+    private int gender;         // 1 = male, 2 = female
     private String lowerAge;
     private String upperAge;
     private String dob;         // yyyy-mm-dd
     private String bYear;
     private String bMonth;
     private String bDate;
-    private String country;
+    private int country;
     private String city;
     private String userName;
     private String firstName;
@@ -23,7 +23,7 @@ public class RegistrationInfo {
     }
 
 
-    public RegistrationInfo(String gender, String lowerAge, String upperAge, String dob, String country, String city,
+    public RegistrationInfo(int gender, String lowerAge, String upperAge, String dob, int country, String city,
             String userName, String firstName, String lastName, String email, String password) {
         this.gender = gender;
         this.lowerAge = lowerAge;
@@ -38,16 +38,15 @@ public class RegistrationInfo {
         this.password = password;
     }
 
-
-    public String getGender() {
+    
+    
+    public int getGender() {
         return gender;
     }
 
-
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
-
 
     public String getLowerAge() {
         return lowerAge;
@@ -111,13 +110,11 @@ public class RegistrationInfo {
         this.bDate = bDate;
     }
 
-
-    public String getCountry() {
+    public int getCountry() {
         return country;
     }
 
-
-    public void setCountry(String country) {
+    public void setCountry(int country) {
         this.country = country;
     }
 

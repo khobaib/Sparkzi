@@ -66,7 +66,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
+        BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.home);
 
         appInstance = (SparkziApplication) getApplication();

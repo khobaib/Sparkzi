@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "3ec7fda7");
+        BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.splash_new);
 
         appInstance = (SparkziApplication) getApplication();
@@ -195,6 +195,7 @@ public class SplashActivity extends Activity {
                     }
                     else{
                         alert("Invalid username/password.", false);
+                        appInstance.setRememberMe(false);
                     }
                 } catch (JSONException e) {
                     alert("Registration Exception.", false);
