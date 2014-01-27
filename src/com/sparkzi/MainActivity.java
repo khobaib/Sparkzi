@@ -3,7 +3,15 @@ package com.sparkzi;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -34,8 +42,11 @@ import com.sparkzi.fragment.SearchFragment;
 import com.sparkzi.fragment.SettingsFragment;
 import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.DrawerItem;
+import com.sparkzi.model.Favorite;
+import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
+import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 import com.sparkzi.utility.Utility;
 
@@ -49,6 +60,8 @@ public class MainActivity extends FragmentActivity {
     LinearLayout mDrawerLinear;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    
+    private String token;
 
     //    private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -97,6 +110,8 @@ public class MainActivity extends FragmentActivity {
         UserCred userCred = appInstance.getUserCred();
         String userName = userCred.getUsername();
         String imageUrl = userCred.getPicUrl();
+        
+        token = userCred.getToken();
 
         imageLoader.DisplayImage(imageUrl, ivProfilePic);
         tvUserName.setText(userName);
@@ -256,6 +271,8 @@ public class MainActivity extends FragmentActivity {
             case SETTINGS:
                 myFragment = new SettingsFragment();
                 break;
+            case LOGOUT:
+                new logout().execute();
             default:
                 Log.e("????????", "DUMMY FRAGMENT");
                 myFragment = new DummyFragment();
@@ -328,6 +345,78 @@ public class MainActivity extends FragmentActivity {
         leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_logout));
         drawerItemList.add(leftDrawerItem);
         
+    }
+    
+    
+    
+    private class logout extends AsyncTask<Void, Void, JSONObject> {
+        
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            
+            pDialog.setMessage("Please wait...");
+            pDialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            String url = Constants.URL_ROOT + "session";
+            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_DELETE, url,
+                    null, null, token);
+            if(response.getStatus() == 200){
+                Log.d(">>>><<<<", "success in retrieving favorite info");
+                JSONObject responseObj = response.getjObj();
+                return responseObj;
+            }
+            else
+                return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject responseObj) {
+            super.onPostExecute(responseObj);
+            
+            if(pDialog.isShowing())
+                pDialog.dismiss();
+            
+            if(responseObj != null){
+                try {
+                    String status = responseObj.getString("status");
+                    if(status.equals("OK")){
+                        alert("Successfully logged out.");
+                    }
+                    else{
+                        alert("Couldn't log out successfully.");
+                    }
+                } catch (JSONException e) {
+                    alert("Exception.");
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+
+    void alert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(MainActivity.this);
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                
+                appInstance.setRememberMe(false);
+                
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+                return;
+            }
+        });
+        bld.create().show();
     }
 
 

@@ -11,6 +11,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -97,6 +98,21 @@ public class JsonParser {
                 }
 
                 httpResponse = httpClient.execute(httpPut);                
+            } else if(reqType == Constants.REQUEST_TYPE_DELETE){
+                HttpDelete httpDelete = new HttpDelete(url);
+                httpDelete.setHeader("Content-Type", "application/json");
+                httpDelete.setHeader("Accept", "application/json");
+                if (appToken != null){
+                    httpDelete.setHeader("token", appToken);
+                }
+
+                if(content != null){
+                    StringEntity se = new StringEntity(content);
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    ((HttpResponse) httpDelete).setEntity(se);
+                }
+
+                httpResponse = httpClient.execute(httpDelete);                
             }
 
             status = httpResponse.getStatusLine().getStatusCode();

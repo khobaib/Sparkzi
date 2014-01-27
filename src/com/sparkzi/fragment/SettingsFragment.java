@@ -125,7 +125,7 @@ public class SettingsFragment extends Fragment{
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(activity);
-            pDialog.setMessage("Loading...");
+            pDialog.setMessage("Please wait...");
             pDialog.show();
         }
 
