@@ -83,9 +83,10 @@ public class FavoriteRequestSentFragment extends ListFragment{
                         favAdapter.setData(fList);
                         if (isResumed()) {
                             setListShown(true);
-                        } else {
-                            setListShownNoAnimation(true);
-                        }                               
+                        } 
+//                        else {
+//                            setListShownNoAnimation(true);
+//                        }                               
                     }
                     else{
                         alert("Invalid token.");

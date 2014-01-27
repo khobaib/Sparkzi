@@ -16,7 +16,7 @@ import com.viewpagerindicator.TabPageIndicator;
 public class FavoriteFragment extends Fragment {
     
     private static final String   TAG        = FavoriteFragment.class.getSimpleName();
-    private static final String[] CONTENT    = new String[] { "Favorites", "Pending", "Request sent" };
+    private static final String[] CONTENT    = new String[] { "Favorites", "Pending", "Req sent" };
     
     private Activity activity;
 
