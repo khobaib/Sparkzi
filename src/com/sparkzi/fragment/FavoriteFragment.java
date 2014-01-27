@@ -1,128 +1,77 @@
 package com.sparkzi.fragment;
 
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.widget.ListView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.sparkzi.adapter.FavoriteAdapter;
-import com.sparkzi.model.Favorite;
-import com.sparkzi.model.Question;
-import com.sparkzi.model.ServerResponse;
-import com.sparkzi.model.UserCred;
-import com.sparkzi.parser.JsonParser;
-import com.sparkzi.utility.Constants;
-import com.sparkzi.utility.SparkziApplication;
+import com.sparkzi.R;
+import com.viewpagerindicator.TabPageIndicator;
 
-public class FavoriteFragment extends ListFragment {
+public class FavoriteFragment extends Fragment {
     
-    private static final String TAG = FavoriteFragment.class.getSimpleName();
-    private Activity activity;   
-    JsonParser jsonParser;
+    private static final String   TAG        = FavoriteFragment.class.getSimpleName();
+    private static final String[] CONTENT    = new String[] { "Favorites", "Pending", "Request sent" };
     
-    private FavoriteAdapter favAdapter;
+    private Activity activity;
 
-    private String token;
+    private ViewPager mViewPager;
+    private TabPageIndicator indicator;
+    
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.layout_favorite, container, false);
+        mViewPager = (ViewPager) view.findViewById(R.id.pager);
+        indicator = (TabPageIndicator) view.findViewById(R.id.indicator);
+
+
+        return view;
+    }
+    
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         activity = getActivity();
-        jsonParser = new JsonParser();
-        
-        UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
-        token = userCred.getToken();
-        ListView lv = getListView();
-        lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
-        lv.setDividerHeight(3);
-        
-        favAdapter = new FavoriteAdapter(activity, null);
-        setListAdapter(favAdapter);
-        setListShown(false);
-        
-        new GetFavoriteInfo().execute();
+        if(activity != null){
+            final FragmentPagerAdapter adapter = new FavoriteListAdapter(getChildFragmentManager());
+            mViewPager.setAdapter(adapter);
+            mViewPager.setOffscreenPageLimit(2);
+            
+            indicator.setViewPager(mViewPager);
+        }
     }
     
     
-    private class GetFavoriteInfo extends AsyncTask<Void, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "favs/all/1";
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url,
-                    null, null, token);
-            if(response.getStatus() == 200){
-                Log.d(">>>><<<<", "success in retrieving favorite info");
-                JSONObject responseObj = response.getjObj();
-                return responseObj;
-            }
-            else
-                return null;
+    class FavoriteListAdapter extends FragmentPagerAdapter{
+        public FavoriteListAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(responseObj);
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){
-                        JSONObject favObj = responseObj.getJSONObject("favs");
-                        JSONArray addedFavArray = favObj.getJSONArray("favs");
-                        final List<Favorite> fList = Favorite.parseFavorite(addedFavArray);
-                        
-//                        activity.runOnUiThread(new Runnable() {
-//
-//                            @Override
-//                            public void run() {
-                                favAdapter.setData(fList);
-                                if (isResumed()) {
-                                    setListShown(true);
-                                } else {
-                                    setListShownNoAnimation(true);
-                                }                               
-                            }
-                            
-//                        });
-//                    }
-                    else{
-                        alert("Invalid token.");
-                    }
-                } catch (JSONException e) {
-                    alert("Exception.");
-                    e.printStackTrace();
-                }
-            }
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return new FavoriteAddedFragment();
+            } else if (position == 1) {
+                return new FavoritePendingFragment();
+            } else
+                return new FavoriteRequestSentFragment();
         }
 
-    }
-    
-    
-    void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(activity);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return CONTENT[position % CONTENT.length];
+        }
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                activity.finish();
-            }
-        });
-        bld.create().show();
+        @Override
+        public int getCount() {
+            return CONTENT.length;
+        }
     }
 
 }

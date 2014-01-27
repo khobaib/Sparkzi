@@ -25,6 +25,7 @@ import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.adapter.LeftDrawerAdapter;
 import com.sparkzi.fragment.ConversationsFragment;
 import com.sparkzi.fragment.DummyFragment;
+import com.sparkzi.fragment.FavoriteAddedFragment;
 import com.sparkzi.fragment.FavoriteFragment;
 import com.sparkzi.fragment.HomeFragment;
 import com.sparkzi.fragment.LastNightFragment;
