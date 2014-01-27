@@ -67,7 +67,7 @@ public class SearchFragment extends Fragment{
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedGender = position + 1;
+                selectedGender = position;
             }
 
             @Override

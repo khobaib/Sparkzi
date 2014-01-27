@@ -19,7 +19,7 @@
 
     <Spinner
         android:id="@+id/s_gender"
-        android:layout_width="150dp"
+        android:layout_width="170dp"
         android:layout_height="40dp"
         android:layout_marginLeft="10dp"
         android:layout_alignBottom="@+id/tv_show_me"

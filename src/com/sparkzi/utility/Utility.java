@@ -27,7 +27,7 @@ public class Utility {
     
     public static final String[] WHO_I_AM = {"Man looking for a woman", "Woman looking for a man"};
     
-    public static final String[] SHOW_ME = {"Men", "Women", "Both"};
+    public static final String[] SHOW_ME = {"Both men & women", "Men", "Women"};
     
     public static final String[] ACTIVITY_TEMPLATE = {
       "saw a movie", "listened to music", "watched television", "ate at a restaurant",
