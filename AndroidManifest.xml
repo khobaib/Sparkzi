@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sparkzi"
     android:versionCode="4"
-    android:versionName="0.00.06" >
+    android:versionName="0.00.07" >
 
     <uses-sdk
         android:minSdkVersion="14"
