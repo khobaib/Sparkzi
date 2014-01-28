@@ -10,7 +10,7 @@
         android:layout_height="70dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/nopic"
+        android:background="@drawable/ic_contact_picture_holo_light"
         android:scaleType="fitXY" />
 
     <TextView

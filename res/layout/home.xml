@@ -45,7 +45,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="12dp"
                 android:layout_marginLeft="12dp"
-                android:background="@drawable/nopic"
+                android:background="@drawable/ic_contact_picture_holo_light"
                 android:scaleType="fitXY" />
 
             <TextView

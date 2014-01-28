@@ -54,7 +54,7 @@ public class ImageLoader {
         fileCache = new FileCache(context);
         executorService = Executors.newFixedThreadPool(5);
         //        this.defaultFrame = defaultFrame;
-        this.defaultFrame = BitmapFactory.decodeResource(((Activity)context).getResources(), R.drawable.nopic);
+        this.defaultFrame = BitmapFactory.decodeResource(((Activity)context).getResources(), R.drawable.ic_contact_picture_holo_light);
         this.imageWidth = 0;
     }
 
@@ -63,7 +63,7 @@ public class ImageLoader {
         fileCache = new FileCache(context);
         executorService = Executors.newFixedThreadPool(5);
         //        this.defaultFrame = defaultFrame;
-        this.defaultFrame = BitmapFactory.decodeResource(((Activity)context).getResources(), R.drawable.nopic);
+        this.defaultFrame = BitmapFactory.decodeResource(((Activity)context).getResources(), R.drawable.ic_contact_picture_holo_light);
 
         this.imageWidth = imageWidth;
     }

@@ -19,7 +19,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:background="@drawable/nopic"
+            android:background="@drawable/ic_contact_picture_holo_light"
             android:scaleType="fitXY" />
 
         <TextView
