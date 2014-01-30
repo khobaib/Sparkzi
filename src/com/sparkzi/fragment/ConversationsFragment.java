@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sparkzi.NewConversationActivity;
 import com.sparkzi.R;
@@ -100,8 +99,13 @@ public class ConversationsFragment extends ListFragment implements LoaderManager
         Conversation selectedConv = (Conversation) l.getItemAtPosition(position);
         String username = selectedConv.getUsername();
         
+        UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
+        int myUId = userCred.getUid();
+        
+        
         Intent i = new Intent(activity, ThreadMessageActivity.class);
         i.putExtra("user_name", username);
+        i.putExtra("user_id", (myUId == selectedConv.getUfrom()) ? selectedConv.getUto() : selectedConv.getUfrom());
         startActivity(i);
     }
 

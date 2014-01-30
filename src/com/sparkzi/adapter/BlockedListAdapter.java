@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.sparkzi.R;
 import com.sparkzi.lazylist.ImageLoader;
-import com.sparkzi.model.Favorite;
+import com.sparkzi.model.BlockedUser;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -31,16 +31,17 @@ import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 import com.sparkzi.utility.Utility;
 
-public class SearchAdapter extends ArrayAdapter<Favorite>{
+public class BlockedListAdapter extends ArrayAdapter<BlockedUser>{
     
     private Context mContext;
     private LayoutInflater mInflater;
     private ImageLoader imageLoader;
     private JsonParser jsonParser;
     private ProgressDialog pDialog;
-
-    public SearchAdapter(Context context, List<Favorite> qList) {
-        super(context, R.layout.row_search);
+    
+    
+    public BlockedListAdapter(Context context, List<BlockedUser> qList) {
+        super(context, R.layout.row_blocked_user);
         this.mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         imageLoader = new ImageLoader((Activity) mContext);
@@ -53,7 +54,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
         ImageView UserImage;
         TextView userName;
         TextView userAgeGender;
-        Button bAddToFav;
+        Button bUnblock;
     }
     
     
@@ -63,35 +64,30 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
         final ViewHolder holder;
         
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.row_search, null);
+            convertView = mInflater.inflate(R.layout.row_blocked_user, null);
 
             holder = new ViewHolder();
             holder.UserImage = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.userName = (TextView) convertView.findViewById(R.id.tv_name);  
             holder.userAgeGender = (TextView) convertView.findViewById(R.id.tv_age_gender); 
-            holder.bAddToFav = (Button) convertView.findViewById(R.id.b_add_to_fav);
+            holder.bUnblock = (Button) convertView.findViewById(R.id.b_unblock);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        holder.bAddToFav.setOnClickListener(new OnClickListener() {
+        holder.bUnblock.setOnClickListener(new OnClickListener() {
             
             @Override
             public void onClick(View v) {
-                if(((Button) v).getText().equals("Request sent")){
-                    alert("You already sent a request.");
-                    return;
-                }
-                Favorite item = getItem(position);
-                String username = item.getUsername();
-                new RequestAddFav(holder.bAddToFav).execute(username);
-                
+                BlockedUser item = getItem(position);
+                int uid = item.getUid();
+                new RequestUnblockUser(position).execute(uid);         
             }
         });
         
-        Favorite item = getItem(position);
+        BlockedUser item = getItem(position);
         
         String imageUrl = item.getPicUrl();
         imageLoader.DisplayImage(imageUrl, holder.UserImage);
@@ -103,33 +99,44 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
     }
     
     
-    public void setData(List<Favorite> favList) {
+    public void setData(List<BlockedUser> bUserList) {
         clear();
-        if (favList != null) {
-            for (int i = 0; i < favList.size(); i++) {
-                add(favList.get(i));
+        if (bUserList != null) {
+            for (int i = 0; i < bUserList.size(); i++) {
+                add(bUserList.get(i));
             }
         }
     }
     
     
-    private class RequestAddFav extends AsyncTask<String, Void, JSONObject> {
+    void alert(String message) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(mContext);
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        });
+        bld.create().show();
+    }
+    
+    
+    private class RequestUnblockUser extends AsyncTask<Integer, Void, JSONObject> {    
         
-        private View v;
+        int position;
         
-        public RequestAddFav() {
-            // TODO Auto-generated constructor stub
+        public RequestUnblockUser(int position) {
+            this.position = position;
         }
-        
-        public RequestAddFav(View v) {
-            this.v = v;
-        }      
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             if(!pDialog.isShowing()){
-                pDialog.setMessage("A moment...");
+                pDialog.setMessage("Please wait...");
                 pDialog.setCancelable(false);
                 pDialog.setIndeterminate(true);
                 pDialog.show();
@@ -137,13 +144,13 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
         }
 
         @Override
-        protected JSONObject doInBackground(String... params) {
-            String url = Constants.URL_ROOT + "favs/" + params[0];
+        protected JSONObject doInBackground(Integer... params) {
+            String url = Constants.URL_ROOT + "block/" + params[0];
             
             UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
             String token = userCred.getToken();
             
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
+            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_DELETE, url,
                     null, null, token);
             if(response.getStatus() == 200){
                 Log.d(">>>><<<<", "success - getting response");
@@ -161,8 +168,12 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
             if(responseObj != null){
                 try {
                     String status = responseObj.getString("status");
-                    if(status.equals("OK")){   
-                        ((Button) v).setText("Request sent");
+                    if(status.equals("OK")){ 
+                        String desc = responseObj.getString("description");
+                        if(desc.equals("User unblocked")){
+                            remove(getItem(position));
+                            notifyDataSetChanged();
+                        }
                     }
                     else{
                         alert("Invalid token.");
@@ -177,21 +188,6 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
                 pDialog.dismiss();
         }
 
-    }
-    
-    
-    void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(mContext);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
-            }
-        });
-        bld.create().show();
     }
 
 }

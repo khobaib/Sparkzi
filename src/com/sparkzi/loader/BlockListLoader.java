@@ -8,58 +8,47 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
-import com.sparkzi.MainActivity;
-import com.sparkzi.model.Conversation;
-import com.sparkzi.model.HomeFeed;
+import com.sparkzi.model.BlockedUser;
 import com.sparkzi.model.ServerResponse;
-import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
-import com.sparkzi.utility.SparkziApplication;
 
-public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>>{
-
-    private static final String TAG = ConversationListLoader.class.getSimpleName();
+public class BlockListLoader extends AsyncTaskLoader<List<BlockedUser>>{
+    
+    
+    private static final String TAG = BlockListLoader.class.getSimpleName();
 
     private JsonParser jsonParser;
 
     private String token;
-    private String username;
-    private int listType;
 
-    private List<Conversation> mConvs;                  // holder to keep previous conv while copying new ones
+    private List<BlockedUser> mBlockedUsers;                  // holder to keep previous blockedUser while copying new ones
 
-    public ConversationListLoader(Context context, String token,int listType, String userName) {
+    public BlockListLoader(Context context, String token) {
         super(context);
         jsonParser = new JsonParser();       
-        this.username = userName;
+
         this.token = token;
     }
 
     @Override
-    public List<Conversation> loadInBackground() {
+    public List<BlockedUser> loadInBackground() {
         
-        String rootUrl = Constants.URL_ROOT;
-        if(listType == Constants.RETRIEVE_ALL_CONVERSATIONS)
-            rootUrl = rootUrl + "messages";
-        else
-            rootUrl = rootUrl + "messages/" + username;
-        Log.d(TAG, "token - " + token);
+        String url = Constants.URL_ROOT + "block";
 
         ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET,
-                rootUrl, null, null, token);
+                url, null, null, token);
         
         if(response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS){
             JSONObject responseObj = response.getjObj();
             try {
                 String status = responseObj.getString("status");
                 String desc = responseObj.getString("description");
-                JSONArray msgArray = responseObj.getJSONArray("messages");
+                JSONArray bUserArray = responseObj.getJSONArray("result");
                 
-                List<Conversation> convList = Conversation.parseConversationList(msgArray);
-                return convList;
+                List<BlockedUser> bUserList = BlockedUser.parseBlockedUserList(bUserArray);
+                return bUserList;
                 
             } catch (JSONException e) {                
                 e.printStackTrace();
@@ -72,7 +61,7 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>>{
 
 
     @Override
-    public void deliverResult(List<Conversation> convs) {
+    public void deliverResult(List<BlockedUser> blockedUserList) {
         if (isReset()) {
             // The Loader has been reset; ignore the result and invalidate the data.
             // This can happen when the Loader is reset while an asynchronous query
@@ -80,26 +69,26 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>>{
             // finishes its work and attempts to deliver the results to the client,
             // it will see here that the Loader has been reset and discard any
             // resources associated with the new data as necessary.
-            if (convs != null) {
-                releaseResources(convs);
+            if (blockedUserList != null) {
+                releaseResources(blockedUserList);
                 return;
             }
         }
 
         // Hold a reference to the old data so it doesn't get garbage collected.
         // We must protect it until the new data has been delivered.
-        List<Conversation> oldConvs = mConvs;
-        mConvs = convs;
+        List<BlockedUser> oldBlockedUserList = mBlockedUsers;
+        mBlockedUsers = blockedUserList;
 
         if (isStarted()) {
             // If the Loader is in a started state, have the superclass deliver the
             // results to the client.
-            super.deliverResult(convs);
+            super.deliverResult(blockedUserList);
         }
 
         // Invalidate the old data as we don't need it any more.
-        if (oldConvs != null && oldConvs != convs) {
-            releaseResources(oldConvs);
+        if (oldBlockedUserList != null && oldBlockedUserList != blockedUserList) {
+            releaseResources(oldBlockedUserList);
         }
     }
 
@@ -108,12 +97,12 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>>{
     @Override
     protected void onStartLoading() {
 
-        if (mConvs != null) {
+        if (mBlockedUsers != null) {
             // Deliver any previously loaded data immediately.
-            deliverResult(mConvs);
+            deliverResult(mBlockedUsers);
         }
 
-        if (mConvs == null) {
+        if (mBlockedUsers == null) {
             // If the current data is null... then we should make it non-null! :)
             forceLoad();
         }
@@ -133,25 +122,25 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>>{
         // Ensure the loader is stopped.
         onStopLoading();
 
-        if (mConvs != null) {
-            releaseResources(mConvs);
-            mConvs = null;
+        if (mBlockedUsers != null) {
+            releaseResources(mBlockedUsers);
+            mBlockedUsers = null;
         }
     }
 
 
     @Override
-    public void onCanceled(List<Conversation> convs) {
+    public void onCanceled(List<BlockedUser> bUserList) {
         // Attempt to cancel the current asynchronous load.
-        super.onCanceled(convs);
+        super.onCanceled(bUserList);
 
         // The load has been canceled, so we should release the resources
         // associated with 'mApps'.
-        releaseResources(convs);
+        releaseResources(bUserList);
     }
 
 
-    private void releaseResources(List<Conversation> convs) {
+    private void releaseResources(List<BlockedUser> bUserList) {
         // For a simple List, there is nothing to do. For something like a Cursor,
         // we would close it in this method. All resources associated with the
         // Loader should be released here.

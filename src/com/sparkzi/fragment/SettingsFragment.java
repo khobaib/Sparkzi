@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.sparkzi.BlockListActivity;
 import com.sparkzi.R;
 import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
@@ -43,7 +45,7 @@ public class SettingsFragment extends Fragment{
     private JsonParser jsonParser;
     private String token;
     
-    RelativeLayout rlChangePassword;
+    RelativeLayout rlChangePassword, rlBlockList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +58,17 @@ public class SettingsFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 onClickChangePassword();
+                
+            }
+        });
+        
+        rlBlockList = (RelativeLayout) view.findViewById(R.id.rl_block_list);
+        rlBlockList.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(activity, BlockListActivity.class);
+                activity.startActivity(i);
                 
             }
         });
