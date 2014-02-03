@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,20 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemSelectedListener;
 
-import com.sparkzi.GetStartedActivity;
-import com.sparkzi.LoginActivity;
 import com.sparkzi.MainActivity;
-import com.sparkzi.ProfileActivity;
 import com.sparkzi.R;
-import com.sparkzi.RegistrationActivity;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -54,6 +50,8 @@ public class LastNightFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         View view = inflater.inflate(R.layout.last_night_fragment, null);
 
@@ -88,6 +86,7 @@ public class LastNightFragment extends Fragment {
 
         activity = getActivity();
         if(activity != null){
+//            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             
             templateIndex = 0;
             jsonParser = new JsonParser();        

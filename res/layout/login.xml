@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/iv_app_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_width="218dp"
+        android:layout_height="110dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
@@ -18,7 +18,9 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/iv_app_logo"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_login" >
 
         <TextView
