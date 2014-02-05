@@ -41,6 +41,11 @@ public class Constants {
     
     public static final int TEMPLATE_ID_SOMETHING_ELSE = 8;
     
+    public static final int FAVORITE_STATUS_STRANGER = 1;
+    public static final int FAVORITE_STATUS_FRIEND = 2;
+    public static final int FAVORITE_STATUS_SENT = 3;
+    public static final int FAVORITE_STATUS_WAITING = 4;
+    
     
     public static final String URL_ROOT = "http://sparkzi.com/api/apinew/";
 

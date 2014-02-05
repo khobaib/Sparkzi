@@ -15,6 +15,7 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.sparkzi.Interface.QuestionListInterface;
 import com.sparkzi.adapter.ProfileQuestionsAdapter;
 import com.sparkzi.model.Question;
 import com.sparkzi.model.ServerResponse;
@@ -23,7 +24,7 @@ import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
-public class ProfileQuestionsFragment extends ListFragment {
+public class ProfileQuestionsFragment extends ListFragment implements QuestionListInterface{
 
     private Activity activity;
     JsonParser jsonParser;
@@ -43,7 +44,6 @@ public class ProfileQuestionsFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
 
         activity = getActivity();
@@ -55,7 +55,7 @@ public class ProfileQuestionsFragment extends ListFragment {
         lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
         lv.setDividerHeight(3);
 
-        pQuestionAdapter = new ProfileQuestionsAdapter(activity, null);
+        pQuestionAdapter = new ProfileQuestionsAdapter(activity, this, null, token);
         setListAdapter(pQuestionAdapter);
         setListShown(false);
 
@@ -116,8 +116,8 @@ public class ProfileQuestionsFragment extends ListFragment {
 
     }
 
-
-    void alert(String message) {
+    
+    public void alert(String message) {
         AlertDialog.Builder bld = new AlertDialog.Builder(activity);
         bld.setMessage(message);
         bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -131,4 +131,10 @@ public class ProfileQuestionsFragment extends ListFragment {
         bld.create().show();
     }
 
+    @Override
+    public void updateQuestionList() {
+        new GetQuestionInfo().execute();     
+    }
+    
 }
+

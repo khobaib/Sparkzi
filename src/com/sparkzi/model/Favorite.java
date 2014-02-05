@@ -18,11 +18,14 @@ public class Favorite {
     private int country;
     private String picUrl;
     private int age;
+    private int favStatus;
     
     public Favorite() {
     }
 
-    public Favorite(int uid, String username, int gender, String hometown, int country, String picUrl, int age) {
+
+    public Favorite(int uid, String username, int gender, String hometown, int country, String picUrl, int age,
+            int favStatus) {
         this.uid = uid;
         this.username = username;
         this.gender = gender;
@@ -30,9 +33,12 @@ public class Favorite {
         this.country = country;
         this.picUrl = picUrl;
         this.age = age;
+        this.favStatus = favStatus;
     }
-    
-    
+
+
+
+
     public static List<Favorite> parseFavorite(JSONArray favArray){
         List<Favorite> favList = new ArrayList<Favorite>(); 
                 
@@ -118,6 +124,14 @@ public class Favorite {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public int getFavStatus() {
+        return favStatus;
+    }
+
+    public void setFavStatus(int favStatus) {
+        this.favStatus = favStatus;
     }
 
 }

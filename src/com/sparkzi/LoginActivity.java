@@ -9,13 +9,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -84,8 +85,8 @@ public class LoginActivity extends Activity {
             }
         });
     }
-    
-    
+
+
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
@@ -117,68 +118,86 @@ public class LoginActivity extends Activity {
         startActivity(new Intent(LoginActivity.this, GetStartedActivity.class));
     }
 
+
     public void onClickForgetPassword(){
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-        startActivity(browserIntent);
+
+        LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+        View textEntryView = inflater.inflate(R.layout.dialog_forget_password, null);
+        final AlertDialog alert = new AlertDialog.Builder(LoginActivity.this).create();
+        alert.setView(textEntryView, 0, 0, 0, 0);
+
+        final EditText etUserName = (EditText) textEntryView.findViewById(R.id.et_username);
+
+        Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
+        OK.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String userName = etUserName.getText().toString();
+                alert.dismiss(); 
+                new SendForgetPassRequest().execute(userName);
+            }
+
+        });
+        alert.show();
     }
 
 
-    //    public class SendForgetPassRequest extends AsyncTask<String, Void, String> {
-    //        
-    //        @Override
-    //        protected void onPreExecute() {
-    //            super.onPreExecute();
-    //            pDialog.setMessage("Loading...");
-    //            pDialog.setIndeterminate(true);
-    //            pDialog.setCancelable(true);
-    //            pDialog.show();
-    //        }
-    //
-    //        @Override
-    //        protected String doInBackground(String... params) {
-    //            String rootUrl = Constants.URL_ROOT;
-    //
-    //            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
-    //            urlParam.add(new BasicNameValuePair("method", Constants.METHOD_FORGET_PASSWORD));
-    //            
-    //            try {
-    //                JSONObject emailObj = new JSONObject();
-    //                emailObj.put("email", params[0]);
-    //                String emailData = emailObj.toString();
-    //
-    //                ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, rootUrl,
-    //                        urlParam, emailData, null);
-    //                if(response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS){
-    //                    Log.d(">>>><<<<", "RESPONSE_STATUS_CODE_SUCCESS");
-    //                    JSONObject responsObj = response.getjObj();
-    //                    String login = responsObj.getString("response");
-    //                    return login;
-    //                }
-    //                return "false";
-    //            } catch (JSONException e) {                
-    //                e.printStackTrace();
-    //                return "false";
-    //            }
-    //        }
-    //        
-    //        
-    //        @Override
-    //        protected void onPostExecute(String result) {
-    //            if(pDialog.isShowing())
-    //                pDialog.dismiss();
-    //            if(result.equals("success")){
-    //                alert("Your password is sent to your email adderess.");
-    //            }
-    //            else if(result.equals("email doesn't exist")){
-    //                alert("This email address doesn't exist.");
-    //            }
-    //            else{
-    //                alert("Request Failure.");
-    //            }
-    //
-    //        }
-    //        
-    //    }
+    public class SendForgetPassRequest extends AsyncTask<String, Void, JSONObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.setMessage("Loading...");
+            pDialog.setIndeterminate(true);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            Log.d("MARKER", "reached this point");
+            String url = Constants.URL_ROOT + "user/" + params[0]+ "/reset";
+
+
+            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
+                    null, null, null);
+            if(response.getStatus() == 200){
+                Log.d(">>>><<<<", "success in sending pass-reset request");
+                JSONObject responseObj = response.getjObj();
+                return responseObj;
+            }
+            else
+                return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(JSONObject responseObj) {
+            if(pDialog.isShowing())
+                pDialog.dismiss();                                
+            if(responseObj != null){
+                try {
+                    String status = responseObj.getString("status");
+                    if(status.equals("OK")){  
+                        alert("Check your email for new password.");
+                    }
+                    else{
+                        alert("Invalid username/password.");
+                    }
+                } catch (JSONException e) {
+                    alert("Connecting to server Exception.");
+                    e.printStackTrace();
+                }
+            }
+            else{
+                alert("Connection error, please try again.");
+            }
+        }
+    }
+    
+    
+    
 
     private class Login extends AsyncTask<Void, Void, JSONObject> {
 

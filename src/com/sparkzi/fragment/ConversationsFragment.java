@@ -79,7 +79,7 @@ public class ConversationsFragment extends ListFragment implements LoaderManager
     
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-       inflater.inflate(R.menu.splash, menu);
+       inflater.inflate(R.menu.menu_conversation, menu);
     }
     
     @Override

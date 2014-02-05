@@ -85,17 +85,18 @@
             android:textColor="@color/app_theme"
             android:textSize="16dp" />
 
-        <Button
+<!--         <Button
             android:id="@+id/bShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_below="@+id/et_elaborate"
             android:layout_alignParentBottom="true"
             android:padding="15dp"
             android:text="Share"
             android:textColor="@color/white"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textStyle="bold" /> -->
     </RelativeLayout>
 
 </ScrollView>

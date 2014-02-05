@@ -87,6 +87,11 @@ public class ProfileEssentialsfragment extends ListFragment {
         setListShown(false);
 
         eList = new ArrayList<Essential>();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
         new GetEssentialInfo().execute();
     }
 

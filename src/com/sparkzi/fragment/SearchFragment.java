@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment{
     private static final String TAG = SearchFragment.class.getSimpleName();
     private Activity activity;
     
-    Spinner sShowMe, sStartAge, sEndAge, sCountry;
+    Spinner sStartAge, sEndAge, sCountry;
     Button bSearch;
     ListView lvSearchResult;
     
@@ -54,7 +54,7 @@ public class SearchFragment extends Fragment{
     
     List<Country> countryList;
     
-    int selectedGender, selectedMinAge, selectedMaxAge, selectedCountryId;
+    int oppositeGender, selectedMinAge, selectedMaxAge, selectedCountryId;
     
     
     @Override
@@ -62,19 +62,19 @@ public class SearchFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_search, null);
         
-        sShowMe = (Spinner) view.findViewById(R.id.s_gender);
-        sShowMe.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedGender = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });
+//        sShowMe = (Spinner) view.findViewById(R.id.s_gender);
+//        sShowMe.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+//                oppositeGender = position;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> arg0) {
+//
+//            }
+//        });
         
         
         sStartAge = (Spinner) view.findViewById(R.id.s_start_age);
@@ -130,6 +130,8 @@ public class SearchFragment extends Fragment{
                     Toast.makeText(activity, "Please choose a valid age interval.", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
+                    oppositeGender = (userCred.getGender() == 1) ? 2 : 1;
                     new GetSearchResult().execute();
                 }
                 
@@ -156,7 +158,7 @@ public class SearchFragment extends Fragment{
             
             new GetCountryList().execute();
             
-            generateSpinner(sShowMe, Utility.SHOW_ME);
+//            generateSpinner(sShowMe, Utility.SHOW_ME);
             generateSpinner(sStartAge, Utility.AGE_RANGE);
             generateSpinner(sEndAge, Utility.AGE_RANGE);
 
@@ -180,7 +182,7 @@ public class SearchFragment extends Fragment{
 
         @Override
         protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "user/search" + "/gender/"+ selectedGender
+            String url = Constants.URL_ROOT + "user/search" + "/gender/"+ oppositeGender
                     + "/country/" + selectedCountryId + "/minage/" + selectedMinAge + "/maxage/" + selectedMaxAge;
             
             UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();

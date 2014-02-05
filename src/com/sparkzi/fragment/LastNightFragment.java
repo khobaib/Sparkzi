@@ -7,10 +7,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sparkzi.MainActivity;
+import com.sparkzi.NewConversationActivity;
 import com.sparkzi.R;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
@@ -47,6 +52,13 @@ public class LastNightFragment extends Fragment {
     JsonParser jsonParser;
     ProgressDialog pDialog;
     SparkziApplication appInstance;
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,21 +73,21 @@ public class LastNightFragment extends Fragment {
         etActivity = (EditText) view.findViewById(R.id.et_activity);
         etElaborate = (EditText) view.findViewById(R.id.et_elaborate);
 
-        bShare = (Button) view.findViewById(R.id.bShare);
-        bShare.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String activityText = etActivity.getText().toString().trim();
-                if(activityText == null || activityText.equals("")){
-                    tvWarning.setVisibility(View.VISIBLE);
-                    return;
-                }
-                String elaboratedtext = etElaborate.getText().toString().trim();
-                new SendLastNightActivity().execute(activityText, elaboratedtext);
-
-            }
-        });
+//        bShare = (Button) view.findViewById(R.id.bShare);
+//        bShare.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                String activityText = etActivity.getText().toString().trim();
+//                if(activityText == null || activityText.equals("")){
+//                    tvWarning.setVisibility(View.VISIBLE);
+//                    return;
+//                }
+//                String elaboratedtext = etElaborate.getText().toString().trim();
+//                new SendLastNightActivity().execute(activityText, elaboratedtext);
+//
+//            }
+//        });
 
         return view;
     }
@@ -109,6 +121,29 @@ public class LastNightFragment extends Fragment {
                 }
             });
         }
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+       inflater.inflate(R.menu.menu_last_night, menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+       // handle item selection
+       switch (item.getItemId()) {
+          case R.id.action_share:           
+              String activityText = etActivity.getText().toString().trim();
+              if(activityText == null || activityText.equals("")){
+                  tvWarning.setVisibility(View.VISIBLE);
+                  return true;
+              }
+              String elaboratedtext = etElaborate.getText().toString().trim();
+              new SendLastNightActivity().execute(activityText, elaboratedtext);
+             return true;
+          default:
+             return super.onOptionsItemSelected(item);
+       }
     }
     
     

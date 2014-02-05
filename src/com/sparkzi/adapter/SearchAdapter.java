@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sparkzi.R;
+import com.sparkzi.R.color;
 import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
@@ -76,6 +78,28 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
             holder = (ViewHolder) convertView.getTag();
         }
         
+        final Favorite item = getItem(position);
+        
+        int favStatus = item.getFavStatus();
+        if(favStatus == Constants.FAVORITE_STATUS_FRIEND){
+            holder.bAddToFav.setVisibility(View.INVISIBLE);
+        } else if (favStatus == Constants.FAVORITE_STATUS_SENT){
+            holder.bAddToFav.setText("Request sent");
+            holder.bAddToFav.setVisibility(View.VISIBLE);
+            holder.bAddToFav.setTextColor(Color.GRAY);
+            holder.bAddToFav.setEnabled(false);
+        } else {
+            if(favStatus == Constants.FAVORITE_STATUS_WAITING){
+                holder.bAddToFav.setText("Approve");
+            }
+            else{
+                holder.bAddToFav.setText("Add to Favorite");
+            }
+            holder.bAddToFav.setVisibility(View.VISIBLE);
+            holder.bAddToFav.setTextColor(Color.WHITE);
+            holder.bAddToFav.setEnabled(true);
+        }
+        
         holder.bAddToFav.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -84,15 +108,12 @@ public class SearchAdapter extends ArrayAdapter<Favorite>{
                     alert("You already sent a request.");
                     return;
                 }
-                Favorite item = getItem(position);
                 String username = item.getUsername();
                 new RequestAddFav(holder.bAddToFav).execute(username);
                 
             }
         });
-        
-        Favorite item = getItem(position);
-        
+               
         String imageUrl = item.getPicUrl();
         imageLoader.DisplayImage(imageUrl, holder.UserImage);
 
