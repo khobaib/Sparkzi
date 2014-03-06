@@ -14,64 +14,66 @@ import com.sparkzi.R;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class FavoriteFragment extends Fragment {
-    
-    private static final String   TAG        = FavoriteFragment.class.getSimpleName();
-    private static final String[] CONTENT    = new String[] { "Favorites", "Pending", "Req sent" };
-    
-    private Activity activity;
 
-    private ViewPager mViewPager;
-    private TabPageIndicator indicator;
-    
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_favorite, container, false);
-        mViewPager = (ViewPager) view.findViewById(R.id.pager);
-        indicator = (TabPageIndicator) view.findViewById(R.id.indicator);
+	@SuppressWarnings("unused")
+	private static final String TAG = FavoriteFragment.class.getSimpleName();
+	private static final String[] CONTENT = new String[] { "Favorites",
+			"Pending", "Req sent" };
 
+	private Activity activity;
 
-        return view;
-    }
-    
-    
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        activity = getActivity();
-        if(activity != null){
-            final FragmentPagerAdapter adapter = new FavoriteListAdapter(getChildFragmentManager());
-            mViewPager.setAdapter(adapter);
-            mViewPager.setOffscreenPageLimit(2);
-            
-            indicator.setViewPager(mViewPager);
-        }
-    }
-    
-    
-    class FavoriteListAdapter extends FragmentPagerAdapter{
-        public FavoriteListAdapter(FragmentManager fm) {
-            super(fm);
-        }
+	private ViewPager mViewPager;
+	private TabPageIndicator indicator;
 
-        @Override
-        public Fragment getItem(int position) {
-            if (position == 0) {
-                return new FavoriteAddedFragment();
-            } else if (position == 1) {
-                return new FavoritePendingFragment();
-            } else
-                return new FavoriteRequestSentFragment();
-        }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater
+				.inflate(R.layout.layout_favorite, container, false);
+		mViewPager = (ViewPager) view.findViewById(R.id.pager);
+		indicator = (TabPageIndicator) view.findViewById(R.id.indicator);
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return CONTENT[position % CONTENT.length];
-        }
+		return view;
+	}
 
-        @Override
-        public int getCount() {
-            return CONTENT.length;
-        }
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		activity = getActivity();
+		if (activity != null) {
+			final FragmentPagerAdapter adapter = new FavoriteListAdapter(
+					getChildFragmentManager());
+			mViewPager.setAdapter(adapter);
+			mViewPager.setOffscreenPageLimit(2);
+
+			indicator.setViewPager(mViewPager);
+		}
+	}
+
+	class FavoriteListAdapter extends FragmentPagerAdapter {
+		public FavoriteListAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			if (position == 0) {
+				return new FavoriteAddedFragment();
+			} else if (position == 1) {
+				return new FavoritePendingFragment();
+			} else
+				return new FavoriteRequestSentFragment();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return CONTENT[position % CONTENT.length];
+		}
+
+		@Override
+		public int getCount() {
+			return CONTENT.length;
+		}
+	}
 
 }

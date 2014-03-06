@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sparkzi.R;
-import com.sparkzi.R.color;
 import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
@@ -33,186 +32,183 @@ import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 import com.sparkzi.utility.Utility;
 
-public class SearchAdapter extends ArrayAdapter<Favorite>{
-    
-    private Context mContext;
-    private LayoutInflater mInflater;
-    private ImageLoader imageLoader;
-    private JsonParser jsonParser;
-    private ProgressDialog pDialog;
+public class SearchAdapter extends ArrayAdapter<Favorite> {
 
-    public SearchAdapter(Context context, List<Favorite> qList) {
-        super(context, R.layout.row_search);
-        this.mContext = context;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        imageLoader = new ImageLoader((Activity) mContext);
-        jsonParser = new JsonParser();
-        pDialog = new ProgressDialog(mContext);
-    }
+	private Context mContext;
+	private LayoutInflater mInflater;
+	private ImageLoader imageLoader;
+	private JsonParser jsonParser;
+	private ProgressDialog pDialog;
 
+	public SearchAdapter(Context context, List<Favorite> qList) {
+		super(context, R.layout.row_search);
+		this.mContext = context;
+		mInflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageLoader = new ImageLoader((Activity) mContext);
+		jsonParser = new JsonParser();
+		pDialog = new ProgressDialog(mContext);
+	}
 
-    private static class ViewHolder {
-        ImageView UserImage;
-        TextView userName;
-        TextView userAgeGender;
-        Button bAddToFav;
-    }
-    
-    
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+	private static class ViewHolder {
+		ImageView UserImage;
+		TextView userName;
+		TextView userAgeGender;
+		Button bAddToFav;
+	}
 
-        final ViewHolder holder;
-        
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.row_search, null);
+	@Override
+	public View getView(final int position, View convertView, ViewGroup parent) {
 
-            holder = new ViewHolder();
-            holder.UserImage = (ImageView) convertView.findViewById(R.id.iv_pic);
-            holder.userName = (TextView) convertView.findViewById(R.id.tv_name);  
-            holder.userAgeGender = (TextView) convertView.findViewById(R.id.tv_age_gender); 
-            holder.bAddToFav = (Button) convertView.findViewById(R.id.b_add_to_fav);
+		final ViewHolder holder;
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        
-        final Favorite item = getItem(position);
-        
-        int favStatus = item.getFavStatus();
-        if(favStatus == Constants.FAVORITE_STATUS_FRIEND){
-            holder.bAddToFav.setVisibility(View.INVISIBLE);
-        } else if (favStatus == Constants.FAVORITE_STATUS_SENT){
-            holder.bAddToFav.setText("Request sent");
-            holder.bAddToFav.setVisibility(View.VISIBLE);
-            holder.bAddToFav.setTextColor(Color.GRAY);
-            holder.bAddToFav.setEnabled(false);
-        } else {
-            if(favStatus == Constants.FAVORITE_STATUS_WAITING){
-                holder.bAddToFav.setText("Approve");
-            }
-            else{
-                holder.bAddToFav.setText("Add to Favorite");
-            }
-            holder.bAddToFav.setVisibility(View.VISIBLE);
-            holder.bAddToFav.setTextColor(Color.WHITE);
-            holder.bAddToFav.setEnabled(true);
-        }
-        
-        holder.bAddToFav.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                if(((Button) v).getText().equals("Request sent")){
-                    alert("You already sent a request.");
-                    return;
-                }
-                String username = item.getUsername();
-                new RequestAddFav(holder.bAddToFav).execute(username);
-                
-            }
-        });
-               
-        String imageUrl = item.getPicUrl();
-        imageLoader.DisplayImage(imageUrl, holder.UserImage);
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.row_search, null);
 
-        holder.userName.setText(item.getUsername());
-        holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender() - 1].substring(0, 1));
-        
-        return convertView;
-    }
-    
-    
-    public void setData(List<Favorite> favList) {
-        clear();
-        if (favList != null) {
-            for (int i = 0; i < favList.size(); i++) {
-                add(favList.get(i));
-            }
-        }
-    }
-    
-    
-    private class RequestAddFav extends AsyncTask<String, Void, JSONObject> {
-        
-        private View v;
-        
-        public RequestAddFav() {
-            // TODO Auto-generated constructor stub
-        }
-        
-        public RequestAddFav(View v) {
-            this.v = v;
-        }      
+			holder = new ViewHolder();
+			holder.UserImage = (ImageView) convertView
+					.findViewById(R.id.iv_pic);
+			holder.userName = (TextView) convertView.findViewById(R.id.tv_name);
+			holder.userAgeGender = (TextView) convertView
+					.findViewById(R.id.tv_age_gender);
+			holder.bAddToFav = (Button) convertView
+					.findViewById(R.id.b_add_to_fav);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if(!pDialog.isShowing()){
-                pDialog.setMessage("A moment...");
-                pDialog.setCancelable(false);
-                pDialog.setIndeterminate(true);
-                pDialog.show();
-            }
-        }
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
 
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            String url = Constants.URL_ROOT + "favs/" + params[0];
-            
-            UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
-            String token = userCred.getToken();
-            
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
-                    null, null, token);
-            if(response.getStatus() == 200){
-                Log.d(">>>><<<<", "success - getting response");
-                JSONObject responseObj = response.getjObj();
-                return responseObj;
-            }
-            else
-                return null;
-        }
+		final Favorite item = getItem(position);
 
-        @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(responseObj);
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){   
-                        ((Button) v).setText("Request sent");
-                    }
-                    else{
-                        alert("Invalid token.");
-                    }
-                } catch (JSONException e) {
-                    alert("Exception.");
-                    e.printStackTrace();
-                }
-            }
-            
-            if(pDialog.isShowing())
-                pDialog.dismiss();
-        }
+		int favStatus = item.getFavStatus();
+		if (favStatus == Constants.FAVORITE_STATUS_FRIEND) {
+			holder.bAddToFav.setVisibility(View.INVISIBLE);
+		} else if (favStatus == Constants.FAVORITE_STATUS_SENT) {
+			holder.bAddToFav.setText("Request sent");
+			holder.bAddToFav.setVisibility(View.VISIBLE);
+			holder.bAddToFav.setTextColor(Color.GRAY);
+			holder.bAddToFav.setEnabled(false);
+		} else {
+			if (favStatus == Constants.FAVORITE_STATUS_WAITING) {
+				holder.bAddToFav.setText("Approve");
+			} else {
+				holder.bAddToFav.setText("Add to Favorite");
+			}
+			holder.bAddToFav.setVisibility(View.VISIBLE);
+			holder.bAddToFav.setTextColor(Color.WHITE);
+			holder.bAddToFav.setEnabled(true);
+		}
 
-    }
-    
-    
-    void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(mContext);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+		holder.bAddToFav.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+			@Override
+			public void onClick(View v) {
+				if (((Button) v).getText().equals("Request sent")) {
+					alert("You already sent a request.");
+					return;
+				}
+				String username = item.getUsername();
+				new RequestAddFav(holder.bAddToFav).execute(username);
 
-            }
-        });
-        bld.create().show();
-    }
+			}
+		});
+
+		String imageUrl = item.getPicUrl();
+		imageLoader.DisplayImage(imageUrl, holder.UserImage);
+
+		holder.userName.setText(item.getUsername());
+		holder.userAgeGender.setText(item.getAge() + " | "
+				+ Utility.Gender[item.getGender() - 1].substring(0, 1));
+
+		return convertView;
+	}
+
+	public void setData(List<Favorite> favList) {
+		clear();
+		if (favList != null) {
+			for (int i = 0; i < favList.size(); i++) {
+				add(favList.get(i));
+			}
+		}
+	}
+
+	private class RequestAddFav extends AsyncTask<String, Void, JSONObject> {
+
+		private View v;
+
+		// public RequestAddFav() {
+		// }
+
+		public RequestAddFav(View v) {
+			this.v = v;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!pDialog.isShowing()) {
+				pDialog.setMessage("A moment...");
+				pDialog.setCancelable(false);
+				pDialog.setIndeterminate(true);
+				pDialog.show();
+			}
+		}
+
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			String url = Constants.URL_ROOT + "favs/" + params[0];
+
+			UserCred userCred = ((SparkziApplication) ((Activity) mContext)
+					.getApplication()).getUserCred();
+			String token = userCred.getToken();
+
+			ServerResponse response = jsonParser.retrieveServerData(
+					Constants.REQUEST_TYPE_PUT, url, null, null, token);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success - getting response");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(responseObj);
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						((Button) v).setText("Request sent");
+					} else {
+						alert("Invalid token.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+		}
+
+	}
+
+	void alert(String message) {
+		AlertDialog.Builder bld = new AlertDialog.Builder(mContext);
+		bld.setMessage(message);
+		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+
+			}
+		});
+		bld.create().show();
+	}
 
 }

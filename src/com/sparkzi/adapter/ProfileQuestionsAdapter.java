@@ -10,7 +10,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,215 +22,205 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.gson.JsonObject;
-import com.sparkzi.EssentialDetailsActivity;
-import com.sparkzi.MainActivity;
 import com.sparkzi.R;
 import com.sparkzi.Interface.QuestionListInterface;
-import com.sparkzi.fragment.ProfileQuestionsFragment;
 import com.sparkzi.model.Question;
 import com.sparkzi.model.ServerResponse;
-import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
-import com.sparkzi.utility.SparkziApplication;
 
 public class ProfileQuestionsAdapter extends ArrayAdapter<Question> {
 
-    private Context mContext;
-    private LayoutInflater mInflater;
-    private String token;
+	private Context mContext;
+	private LayoutInflater mInflater;
+	private String token;
 
-    JsonParser jsonParser;
-    ProgressDialog pDialog;
+	JsonParser jsonParser;
+	ProgressDialog pDialog;
 
-    private QuestionListInterface listener;
+	private QuestionListInterface listener;
 
-    public ProfileQuestionsAdapter(Context context, QuestionListInterface listener, List<Question> qList, String token) {
-        super(context, R.layout.row_profile_question);
-        this.mContext = context;
-        this.listener = listener;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public ProfileQuestionsAdapter(Context context,
+			QuestionListInterface listener, List<Question> qList, String token) {
+		super(context, R.layout.row_profile_question);
+		this.mContext = context;
+		this.listener = listener;
+		mInflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        jsonParser = new JsonParser();        
-        pDialog = new ProgressDialog(mContext);
-        this.token = token;
-    }
+		jsonParser = new JsonParser();
+		pDialog = new ProgressDialog(mContext);
+		this.token = token;
+	}
 
+	private static class ViewHolder {
+		TextView qText;
+		TextView ansText;
+		ImageButton ImageButton;
+	}
 
-    private static class ViewHolder {
-        TextView qText;
-        TextView ansText;  
-        ImageButton ImageButton;
-    }
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
 
+		ViewHolder holder;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+		if (convertView == null) {
+			convertView = mInflater
+					.inflate(R.layout.row_profile_question, null);
 
-        ViewHolder holder;
+			holder = new ViewHolder();
+			holder.qText = (TextView) convertView
+					.findViewById(R.id.tv_question);
+			holder.ansText = (TextView) convertView
+					.findViewById(R.id.tv_answer);
+			holder.ImageButton = (ImageButton) convertView
+					.findViewById(R.id.iv_edit);
 
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.row_profile_question, null);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
 
-            holder = new ViewHolder();
-            holder.qText = (TextView) convertView.findViewById(R.id.tv_question);  
-            holder.ansText = (TextView) convertView.findViewById(R.id.tv_answer); 
-            holder.ImageButton = (ImageButton) convertView.findViewById(R.id.iv_edit); 
+		final Question item = getItem(position);
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+		holder.qText.setText(item.getqText());
 
-        final Question item = getItem(position);
+		if (item.getAnsText() == null || item.getAnsText().equals("")) {
+			holder.ansText.setText("I won't say but ask me.");
+		} else {
+			holder.ansText.setText(item.getAnsText());
+		}
 
-        holder.qText.setText(item.getqText());
+		holder.ImageButton.setOnClickListener(new OnClickListener() {
 
-        if(item.getAnsText() == null || item.getAnsText().equals("")){
-            holder.ansText.setText("I won't say but ask me.");
-        }
-        else{
-            holder.ansText.setText(item.getAnsText());
-        }
+			@Override
+			public void onClick(View v) {
+				onClickEditQuestion(item);
 
-        holder.ImageButton.setOnClickListener(new OnClickListener() {
+			}
+		});
 
-            @Override
-            public void onClick(View v) {
-                onClickEditQuestion(item);
+		return convertView;
+	}
 
-            }
-        });
+	public void onClickEditQuestion(final Question item) {
 
+		View textEntryView = mInflater.inflate(
+				R.layout.dialog_edit_question_answer, null);
+		final AlertDialog alert = new AlertDialog.Builder(mContext).create();
+		alert.setView(textEntryView, 0, 0, 0, 0);
 
+		final EditText etAnswer = (EditText) textEntryView
+				.findViewById(R.id.et_answer);
 
-        return convertView;
-    }
+		Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
+		OK.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				String answerText = etAnswer.getText().toString();
+				alert.dismiss();
+				new SendQuestionUpdateRequest(answerText).execute(item);
+			}
 
-    public void onClickEditQuestion(final Question item){
+		});
+		alert.show();
+	}
 
-        View textEntryView = mInflater.inflate(R.layout.dialog_edit_question_answer, null);
-        final AlertDialog alert = new AlertDialog.Builder(mContext).create();
-        alert.setView(textEntryView, 0, 0, 0, 0);
+	public void setData(List<Question> qList) {
+		clear();
+		if (qList != null) {
+			for (int i = 0; i < qList.size(); i++) {
+				add(qList.get(i));
+			}
+		}
+	}
 
-        final EditText etAnswer = (EditText) textEntryView.findViewById(R.id.et_answer);
+	public class SendQuestionUpdateRequest extends
+			AsyncTask<Question, Void, JSONObject> {
 
-        Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
-        OK.setOnClickListener(new OnClickListener() {
+		private String ansText;
 
-            @Override
-            public void onClick(View v) {
-                String answerText = etAnswer.getText().toString();
-                alert.dismiss(); 
-                new SendQuestionUpdateRequest(answerText).execute(item);
-            }
+		public SendQuestionUpdateRequest(String answer) {
+			this.ansText = answer;
+		}
 
-        });
-        alert.show();
-    }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog.setMessage("Please wait while app is updating data...");
+			pDialog.show();
+		}
 
+		@Override
+		protected JSONObject doInBackground(Question... params) {
+			String url = Constants.URL_ROOT + "user";
 
-    public void setData(List<Question> qList) {
-        clear();
-        if (qList != null) {
-            for (int i = 0; i < qList.size(); i++) {
-                add(qList.get(i));
-            }
-        }
-    }
+			try {
+				JSONArray qArray = new JSONArray();
 
+				JSONObject qObj = new JSONObject();
+				qObj.put("qid", params[0].getqId());
+				qObj.put("answer", ansText);
 
-    public class SendQuestionUpdateRequest extends AsyncTask<Question, Void, JSONObject> {
+				qArray.put(qObj);
+				// String ansData = qArray.toString();
+				// Log.e(">>>>>", "ansData = " + ansData);
 
-        private String ansText;
+				JSONObject contentObj = new JSONObject();
+				contentObj.put("questions", qArray);
+				String ansData = contentObj.toString();
+				Log.e(">>>>>", "ansData = " + ansData);
 
-        public SendQuestionUpdateRequest(String answer) {
-            this.ansText = answer;
-        }
+				ServerResponse response = jsonParser.retrieveServerData(
+						Constants.REQUEST_TYPE_POST, url, null, ansData, token);
+				if (response.getStatus() == 200) {
+					JSONObject responseObj = response.getjObj();
+					return responseObj;
+				} else {
+					return null;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog.setMessage("Please wait while app is updating data...");
-            pDialog.show();
-        }
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			super.onPostExecute(responseObj);
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						listener.updateQuestionList();
+					} else {
+						alert("Update failed.");
+					}
+				} catch (JSONException e) {
+					alert("Update failed.");
+					e.printStackTrace();
+				}
 
-        @Override
-        protected JSONObject doInBackground(Question... params) {
-            String url = Constants.URL_ROOT + "user";
+			} else {
+				alert("Update failed.");
+			}
+		}
+	}
 
-            try {
-                JSONArray qArray = new JSONArray();
+	public void alert(String message) {
+		AlertDialog.Builder bld = new AlertDialog.Builder(mContext);
+		bld.setMessage(message);
+		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
-                JSONObject qObj = new JSONObject();
-                qObj.put("qid", params[0].getqId());
-                qObj.put("answer", ansText);      
-
-                qArray.put(qObj);
-                //                String ansData = qArray.toString();
-                //                Log.e(">>>>>", "ansData = " + ansData);
-
-                JSONObject contentObj = new JSONObject();
-                contentObj.put("questions", qArray);
-                String ansData = contentObj.toString();
-                Log.e(">>>>>", "ansData = " + ansData);
-
-                ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, url,
-                        null, ansData, token);
-                if(response.getStatus() == 200){
-                    JSONObject responseObj = response.getjObj();
-                    return responseObj;
-                }
-                else{
-                    return null;
-                }
-            } catch (JSONException e) {                
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            super.onPostExecute(responseObj);
-            if(pDialog.isShowing())
-                pDialog.dismiss();
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){
-                        listener.updateQuestionList();
-                    }
-                    else{
-                        alert("Update failed.");
-                    }
-                } catch (JSONException e) {
-                    alert("Update failed.");
-                    e.printStackTrace();
-                }
-
-            }
-            else{
-                alert("Update failed.");
-            }
-        }        
-    }
-
-
-    public void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(mContext);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        bld.create().show();
-    }
-
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		bld.create().show();
+	}
 
 }

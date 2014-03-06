@@ -14,136 +14,139 @@ import com.sparkzi.model.ServerResponse;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 
-public class BlockListLoader extends AsyncTaskLoader<List<BlockedUser>>{
-    
-    
-    private static final String TAG = BlockListLoader.class.getSimpleName();
+public class BlockListLoader extends AsyncTaskLoader<List<BlockedUser>> {
 
-    private JsonParser jsonParser;
+	@SuppressWarnings("unused")
+	private static final String TAG = BlockListLoader.class.getSimpleName();
 
-    private String token;
+	private JsonParser jsonParser;
 
-    private List<BlockedUser> mBlockedUsers;                  // holder to keep previous blockedUser while copying new ones
+	private String token;
 
-    public BlockListLoader(Context context, String token) {
-        super(context);
-        jsonParser = new JsonParser();       
+	private List<BlockedUser> mBlockedUsers; // holder to keep previous
+												// blockedUser while copying new
+												// ones
 
-        this.token = token;
-    }
+	public BlockListLoader(Context context, String token) {
+		super(context);
+		jsonParser = new JsonParser();
 
-    @Override
-    public List<BlockedUser> loadInBackground() {
-        
-        String url = Constants.URL_ROOT + "block";
+		this.token = token;
+	}
 
-        ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET,
-                url, null, null, token);
-        
-        if(response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS){
-            JSONObject responseObj = response.getjObj();
-            try {
-                String status = responseObj.getString("status");
-                String desc = responseObj.getString("description");
-                JSONArray bUserArray = responseObj.getJSONArray("result");
-                
-                List<BlockedUser> bUserList = BlockedUser.parseBlockedUserList(bUserArray);
-                return bUserList;
-                
-            } catch (JSONException e) {                
-                e.printStackTrace();
-            }
+	@SuppressWarnings("unused")
+	@Override
+	public List<BlockedUser> loadInBackground() {
 
-        }
+		String url = Constants.URL_ROOT + "block";
 
-        return null;
-    }
+		ServerResponse response = jsonParser.retrieveServerData(
+				Constants.REQUEST_TYPE_GET, url, null, null, token);
 
+		if (response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
+			JSONObject responseObj = response.getjObj();
+			try {
+				String status = responseObj.getString("status");
+				String desc = responseObj.getString("description");
+				JSONArray bUserArray = responseObj.getJSONArray("result");
 
-    @Override
-    public void deliverResult(List<BlockedUser> blockedUserList) {
-        if (isReset()) {
-            // The Loader has been reset; ignore the result and invalidate the data.
-            // This can happen when the Loader is reset while an asynchronous query
-            // is working in the background. That is, when the background thread
-            // finishes its work and attempts to deliver the results to the client,
-            // it will see here that the Loader has been reset and discard any
-            // resources associated with the new data as necessary.
-            if (blockedUserList != null) {
-                releaseResources(blockedUserList);
-                return;
-            }
-        }
+				List<BlockedUser> bUserList = BlockedUser
+						.parseBlockedUserList(bUserArray);
+				return bUserList;
 
-        // Hold a reference to the old data so it doesn't get garbage collected.
-        // We must protect it until the new data has been delivered.
-        List<BlockedUser> oldBlockedUserList = mBlockedUsers;
-        mBlockedUsers = blockedUserList;
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 
-        if (isStarted()) {
-            // If the Loader is in a started state, have the superclass deliver the
-            // results to the client.
-            super.deliverResult(blockedUserList);
-        }
+		}
 
-        // Invalidate the old data as we don't need it any more.
-        if (oldBlockedUserList != null && oldBlockedUserList != blockedUserList) {
-            releaseResources(oldBlockedUserList);
-        }
-    }
+		return null;
+	}
 
+	@Override
+	public void deliverResult(List<BlockedUser> blockedUserList) {
+		if (isReset()) {
+			// The Loader has been reset; ignore the result and invalidate the
+			// data.
+			// This can happen when the Loader is reset while an asynchronous
+			// query
+			// is working in the background. That is, when the background thread
+			// finishes its work and attempts to deliver the results to the
+			// client,
+			// it will see here that the Loader has been reset and discard any
+			// resources associated with the new data as necessary.
+			if (blockedUserList != null) {
+				releaseResources(blockedUserList);
+				return;
+			}
+		}
 
+		// Hold a reference to the old data so it doesn't get garbage collected.
+		// We must protect it until the new data has been delivered.
+		List<BlockedUser> oldBlockedUserList = mBlockedUsers;
+		mBlockedUsers = blockedUserList;
 
-    @Override
-    protected void onStartLoading() {
+		if (isStarted()) {
+			// If the Loader is in a started state, have the superclass deliver
+			// the
+			// results to the client.
+			super.deliverResult(blockedUserList);
+		}
 
-        if (mBlockedUsers != null) {
-            // Deliver any previously loaded data immediately.
-            deliverResult(mBlockedUsers);
-        }
+		// Invalidate the old data as we don't need it any more.
+		if (oldBlockedUserList != null && oldBlockedUserList != blockedUserList) {
+			releaseResources(oldBlockedUserList);
+		}
+	}
 
-        if (mBlockedUsers == null) {
-            // If the current data is null... then we should make it non-null! :)
-            forceLoad();
-        }
-    }
+	@Override
+	protected void onStartLoading() {
 
-    @Override
-    protected void onStopLoading() {
-        // The Loader has been put in a stopped state, so we should attempt to
-        // cancel the current load (if there is one).
-        cancelLoad();
-    }
+		if (mBlockedUsers != null) {
+			// Deliver any previously loaded data immediately.
+			deliverResult(mBlockedUsers);
+		}
 
+		if (mBlockedUsers == null) {
+			// If the current data is null... then we should make it non-null!
+			// :)
+			forceLoad();
+		}
+	}
 
+	@Override
+	protected void onStopLoading() {
+		// The Loader has been put in a stopped state, so we should attempt to
+		// cancel the current load (if there is one).
+		cancelLoad();
+	}
 
-    @Override
-    protected void onReset() {
-        // Ensure the loader is stopped.
-        onStopLoading();
+	@Override
+	protected void onReset() {
+		// Ensure the loader is stopped.
+		onStopLoading();
 
-        if (mBlockedUsers != null) {
-            releaseResources(mBlockedUsers);
-            mBlockedUsers = null;
-        }
-    }
+		if (mBlockedUsers != null) {
+			releaseResources(mBlockedUsers);
+			mBlockedUsers = null;
+		}
+	}
 
+	@Override
+	public void onCanceled(List<BlockedUser> bUserList) {
+		// Attempt to cancel the current asynchronous load.
+		super.onCanceled(bUserList);
 
-    @Override
-    public void onCanceled(List<BlockedUser> bUserList) {
-        // Attempt to cancel the current asynchronous load.
-        super.onCanceled(bUserList);
+		// The load has been canceled, so we should release the resources
+		// associated with 'mApps'.
+		releaseResources(bUserList);
+	}
 
-        // The load has been canceled, so we should release the resources
-        // associated with 'mApps'.
-        releaseResources(bUserList);
-    }
-
-
-    private void releaseResources(List<BlockedUser> bUserList) {
-        // For a simple List, there is nothing to do. For something like a Cursor,
-        // we would close it in this method. All resources associated with the
-        // Loader should be released here.
-    }
+	private void releaseResources(List<BlockedUser> bUserList) {
+		// For a simple List, there is nothing to do. For something like a
+		// Cursor,
+		// we would close it in this method. All resources associated with the
+		// Loader should be released here.
+	}
 
 }

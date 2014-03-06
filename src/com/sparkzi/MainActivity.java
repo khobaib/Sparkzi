@@ -3,7 +3,6 @@ package com.sparkzi;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +32,6 @@ import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.adapter.LeftDrawerAdapter;
 import com.sparkzi.fragment.ConversationsFragment;
 import com.sparkzi.fragment.DummyFragment;
-import com.sparkzi.fragment.FavoriteAddedFragment;
 import com.sparkzi.fragment.FavoriteFragment;
 import com.sparkzi.fragment.HomeFragment;
 import com.sparkzi.fragment.LastNightFragment;
@@ -42,7 +40,6 @@ import com.sparkzi.fragment.SearchFragment;
 import com.sparkzi.fragment.SettingsFragment;
 import com.sparkzi.lazylist.ImageLoader;
 import com.sparkzi.model.DrawerItem;
-import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -52,373 +49,378 @@ import com.sparkzi.utility.Utility;
 
 public class MainActivity extends FragmentActivity {
 
-    JsonParser jsonParser;
-    ProgressDialog pDialog;
-    SparkziApplication appInstance;
+	JsonParser jsonParser;
+	ProgressDialog pDialog;
+	SparkziApplication appInstance;
 
-    private DrawerLayout mDrawerLayout;
-    LinearLayout mDrawerLinear;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-    
-    private String token;
+	private DrawerLayout mDrawerLayout;
+	LinearLayout mDrawerLinear;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
 
-    //    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    
-    private List<DrawerItem> drawerItemList;
-//    private String[] mDrawerItems;
+	private String token;
 
-    private Fragment myFragment;
-    int currentFragmentIndex;
+	// private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
 
-    ImageLoader imageLoader;
-    RelativeLayout rlProfileMenu;
-    ImageView ivProfilePic;
-    TextView tvUserName;
+	private List<DrawerItem> drawerItemList;
+	// private String[] mDrawerItems;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(this, "2c5ced14");
-        setContentView(R.layout.home);
+	private Fragment myFragment;
+	int currentFragmentIndex;
 
-        appInstance = (SparkziApplication) getApplication();
-        pDialog = new ProgressDialog(MainActivity.this);
-        jsonParser = new JsonParser();
-        imageLoader = new ImageLoader(MainActivity.this);
+	ImageLoader imageLoader;
+	RelativeLayout rlProfileMenu;
+	ImageView ivProfilePic;
+	TextView tvUserName;
 
-        currentFragmentIndex = 0;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		BugSenseHandler.initAndStartSession(this, "2c5ced14");
+		setContentView(R.layout.home);
 
-        mTitle = getTitle();
-        //        mDrawerTitle = getTitle();
-//        mDrawerItems = getResources().getStringArray(R.array.drawer_menu_array);
-        
-        drawerItemList = new ArrayList<DrawerItem>();
-        setDrawerMenuItems();
-        
+		appInstance = (SparkziApplication) getApplication();
+		pDialog = new ProgressDialog(MainActivity.this);
+		jsonParser = new JsonParser();
+		imageLoader = new ImageLoader(MainActivity.this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLinear = (LinearLayout) findViewById(R.id.left_drawer);
-        //        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer_child);
+		currentFragmentIndex = 0;
 
-        rlProfileMenu = (RelativeLayout) findViewById(R.id.rl_menu_profile);
-        ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
-        tvUserName = (TextView) findViewById(R.id.tv_name);
+		mTitle = getTitle();
+		// mDrawerTitle = getTitle();
+		// mDrawerItems =
+		// getResources().getStringArray(R.array.drawer_menu_array);
 
-        UserCred userCred = appInstance.getUserCred();
-        String userName = userCred.getUsername();
-        String imageUrl = userCred.getPicUrl();
-        
-        token = userCred.getToken();
+		drawerItemList = new ArrayList<DrawerItem>();
+		setDrawerMenuItems();
 
-        imageLoader.DisplayImage(imageUrl, ivProfilePic);
-        tvUserName.setText(userName);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLinear = (LinearLayout) findViewById(R.id.left_drawer);
+		// mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer_child);
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
-//        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mDrawerItems));
-        mDrawerList.setAdapter(new LeftDrawerAdapter(drawerItemList, this));
-        
-        
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		rlProfileMenu = (RelativeLayout) findViewById(R.id.rl_menu_profile);
+		ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
+		tvUserName = (TextView) findViewById(R.id.tv_name);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+		UserCred userCred = appInstance.getUserCred();
+		String userName = userCred.getUsername();
+		String imageUrl = userCred.getPicUrl();
 
+		token = userCred.getToken();
 
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description for accessibility */
-                R.string.drawer_close  /* "close drawer" description for accessibility */
-                ) {
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
+		// imageLoader.DisplayImage(imageUrl, ivProfilePic); // TODO
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
+				ivProfilePic));
+		tvUserName.setText(userName);
 
-            public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle("");
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+		// set a custom shadow that overlays the main content when the drawer
+		// opens
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+		// set up the drawer's list view with items and click listener
+		// mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+		// R.layout.drawer_list_item, mDrawerItems));
+		mDrawerList.setAdapter(new LeftDrawerAdapter(drawerItemList, this));
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
-    }
-    
-    
-    @Override
-    protected void onStart() {
-        // TODO Auto-generated method stub
-        super.onStart();
-        BugSenseHandler.startSession(this);
-    }
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        BugSenseHandler.closeSession(this);
-    }
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description for accessibility */
+		R.string.drawer_close /* "close drawer" description for accessibility */
+		) {
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
 
+			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle("");
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-    //    @Override
-    //    public boolean onCreateOptionsMenu(Menu menu) {
-    //        MenuInflater inflater = getMenuInflater();
-    //        inflater.inflate(R.menu.main, menu);
-    //        return super.onCreateOptionsMenu(menu);
-    //    }
-    //
-    //    /* Called whenever we call invalidateOptionsMenu() */
-    //    @Override
-    //    public boolean onPrepareOptionsMenu(Menu menu) {
-    //        // If the nav drawer is open, hide action items related to the content view
-    //        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-    //        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
-    //        return super.onPrepareOptionsMenu(menu);
-    //    }
+		if (savedInstanceState == null) {
+			selectItem(0);
+		}
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+	@Override
+	protected void onStart() {
+		super.onStart();
+		BugSenseHandler.startSession(this);
+	}
 
-//        if (item.getItemId() == android.R.id.home){
-//            if (mDrawerLayout.isDrawerOpen(mDrawerList)){
-//                mDrawerLayout.closeDrawer(mDrawerList);
-//            } 
-//            else{
-//                mDrawerLayout.openDrawer(mDrawerList);
-//            }
-//        }
-//        return super.onOptionsItemSelected(item);
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-                if (mDrawerToggle.onOptionsItemSelected(item)) {
-                    return true;
-                }
-                return super.onOptionsItemSelected(item);
-        // Handle action buttons
-        //        switch(item.getItemId()) {
-        //        case R.id.action_websearch:
-        //            // create intent to perform web search for this planet
-        //            Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-        //            intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-        //            // catch event that there's no activity to handle intent
-        //            if (intent.resolveActivity(getPackageManager()) != null) {
-        //                startActivity(intent);
-        //            } else {
-        //                Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-        //            }
-        //            return true;
-        //        default:
-        //            return super.onOptionsItemSelected(item);
-        //        }
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		BugSenseHandler.closeSession(this);
+	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.main, menu);
+	// return super.onCreateOptionsMenu(menu);
+	// }
+	//
+	// /* Called whenever we call invalidateOptionsMenu() */
+	// @Override
+	// public boolean onPrepareOptionsMenu(Menu menu) {
+	// // If the nav drawer is open, hide action items related to the content
+	// view
+	// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+	// menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+	// return super.onPrepareOptionsMenu(menu);
+	// }
 
-        UserCred userCred = appInstance.getUserCred();
-        String imageUrl = userCred.getPicUrl();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
 
-        imageLoader.DisplayImage(imageUrl, ivProfilePic);
-    }
+		// if (item.getItemId() == android.R.id.home){
+		// if (mDrawerLayout.isDrawerOpen(mDrawerList)){
+		// mDrawerLayout.closeDrawer(mDrawerList);
+		// }
+		// else{
+		// mDrawerLayout.openDrawer(mDrawerList);
+		// }
+		// }
+		// return super.onOptionsItemSelected(item);
+		// The action bar home/up action should open or close the drawer.
+		// ActionBarDrawerToggle will take care of this.
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+		// Handle action buttons
+		// switch(item.getItemId()) {
+		// case R.id.action_websearch:
+		// // create intent to perform web search for this planet
+		// Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+		// intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+		// // catch event that there's no activity to handle intent
+		// if (intent.resolveActivity(getPackageManager()) != null) {
+		// startActivity(intent);
+		// } else {
+		// Toast.makeText(this, R.string.app_not_available,
+		// Toast.LENGTH_LONG).show();
+		// }
+		// return true;
+		// default:
+		// return super.onOptionsItemSelected(item);
+		// }
+	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if(currentFragmentIndex != position){             
-                selectItem(position);
-            }
-            else
-                mDrawerLayout.closeDrawer(mDrawerLinear);
-        }
-    }
+		UserCred userCred = appInstance.getUserCred();
+		String imageUrl = userCred.getPicUrl();
 
-    public void onClickMenuProfile(View v){
-        mDrawerLayout.closeDrawer(mDrawerLinear);        
-    }
+		// imageLoader.DisplayImage(imageUrl, ivProfilePic); TODO
+		ivProfilePic.setBackgroundResource(android.R.color.transparent);
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
+				ivProfilePic));
+	}
 
-    public void selectItem(int position) {
-        currentFragmentIndex = position;
-        switch (Utility.SLIDING_MENU_OPTION.values()[position]){
-            case HOME:
-                myFragment = new HomeFragment();
-                break;
-            case CONVERSATIONS:
-                myFragment = new ConversationsFragment();
-                break;
-            case LASTNIGHT:
-                myFragment = new LastNightFragment();
-                break;
-            case PROFILE:
-                myFragment = new ProfileFragment();
-                break;
-            case FAVORITES:
-                myFragment = new FavoriteFragment();
-                break;
-            case SEARCH:
-                myFragment = new SearchFragment();
-                break;
-            case SETTINGS:
-                myFragment = new SettingsFragment();
-                break;
-            case LOGOUT:
-                new logout().execute();
-            default:
-                Log.e("????????", "DUMMY FRAGMENT");
-                myFragment = new DummyFragment();
-                break;
-        }
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			if (currentFragmentIndex != position) {
+				selectItem(position);
+			} else
+				mDrawerLayout.closeDrawer(mDrawerLinear);
+		}
+	}
 
-        // update selected item and title, then close the drawer
+	public void onClickMenuProfile(View v) {
+		mDrawerLayout.closeDrawer(mDrawerLinear);
+	}
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, myFragment).commit();
+	public void selectItem(int position) {
+		currentFragmentIndex = position;
+		switch (Utility.SLIDING_MENU_OPTION.values()[position]) {
+		case HOME:
+			myFragment = new HomeFragment();
+			break;
+		case CONVERSATIONS:
+			myFragment = new ConversationsFragment();
+			break;
+		case LASTNIGHT:
+			myFragment = new LastNightFragment();
+			break;
+		case PROFILE:
+			myFragment = new ProfileFragment();
+			break;
+		case FAVORITES:
+			myFragment = new FavoriteFragment();
+			break;
+		case SEARCH:
+			myFragment = new SearchFragment();
+			break;
+		case SETTINGS:
+			myFragment = new SettingsFragment();
+			break;
+		case LOGOUT:
+			new logout().execute();
+		default:
+			Log.e("????????", "DUMMY FRAGMENT");
+			myFragment = new DummyFragment();
+			break;
+		}
 
-        mDrawerList.setItemChecked(position, true);
-        setTitle(drawerItemList.get(position).getName());
-        mDrawerLayout.closeDrawer(mDrawerLinear);
-    }
+		// update selected item and title, then close the drawer
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
-    }
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, myFragment).commit();
 
+		mDrawerList.setItemChecked(position, true);
+		setTitle(drawerItemList.get(position).getName());
+		mDrawerLayout.closeDrawer(mDrawerLinear);
+	}
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-    
-    
-    private void setDrawerMenuItems() {
-        DrawerItem leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Home");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_home));
-        drawerItemList.add(leftDrawerItem);
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getActionBar().setTitle(mTitle);
+	}
 
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Conversations");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_conversation));
-        drawerItemList.add(leftDrawerItem);
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
 
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Last Night");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_last_night));
-        drawerItemList.add(leftDrawerItem);
+	private void setDrawerMenuItems() {
+		DrawerItem leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Home");
+		leftDrawerItem.setImage(getResources()
+				.getDrawable(R.drawable.icon_home));
+		drawerItemList.add(leftDrawerItem);
 
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Search");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_search));
-        drawerItemList.add(leftDrawerItem);
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Conversations");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_conversation));
+		drawerItemList.add(leftDrawerItem);
 
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Favorites");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_favorite));
-        drawerItemList.add(leftDrawerItem);
-        
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Profile");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_profile));
-        drawerItemList.add(leftDrawerItem);
-        
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Settings");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_settings));
-        drawerItemList.add(leftDrawerItem);
-        
-        leftDrawerItem = new DrawerItem();
-        leftDrawerItem.setName("Log out");
-        leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_logout));
-        drawerItemList.add(leftDrawerItem);
-        
-    }
-    
-    
-    
-    private class logout extends AsyncTask<Void, Void, JSONObject> {
-        
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            
-            pDialog.setMessage("Please wait...");
-            pDialog.show();
-        }
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Last Night");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_last_night));
+		drawerItemList.add(leftDrawerItem);
 
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "session";
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_DELETE, url,
-                    null, null, token);
-            if(response.getStatus() == 200){
-                Log.d(">>>><<<<", "success in retrieving favorite info");
-                JSONObject responseObj = response.getjObj();
-                return responseObj;
-            }
-            else
-                return null;
-        }
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Search");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_search));
+		drawerItemList.add(leftDrawerItem);
 
-        @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            super.onPostExecute(responseObj);
-            
-            if(pDialog.isShowing())
-                pDialog.dismiss();
-            
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){
-                        alert("Successfully logged out.");
-                    }
-                    else{
-                        alert("Couldn't log out successfully.");
-                    }
-                } catch (JSONException e) {
-                    alert("Exception.");
-                    e.printStackTrace();
-                }
-            }
-        }
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Favorites");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_favorite));
+		drawerItemList.add(leftDrawerItem);
 
-    }
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Profile");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_profile));
+		drawerItemList.add(leftDrawerItem);
 
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Settings");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_settings));
+		drawerItemList.add(leftDrawerItem);
 
-    void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(MainActivity.this);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+		leftDrawerItem = new DrawerItem();
+		leftDrawerItem.setName("Log out");
+		leftDrawerItem.setImage(getResources().getDrawable(
+				R.drawable.icon_logout));
+		drawerItemList.add(leftDrawerItem);
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                
-                appInstance.setRememberMe(false);
-                
-                Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
-                return;
-            }
-        });
-        bld.create().show();
-    }
+	}
 
+	private class logout extends AsyncTask<Void, Void, JSONObject> {
 
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+			pDialog.setMessage("Please wait...");
+			pDialog.show();
+		}
+
+		@Override
+		protected JSONObject doInBackground(Void... params) {
+			String url = Constants.URL_ROOT + "session";
+			ServerResponse response = jsonParser.retrieveServerData(
+					Constants.REQUEST_TYPE_DELETE, url, null, null, token);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success in retrieving favorite info");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			super.onPostExecute(responseObj);
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						alert("Successfully logged out.");
+					} else {
+						alert("Couldn't log out successfully.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+
+	void alert(String message) {
+		AlertDialog.Builder bld = new AlertDialog.Builder(MainActivity.this);
+		bld.setMessage(message);
+		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+
+				appInstance.setRememberMe(false);
+
+				Intent i = new Intent(MainActivity.this, LoginActivity.class);
+				startActivity(i);
+				finish();
+				return;
+			}
+		});
+		bld.create().show();
+	}
 
 }

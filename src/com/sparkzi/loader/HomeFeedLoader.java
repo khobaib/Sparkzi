@@ -6,12 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.google.gson.JsonArray;
 import com.sparkzi.MainActivity;
 import com.sparkzi.model.HomeFeed;
 import com.sparkzi.model.ServerResponse;
@@ -43,7 +41,8 @@ public class HomeFeedLoader extends AsyncTaskLoader<List<HomeFeed>> {
         this.token = userCred.getToken();
     }
 
-    @Override
+    @SuppressWarnings("unused")
+	@Override
     public List<HomeFeed> loadInBackground() {
         
         String rootUrl = Constants.URL_ROOT + "user/" + username + "/feeds";
@@ -56,7 +55,7 @@ public class HomeFeedLoader extends AsyncTaskLoader<List<HomeFeed>> {
             JSONObject responseObj = response.getjObj();
             try {
                 String status = responseObj.getString("status");
-                String desc = responseObj.getString("description");
+				String desc = responseObj.getString("description");
                 JSONArray feedArray = responseObj.getJSONArray("feeds");
                 
                 List<HomeFeed> homeFeeds = HomeFeed.parseFeeds(feedArray);

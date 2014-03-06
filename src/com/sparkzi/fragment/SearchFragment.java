@@ -38,282 +38,285 @@ import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 import com.sparkzi.utility.Utility;
 
-public class SearchFragment extends Fragment{
-    
-    private static final String TAG = SearchFragment.class.getSimpleName();
-    private Activity activity;
-    
-    Spinner sStartAge, sEndAge, sCountry;
-    Button bSearch;
-    ListView lvSearchResult;
-    
-    JsonParser jsonParser;
-    ProgressDialog pDialog;
-    
-    SearchAdapter searchAdapter;
-    
-    List<Country> countryList;
-    
-    int oppositeGender, selectedMinAge, selectedMaxAge, selectedCountryId;
-    
-    
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+public class SearchFragment extends Fragment {
 
-        View view = inflater.inflate(R.layout.fragment_search, null);
-        
-//        sShowMe = (Spinner) view.findViewById(R.id.s_gender);
-//        sShowMe.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-//                oppositeGender = position;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> arg0) {
-//
-//            }
-//        });
-        
-        
-        sStartAge = (Spinner) view.findViewById(R.id.s_start_age);
-        sStartAge.setOnItemSelectedListener(new OnItemSelectedListener() {
+	@SuppressWarnings("unused")
+	private static final String TAG = SearchFragment.class.getSimpleName();
+	private Activity activity;
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedMinAge = Integer.parseInt((String)parent.getItemAtPosition(position));
-            }
+	Spinner sStartAge, sEndAge, sCountry;
+	Button bSearch;
+	ListView lvSearchResult;
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+	JsonParser jsonParser;
+	ProgressDialog pDialog;
 
-            }
-        });
-        
-        sEndAge = (Spinner) view.findViewById(R.id.s_end_age);
-        sEndAge.setOnItemSelectedListener(new OnItemSelectedListener() {
+	SearchAdapter searchAdapter;
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedMaxAge = Integer.parseInt((String)parent.getItemAtPosition(position));
-            }
+	List<Country> countryList;
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+	int oppositeGender, selectedMinAge, selectedMaxAge, selectedCountryId;
 
-            }
-        });
-        
-        
-        sCountry = (Spinner) view.findViewById(R.id.s_country);
-        sCountry.setOnItemSelectedListener(new OnItemSelectedListener() {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedCountryId = countryList.get(position).getId();
-            }
+		View view = inflater.inflate(R.layout.fragment_search, null);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+		// sShowMe = (Spinner) view.findViewById(R.id.s_gender);
+		// sShowMe.setOnItemSelectedListener(new OnItemSelectedListener() {
+		//
+		// @Override
+		// public void onItemSelected(AdapterView<?> parent, View v, int
+		// position, long id) {
+		// oppositeGender = position;
+		// }
+		//
+		// @Override
+		// public void onNothingSelected(AdapterView<?> arg0) {
+		//
+		// }
+		// });
 
-            }
-        });
-        
-        
-        bSearch = (Button) view.findViewById(R.id.b_search);
-        bSearch.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                if(selectedMinAge >= selectedMaxAge){
-                    Toast.makeText(activity, "Please choose a valid age interval.", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
-                    oppositeGender = (userCred.getGender() == 1) ? 2 : 1;
-                    new GetSearchResult().execute();
-                }
-                
-            }
-        });
-        
-        lvSearchResult = (ListView) view.findViewById(R.id.lv_search_list);
-        
-        return view;
-    }
-    
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        
-        activity = getActivity();
-        if(activity != null){
-            jsonParser = new JsonParser();
-            pDialog = new ProgressDialog(activity);
-            
-            searchAdapter = new SearchAdapter(activity, null);
-            lvSearchResult.setAdapter(searchAdapter);
-//            lvSearchResult.setVisibility(View.GONE);
-            
-            new GetCountryList().execute();
-            
-//            generateSpinner(sShowMe, Utility.SHOW_ME);
-            generateSpinner(sStartAge, Utility.AGE_RANGE);
-            generateSpinner(sEndAge, Utility.AGE_RANGE);
+		sStartAge = (Spinner) view.findViewById(R.id.s_start_age);
+		sStartAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-        }
-    }
-    
-    
-    
-    private class GetSearchResult extends AsyncTask<Void, Void, JSONObject> {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				selectedMinAge = Integer.parseInt((String) parent
+						.getItemAtPosition(position));
+			}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if(!pDialog.isShowing()){
-                pDialog.setMessage("Searching...");
-                pDialog.setCancelable(false);
-                pDialog.setIndeterminate(true);
-                pDialog.show();
-            }
-        }
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
 
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "user/search" + "/gender/"+ oppositeGender
-                    + "/country/" + selectedCountryId + "/minage/" + selectedMinAge + "/maxage/" + selectedMaxAge;
-            
-            UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
-            String token = userCred.getToken();
-            
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url,
-                    null, null, token);
-            if(response.getStatus() == 200){
-                Log.d(">>>><<<<", "success in retrieving country info");
-                JSONObject responseObj = response.getjObj();
-                return responseObj;
-            }
-            else
-                return null;
-        }
+			}
+		});
 
-        @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(responseObj);
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){   
-                        JSONArray searchArray = responseObj.getJSONArray("result");
-                        List<Favorite> peopleList = Favorite.parseFavorite(searchArray);
-                        Log.e("???????", "search count = " + peopleList.size());
-                        
-                        searchAdapter.setData(peopleList);
-                        searchAdapter.notifyDataSetChanged();
-//                        searchAdapter = new SearchAdapter(activity, peopleList);
-//                        lvSearchResult.setAdapter(searchAdapter);
-                    }
-                    else{
-                        alert("Invalid token.");
-                    }
-                } catch (JSONException e) {
-                    alert("Exception.");
-                    e.printStackTrace();
-                }
-            }
-            
-            if(pDialog.isShowing())
-                pDialog.dismiss();
-        }
+		sEndAge = (Spinner) view.findViewById(R.id.s_end_age);
+		sEndAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-    }
-    
-    
-    private class GetCountryList extends AsyncTask<Void, Void, JSONObject> {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				selectedMaxAge = Integer.parseInt((String) parent
+						.getItemAtPosition(position));
+			}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if(!pDialog.isShowing()){
-                pDialog.setMessage("Please wait...");
-                pDialog.setCancelable(false);
-                pDialog.setIndeterminate(true);
-                pDialog.show();
-            }
-        }
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
 
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "enum/country";
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url,
-                    null, null, null);
-            if(response.getStatus() == 200){
-                Log.d(">>>><<<<", "success in retrieving country info");
-                JSONObject responseObj = response.getjObj();
-                return responseObj;
-            }
-            else
-                return null;
-        }
+			}
+		});
 
-        @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            // TODO Auto-generated method stub
-            super.onPostExecute(responseObj);
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){
-                        JSONArray ctyArray = responseObj.getJSONArray("feeds");
-                        countryList = Country.parseCountry(ctyArray);
-                        
-                        List<String> cntryList = new ArrayList<String>();
-                        for(Country country : countryList){
-                            cntryList.add(country.getValue());
-                        }
-                        generateSpinner(sCountry, cntryList.toArray(new String[cntryList.size()]));
-                    }
-                    else{
-                        alert("Invalid token.");
-                    }
-                } catch (JSONException e) {
-                    alert("Exception.");
-                    e.printStackTrace();
-                }
-            }
-            
-            if(pDialog.isShowing())
-                pDialog.dismiss();
-        }
+		sCountry = (Spinner) view.findViewById(R.id.s_country);
+		sCountry.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-    }
-    
-    private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
-                activity, R.layout.my_simple_spinner_item, arrayToSpinner);
-        spinner.setAdapter(myAdapter);
-        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				selectedCountryId = countryList.get(position).getId();
+			}
 
-    }
-    
-    
-    void alert(String message) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(activity);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+			}
+		});
 
-            }
-        });
-        bld.create().show();
-    }
-    
-    
+		bSearch = (Button) view.findViewById(R.id.b_search);
+		bSearch.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (selectedMinAge >= selectedMaxAge) {
+					Toast.makeText(activity,
+							"Please choose a valid age interval.",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					UserCred userCred = ((SparkziApplication) activity
+							.getApplication()).getUserCred();
+					oppositeGender = (userCred.getGender() == 1) ? 2 : 1;
+					new GetSearchResult().execute();
+				}
+
+			}
+		});
+
+		lvSearchResult = (ListView) view.findViewById(R.id.lv_search_list);
+
+		return view;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		activity = getActivity();
+		if (activity != null) {
+			jsonParser = new JsonParser();
+			pDialog = new ProgressDialog(activity);
+
+			searchAdapter = new SearchAdapter(activity, null);
+			lvSearchResult.setAdapter(searchAdapter);
+			// lvSearchResult.setVisibility(View.GONE);
+
+			new GetCountryList().execute();
+
+			// generateSpinner(sShowMe, Utility.SHOW_ME);
+			generateSpinner(sStartAge, Utility.AGE_RANGE);
+			generateSpinner(sEndAge, Utility.AGE_RANGE);
+
+		}
+	}
+
+	private class GetSearchResult extends AsyncTask<Void, Void, JSONObject> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!pDialog.isShowing()) {
+				pDialog.setMessage("Searching...");
+				pDialog.setCancelable(false);
+				pDialog.setIndeterminate(true);
+				pDialog.show();
+			}
+		}
+
+		@Override
+		protected JSONObject doInBackground(Void... params) {
+			String url = Constants.URL_ROOT + "user/search" + "/gender/"
+					+ oppositeGender + "/country/" + selectedCountryId
+					+ "/minage/" + selectedMinAge + "/maxage/" + selectedMaxAge;
+
+			UserCred userCred = ((SparkziApplication) activity.getApplication())
+					.getUserCred();
+			String token = userCred.getToken();
+
+			ServerResponse response = jsonParser.retrieveServerData(
+					Constants.REQUEST_TYPE_GET, url, null, null, token);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success in retrieving country info");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(responseObj);
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						JSONArray searchArray = responseObj
+								.getJSONArray("result");
+						List<Favorite> peopleList = Favorite
+								.parseFavorite(searchArray);
+						Log.e("???????", "search count = " + peopleList.size());
+
+						searchAdapter.setData(peopleList);
+						searchAdapter.notifyDataSetChanged();
+						// searchAdapter = new SearchAdapter(activity,
+						// peopleList);
+						// lvSearchResult.setAdapter(searchAdapter);
+					} else {
+						alert("Invalid token.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+		}
+
+	}
+
+	private class GetCountryList extends AsyncTask<Void, Void, JSONObject> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!pDialog.isShowing()) {
+				pDialog.setMessage("Please wait...");
+				pDialog.setCancelable(false);
+				pDialog.setIndeterminate(true);
+				pDialog.show();
+			}
+		}
+
+		@Override
+		protected JSONObject doInBackground(Void... params) {
+			String url = Constants.URL_ROOT + "enum/country";
+			ServerResponse response = jsonParser.retrieveServerData(
+					Constants.REQUEST_TYPE_GET, url, null, null, null);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success in retrieving country info");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(responseObj);
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						JSONArray ctyArray = responseObj.getJSONArray("feeds");
+						countryList = Country.parseCountry(ctyArray);
+
+						List<String> cntryList = new ArrayList<String>();
+						for (Country country : countryList) {
+							cntryList.add(country.getValue());
+						}
+						generateSpinner(sCountry,
+								cntryList.toArray(new String[cntryList.size()]));
+					} else {
+						alert("Invalid token.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+		}
+
+	}
+
+	private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity,
+				R.layout.my_simple_spinner_item, arrayToSpinner);
+		spinner.setAdapter(myAdapter);
+		myAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+	}
+
+	void alert(String message) {
+		AlertDialog.Builder bld = new AlertDialog.Builder(activity);
+		bld.setMessage(message);
+		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+
+			}
+		});
+		bld.create().show();
+	}
 
 }

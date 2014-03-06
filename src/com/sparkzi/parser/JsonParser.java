@@ -41,7 +41,8 @@ public class JsonParser {
 
     }
 
-    public ServerResponse retrieveServerData(int reqType, String url, List<NameValuePair> urlParams, String content, String appToken) {
+	public ServerResponse retrieveServerData(int reqType, String url, 
+			List<NameValuePair> urlParams, String content, String appToken) {
         Log.d(TAG, "in retrieveServerData method");
 
         int status = 0;
@@ -79,7 +80,8 @@ public class JsonParser {
                 }
 
                 StringEntity se = new StringEntity(content);
-                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, 
+                		"application/json"));
                 httpPost.setEntity(se);
 
                 httpResponse = httpClient.execute(httpPost);                
@@ -93,7 +95,8 @@ public class JsonParser {
 
                 if(content != null){
                     StringEntity se = new StringEntity(content);
-                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, 
+                    		"application/json"));
                     httpPut.setEntity(se);
                 }
 
@@ -108,7 +111,8 @@ public class JsonParser {
 
                 if(content != null){
                     StringEntity se = new StringEntity(content);
-                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, 
+                    		"application/json"));
                     ((HttpResponse) httpDelete).setEntity(se);
                 }
 
@@ -130,7 +134,8 @@ public class JsonParser {
 
         try {
             Log.d(TAG, "trying to read input stream.");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is,
+            		"iso-8859-1"), 8);
             sb = new StringBuilder();
             String line = null;
             while ((line = reader.readLine()) != null) {

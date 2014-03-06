@@ -149,7 +149,6 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
     
     @Override
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
         BugSenseHandler.startSession(this);
     }
@@ -171,7 +170,8 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
         return ctyList;
     }
 
-    private int getCityId(String cityName){
+    @SuppressWarnings("unused")
+	private int getCityId(String cityName){
         for(City city : cityList){
             if(city.getvalue().equals(cityName))
                 return city.getId();
@@ -191,8 +191,10 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 
 
 
-    public void onClickCalendar(View v){
-        DialogFragment newFragment = new DatePickerFragment().newInstance(calendar, "get_started");
+    @SuppressWarnings("static-access")
+	public void onClickCalendar(View v){
+		DialogFragment newFragment = new DatePickerFragment().newInstance(
+				calendar, "get_started");
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 

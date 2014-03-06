@@ -35,7 +35,8 @@ public class FavoritePendingAdapter extends ArrayAdapter<Favorite>{
         ImageView UserImage;
         TextView userName;
         TextView userAgeGender;
-        Button bAccept;
+        @SuppressWarnings("unused")
+		Button bAccept;
     }
     
     
