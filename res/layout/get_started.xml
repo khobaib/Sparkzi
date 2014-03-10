@@ -226,6 +226,30 @@
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold" />
+            
+            
+            <View
+                android:id="@+id/view3"
+                android:layout_width="280dp"
+                android:layout_height="2dp"
+                android:layout_below="@+id/b_next"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@color/gray70_transparent_back" />
+            
+            
+            <Button
+                android:id="@+id/b_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+               android:padding="15dp"
+                android:text="Register with facebook"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
         </RelativeLayout>
     </ScrollView>
 

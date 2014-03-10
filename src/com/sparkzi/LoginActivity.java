@@ -1,5 +1,10 @@
 package com.sparkzi;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,8 +14,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +33,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
+
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
@@ -32,18 +48,14 @@ import com.sparkzi.utility.SparkziApplication;
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
-
-    // Progress Dialog
     private ProgressDialog pDialog;
-
     EditText Username, Password;
     CheckBox RememberMe;
     TextView ForgetPassword;
-
     SparkziApplication appInstance;
     String userName, password;
     String imageUrl;
-
+    Session session1;
     JsonParser jsonParser;
 
     @Override
@@ -51,6 +63,25 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.login);
+        
+        
+    	try {
+	        PackageInfo info = getPackageManager().getPackageInfo(
+	                "com.sparkzi", 
+	                PackageManager.GET_SIGNATURES);
+	        	for (Signature signature : info.signatures) {
+	        			MessageDigest md = MessageDigest.getInstance("SHA");
+	        			md.update(signature.toByteArray());
+	        			 Log.e("MY KEY HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	          
+	            }
+	    } catch (NameNotFoundException e) {
+
+	    } catch (NoSuchAlgorithmException e) {
+
+	    }
+        
+        
 
         pDialog = new ProgressDialog(LoginActivity.this);
         appInstance = (SparkziApplication) getApplication();
@@ -115,7 +146,9 @@ public class LoginActivity extends Activity {
     }
 
     public void onClickRegister(View v){
-        startActivity(new Intent(LoginActivity.this, GetStartedActivity.class));
+    	 startActivity(new Intent(LoginActivity.this, GetStartedActivity.class));
+			
+       
     }
 
 
@@ -346,5 +379,9 @@ public class LoginActivity extends Activity {
     //        //      Log.d(TAG, "Showing alert dialog: " + message);
     //        bld.create().show();
     //    }
+    
+    
+ 
+ 
 
 }

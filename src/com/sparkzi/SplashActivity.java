@@ -35,7 +35,7 @@ public class SplashActivity extends Activity {
 
     String userName, password;
     String imageUrl;
-
+   
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

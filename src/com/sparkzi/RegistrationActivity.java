@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.facebook.model.GraphUser;
 import com.sparkzi.model.RegistrationInfo;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.parser.JsonParser;
@@ -56,7 +57,15 @@ public class RegistrationActivity extends Activity {
         etLastName = (EditText) findViewById(R.id.et_last_name);
         etEmail = (EditText) findViewById(R.id.et_email);
         etPassword = (EditText) findViewById(R.id.et_password);
-        etConfirmPass = (EditText) findViewById(R.id.et_confirm_password);       
+        etConfirmPass = (EditText) findViewById(R.id.et_confirm_password);     
+        
+        if(GetStartedActivity.graphuser!=null){
+        	GraphUser user=GetStartedActivity.graphuser;
+        	etFirstName.setText(user.getFirstName());
+        	 etLastName.setText(user.getLastName());
+        	 etEmail.setText(user.getProperty("email").toString());
+        }
+        
     }
     
     
