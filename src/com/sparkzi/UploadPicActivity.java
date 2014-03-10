@@ -165,11 +165,12 @@ public class UploadPicActivity extends Activity {
 	public void onClickGoToGallery(View v) {
 		Intent intent = new Intent(Intent.ACTION_PICK);
 		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
+		// intent.setAction(Intent.ACTION_GET_CONTENT);
 		// Intent intent = new Intent(Intent.ACTION_PICK,
 		// android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		startActivityForResult(Intent.createChooser(intent, "Select Picture"),
-				GALLERY_REQ_CODE);
+		// startActivityForResult(Intent.createChooser(intent,
+		//  TODO "Select Picture"),
+		startActivityForResult(intent, GALLERY_REQ_CODE);
 	}
 
 	private void startCropImage() {
@@ -178,7 +179,7 @@ public class UploadPicActivity extends Activity {
 		intent.putExtra(CropImage.IMAGE_PATH, picFile.getPath());
 		intent.putExtra(CropImage.SCALE, true);
 
-		intent.putExtra(CropImage.ASPECT_X, 3);
+		intent.putExtra(CropImage.ASPECT_X, 2);
 		intent.putExtra(CropImage.ASPECT_Y, 2);
 
 		Log.d(TAG, "Starting crop from startCropImage()");

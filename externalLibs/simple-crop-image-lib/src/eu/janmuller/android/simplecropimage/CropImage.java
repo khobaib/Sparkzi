@@ -39,7 +39,6 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.media.FaceDetector;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -465,7 +464,6 @@ public class CropImage extends MonitoredActivity {
 
 
     Runnable mRunFaceDetection = new Runnable() {
-        @SuppressWarnings("hiding")
         float mScale = 1F;
         Matrix mImageMatrix;
         FaceDetector.Face[] mFaces = new FaceDetector.Face[3];
