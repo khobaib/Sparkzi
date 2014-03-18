@@ -16,6 +16,12 @@ import android.util.Log;
 
 @SuppressLint({ "DefaultLocale", "SimpleDateFormat" })
 public class Utility {
+	
+	public static String token;
+	  public static final String EXTRA_MESSAGE = "message";
+	 public static final String DISPLAY_MESSAGE_ACTION =
+	            "com.google.android.gcm.demo.app.DISPLAY_MESSAGE";
+	 public static final String SENDER_ID = "326205185342";
 
 	public static final String[] MONTH_NAME = { "JAN", "FEB", "MAR", "APR",
 			"MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" };

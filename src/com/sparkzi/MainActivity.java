@@ -8,8 +8,11 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -29,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.google.android.gcm.GCMRegistrar;
 import com.sparkzi.adapter.LeftDrawerAdapter;
 import com.sparkzi.fragment.ConversationsFragment;
 import com.sparkzi.fragment.DummyFragment;
@@ -59,6 +63,10 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 
 	private String token;
+	
+	//for push notification
+	AsyncTask<Void, Void, Void> mRegisterTask;
+	//for push notification
 
 	// private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
@@ -130,21 +138,21 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-		mDrawerLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-		R.string.drawer_open, /* "open drawer" description for accessibility */
-		R.string.drawer_close /* "close drawer" description for accessibility */
-		) {
+				mDrawerLayout, /* DrawerLayout object */
+				R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+				R.string.drawer_open, /* "open drawer" description for accessibility */
+				R.string.drawer_close /* "close drawer" description for accessibility */
+				) {
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				// onPrepareOptionsMenu()
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				getActionBar().setTitle("");
 				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				// onPrepareOptionsMenu()
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -152,6 +160,10 @@ public class MainActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			selectItem(0);
 		}
+
+		Utility.token=token;
+
+		newgetGCMDeviceID();
 	}
 
 	@Override
@@ -234,7 +246,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -285,7 +297,7 @@ public class MainActivity extends FragmentActivity {
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, myFragment).commit();
+		.replace(R.id.content_frame, myFragment).commit();
 
 		mDrawerList.setItemChecked(position, true);
 		setTitle(drawerItemList.get(position).getName());
@@ -423,4 +435,99 @@ public class MainActivity extends FragmentActivity {
 		bld.create().show();
 	}
 
+
+	@Override
+	protected void onDestroy() {
+		if (mRegisterTask != null) {
+			mRegisterTask.cancel(true);
+		}
+		try {
+			unregisterReceiver(mHandleMessageReceiver);
+			GCMRegistrar.onDestroy(this);
+		} catch (Exception e) {
+			Log.e("UnRegister Receiver Error", "> " + e.getMessage());
+		}
+		super.onDestroy();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+
+
+	}
+
+	private void newgetGCMDeviceID() {
+		if(Utility.hasInternet(MainActivity.this)){
+
+			// Make sure the device has the proper dependencies.
+			GCMRegistrar.checkDevice(MainActivity.this);
+
+			// Make sure the manifest was properly set - comment out this line
+			// while developing the app, then uncomment it when it's ready.
+			GCMRegistrar.checkManifest(MainActivity.this);
+
+			registerReceiver(mHandleMessageReceiver, new IntentFilter(Utility.DISPLAY_MESSAGE_ACTION));
+
+			// Get GCM registration id
+			final String regId = GCMRegistrar.getRegistrationId(MainActivity.this);
+			Log.d(">>>>><<<<<", "already registered, regId = " + regId);
+
+			// Check if regid already presents
+			if (regId.equals("")) {
+				// Registration is not present, register now with GCM          
+				GCMRegistrar.register(this, Utility.SENDER_ID);
+				Log.d(">>>>><<<<<", "just registered, regId = " + GCMRegistrar.getRegistrationId(MainActivity.this));
+			} else {
+
+				// if the device is already registered in our server?? this flag becomes true when we get success response
+				// while connecting to our server earlier.
+				if (GCMRegistrar.isRegisteredOnServer(MainActivity.this)) {
+					// Skips registration in the server         
+					//                       Toast.makeText(getApplicationContext(), "Already registered in server", Toast.LENGTH_LONG).show();
+				} else {
+
+					// Try to register again, but not in the UI thread.
+					// It's also necessary to cancel the thread onDestroy(),
+					// hence the use of AsyncTask instead of a raw thread.
+					final Context context = this;
+					mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+						@Override
+						protected Void doInBackground(Void... params) {
+							// Register on our server
+							// On server creates a new user
+							boolean registered = ServerUtilities.register(context, regId);
+							//                            if (!registered) {
+							//                                GCMRegistrar.unregister(context);
+							//                            }
+							return null;
+						}
+
+						@Override
+						protected void onPostExecute(Void result) {
+							mRegisterTask = null;
+						}
+
+					};
+					mRegisterTask.execute(null, null, null);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Receiving push messages
+	 * */
+	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			String newMessage = intent.getExtras().getString(Utility.EXTRA_MESSAGE);
+		}
+	};
+
 }
+
