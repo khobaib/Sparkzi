@@ -20,7 +20,7 @@
     <string name="server_unregister_error">Could not unregister device on Demo Server (%1$s).</string>
     <string name="options_register">Register</string>
     <string name="options_unregister">Unregister</string>
-
+ 	<string name="app_id">1422228148015445</string>
     <string-array name="drawer_menu_array">
         <item>Home</item>
         <item>Conversations</item>

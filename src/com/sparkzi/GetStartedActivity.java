@@ -1,5 +1,6 @@
 package com.sparkzi;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -19,15 +21,22 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 import com.sparkzi.fragment.DatePickerFragment;
 import com.sparkzi.model.City;
 import com.sparkzi.model.Country;
@@ -38,29 +47,43 @@ import com.sparkzi.utility.Utility;
 
 public class GetStartedActivity extends FragmentActivity implements OnDateSetListener{
 
-    Spinner sWhoIAm, sStartAge, sEndAge, sCountry, sCity;
+   Spinner sWhoIAm, sStartAge, sEndAge, sCountry, sCity;
     TextView tvDoB;
-
+    Button b_facebook;
     String whoAmI, startAge, endAge, selectedCityName;
     int countryId;
     Calendar calendar;
-
+   public   static GraphUser graphuser;
     JsonParser jsonParser;
     ProgressDialog pDialog;
 
     List<Country> countryList;
     List<City> cityList;
-
+    Session session1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BugSenseHandler.initAndStartSession(this, "2c5ced14");
         setContentView(R.layout.get_started);
-
+        
         jsonParser = new JsonParser();
         pDialog = new ProgressDialog(GetStartedActivity.this);
         calendar = Calendar.getInstance();
-
+        
+        //retreeive data from facebook
+        
+        b_facebook=(Button) findViewById(R.id.b_facebook);
+        b_facebook.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				registerwithfacebook();
+			}
+		});
+        
+        
+        
         tvDoB = (TextView) findViewById(R.id.tv_dob);
         tvDoB.setText(String.format("%04d-%02d-%02d", calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)));
@@ -346,5 +369,99 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
         });
         bld.create().show();
     }
+    
+    
+    
+
+    public void registerwithfacebook(){
+		 
+		 List<String> permissions = new ArrayList<String>();
+		 permissions.add("email");
+		 permissions.add("user_birthday");
+		// openActiveSession(activity, allowLoginUI, callback, permissions)
+		 session1=openActiveSession(this, true, new Session.StatusCallback() {
+		     @Override
+		     public void call(final Session session, SessionState state, Exception exception) {
+		 
+		        if (session.isOpened()) {
+		          
+		             Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+		                 @Override
+		                 public void onCompleted(GraphUser user, Response response) {
+		                     if (user != null) {
+		                    	 
+		                    	 graphuser=user;
+		                    	String Name =  user.getUsername();
+		                         Log.d("result", Name);
+		                         String lastName = user.getLastName();
+		                         String id = user.getId();
+		                         String email = user.getProperty("email").toString();
+		                         Log.d("resonse", Name+"  "+id+" "+email);
+		                         b_facebook.setVisibility(View.GONE);
+		                         String birthdate=user.getBirthday();
+		                         if( birthdate!=null){
+		                        	 
+		                        	 Log.d("birthdate", birthdate);
+		                        	 String date= birthdate.substring(0, birthdate.indexOf('/'));
+		                        	 String month= birthdate.substring(birthdate.indexOf('/')+1,birthdate.lastIndexOf('/'));
+		                        	 String  year=birthdate.substring(birthdate.lastIndexOf('/')+1);
+		                        	 Log.d("Date", date+ "   " +month+  "  "+ year);
+		                        	 birthdate=year+"-"+month+"-"+date;
+		                        	 tvDoB.setText(birthdate); 
+		                        	  
+		                         }
+		                         String get_gender = (String) user.getProperty("gender");
+		                         if(get_gender!=null){
+		                        	 if(get_gender.equals("male")){
+		                        		 sWhoIAm.setSelection(0);
+		                        	 }
+		                        	 else{
+		                        		 sWhoIAm.setSelection(1);
+		                        	 }
+		                        	 
+		                         }
+		                         session.getActiveSession().closeAndClearTokenInformation();
+		                      
+		                     } 
+		                     else{
+		                    	 Log.d("resonse", "not found");
+		                    	 
+		                     }
+		                   
+		                 }
+		             });
+		             
+		        }
+		         else{
+		        	
+		        	 Log.d("resonse", "problem");
+				 }
+		      }
+		  }, permissions);
+		 
+	
+	 }
+	 
+	 private static Session openActiveSession(Activity activity, boolean allowLoginUI, Session.StatusCallback callback, List<String> permissions) {
+		    Session.OpenRequest openRequest = new Session.OpenRequest(activity).setPermissions(permissions).setCallback(callback);
+		    Session session = new Session.Builder(activity).build();
+		    if (SessionState.CREATED_TOKEN_LOADED.equals(session.getState()) || allowLoginUI) {
+		    Session.setActiveSession(session);
+		    session.openForRead(openRequest);
+		    return session;
+		    }
+		    return null;
+		}
+	 
+	 @Override
+	  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	      super.onActivityResult(requestCode, resultCode, data);
+	      Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+	      
+	      
+	      
+	      
+	  }
+	 
 
 }
