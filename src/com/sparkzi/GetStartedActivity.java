@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -23,8 +24,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
@@ -37,6 +40,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
+
 import com.sparkzi.fragment.DatePickerFragment;
 import com.sparkzi.model.City;
 import com.sparkzi.model.Country;
@@ -45,9 +49,11 @@ import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.Utility;
 
+@SuppressLint("NewApi")
 public class GetStartedActivity extends FragmentActivity implements OnDateSetListener{
 
-   Spinner sWhoIAm, sStartAge, sEndAge, sCountry, sCity;
+   Spinner sWhoIAm, sStartAge, sEndAge;
+   AutoCompleteTextView sCountry1, sCity1;
     TextView tvDoB;
     Button b_facebook;
     String whoAmI, startAge, endAge, selectedCityName;
@@ -134,21 +140,42 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
             }
         });
 
-        sCity = (Spinner) findViewById(R.id.s_city);
-        sCity.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+
+        sCity1 = (AutoCompleteTextView) findViewById(R.id.s_city);
+        
+        sCity1.setThreshold(1);
+        
+        sCity1.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                selectedCityName = (String)parent.getItemAtPosition(position);
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            	   selectedCityName = (String)parent.getItemAtPosition(position);
+
             }
+        });
+        
+        
+      
+        sCountry1=(AutoCompleteTextView) findViewById(R.id.s_country);
+        
+        
+        sCountry1.setThreshold(1);
+        sCountry1.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            	  countryId = countryList.get(position).getId();
+                  List<String> cityList = getCityList(countryList.get(position).getId());
+                  Log.e(">>>", "city list size = " + cityList);
+                  generateautocomplete(sCity1, cityList.toArray(new String[cityList.size()]));
 
             }
         });
 
-        sCountry = (Spinner) findViewById(R.id.s_country);
+        
+        
+    /*    sCountry = (Spinner) findViewById(R.id.s_country);
         sCountry.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
@@ -164,7 +191,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
             public void onNothingSelected(AdapterView<?> arg0) {
 
             }
-        });
+        });*/
 
         new GetCountryList().execute();
     }
@@ -210,6 +237,13 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
         myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
     }
+    
+   private void generateautocomplete(AutoCompleteTextView autextview,String[] arrayToSpinner){
+	   ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
+               GetStartedActivity.this,  R.layout.my_autocomplete_text_style, arrayToSpinner);
+	   autextview.setAdapter(myAdapter);
+	   
+   }
 
 
 
@@ -337,7 +371,8 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
                         for(Country country : countryList){
                             cntryList.add(country.getValue());
                         }
-                        generateSpinner(sCountry, cntryList.toArray(new String[cntryList.size()]));
+                      //  generateSpinner(sCountry, cntryList.toArray(new String[cntryList.size()]));
+                        generateautocomplete(sCountry1, cntryList.toArray(new String[cntryList.size()]));
                     }
                     else{
                         alert("Invalid token.");
@@ -380,55 +415,60 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 		 permissions.add("user_birthday");
 		// openActiveSession(activity, allowLoginUI, callback, permissions)
 		 session1=openActiveSession(this, true, new Session.StatusCallback() {
-		     @Override
+		     @SuppressWarnings("deprecation")
+			@Override
 		     public void call(final Session session, SessionState state, Exception exception) {
 		 
 		        if (session.isOpened()) {
 		          
 		             Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-		                 @Override
-		                 public void onCompleted(GraphUser user, Response response) {
-		                     if (user != null) {
-		                    	 
-		                    	 graphuser=user;
-		                    	String Name =  user.getUsername();
-		                         Log.d("result", Name);
-		                         String lastName = user.getLastName();
-		                         String id = user.getId();
-		                         String email = user.getProperty("email").toString();
-		                         Log.d("resonse", Name+"  "+id+" "+email);
-		                         b_facebook.setVisibility(View.GONE);
-		                         String birthdate=user.getBirthday();
-		                         if( birthdate!=null){
-		                        	 
-		                        	 Log.d("birthdate", birthdate);
-		                        	 String date= birthdate.substring(0, birthdate.indexOf('/'));
-		                        	 String month= birthdate.substring(birthdate.indexOf('/')+1,birthdate.lastIndexOf('/'));
-		                        	 String  year=birthdate.substring(birthdate.lastIndexOf('/')+1);
-		                        	 Log.d("Date", date+ "   " +month+  "  "+ year);
-		                        	 birthdate=year+"-"+month+"-"+date;
-		                        	 tvDoB.setText(birthdate); 
-		                        	  
-		                         }
-		                         String get_gender = (String) user.getProperty("gender");
-		                         if(get_gender!=null){
-		                        	 if(get_gender.equals("male")){
-		                        		 sWhoIAm.setSelection(0);
-		                        	 }
-		                        	 else{
-		                        		 sWhoIAm.setSelection(1);
-		                        	 }
-		                        	 
-		                         }
-		                         session.getActiveSession().closeAndClearTokenInformation();
-		                      
-		                     } 
-		                     else{
-		                    	 Log.d("resonse", "not found");
-		                    	 
-		                     }
-		                   
-		                 }
+		                 
+						@Override
+						public void onCompleted(GraphUser user,
+								Response response) {
+							// TODO Auto-generated method stub
+							
+							  if (user != null) {
+			                    	 
+			                    	 graphuser=user;
+			                    	String Name =  user.getUsername();
+			                         Log.d("result", Name);
+			                         String lastName = user.getLastName();
+			                         String id = user.getId();
+			                         String email = user.getProperty("email").toString();
+			                         Log.d("resonse", Name+"  "+id+" "+email);
+			                         b_facebook.setVisibility(View.GONE);
+			                         String birthdate=user.getBirthday();
+			                         if( birthdate!=null){
+			                        	 
+			                        	 Log.d("birthdate", birthdate);
+			                        	 String date= birthdate.substring(0, birthdate.indexOf('/'));
+			                        	 String month= birthdate.substring(birthdate.indexOf('/')+1,birthdate.lastIndexOf('/'));
+			                        	 String  year=birthdate.substring(birthdate.lastIndexOf('/')+1);
+			                        	 Log.d("Date", date+ "   " +month+  "  "+ year);
+			                        	 birthdate=year+"-"+month+"-"+date;
+			                        	 tvDoB.setText(birthdate); 
+			                        	  
+			                         }
+			                         String get_gender = (String) user.getProperty("gender");
+			                         if(get_gender!=null){
+			                        	 if(get_gender.equals("male")){
+			                        		 sWhoIAm.setSelection(0);
+			                        	 }
+			                        	 else{
+			                        		 sWhoIAm.setSelection(1);
+			                        	 }
+			                        	 
+			                         }
+			                         session.getActiveSession().closeAndClearTokenInformation();
+			                      
+			                     } 
+			                     else{
+			                    	 Log.d("resonse", "not found");
+			                    	 
+			                     }
+							
+						}
 		             });
 		             
 		        }

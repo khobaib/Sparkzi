@@ -32,8 +32,7 @@
         <item name="android:listViewStyle">@style/ListViewAppTheme</item>
         <item name="android:listViewWhiteStyle">@style/ListViewAppTheme.White</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemAppTheme</item>
-        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
-        <item name="android:activatedBackgroundIndicator">@drawable/listitem_background</item>
+      <item name="android:activatedBackgroundIndicator">@drawable/listitem_background</item>
     </style>
 
     <style name="MyActionBar" parent="Widget.Sherlock.ActionBar">
