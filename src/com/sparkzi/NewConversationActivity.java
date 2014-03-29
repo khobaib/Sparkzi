@@ -36,7 +36,7 @@ public class NewConversationActivity extends Activity{
     ProgressDialog pDialog;
     SparkziApplication appInstance;
 
-    String selectedUserName;
+   String selectedUserName;
     String msgBody;
 
     List<Favorite> fList;

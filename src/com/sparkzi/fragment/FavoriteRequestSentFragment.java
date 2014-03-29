@@ -81,7 +81,9 @@ public class FavoriteRequestSentFragment extends ListFragment {
 					if (status.equals("OK")) {
 						JSONObject favObj = responseObj.getJSONObject("favs");
 						JSONArray addedFavArray = favObj
-								.getJSONArray("pendeingByMe");
+								.getJSONArray("pendingByMe");
+						
+					
 						final List<Favorite> fList = Favorite
 								.parseFavorite(addedFavArray);
 						favAdapter.setData(fList);

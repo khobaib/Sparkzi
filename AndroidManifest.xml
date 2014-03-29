@@ -59,11 +59,11 @@
          
         <activity
             android:name=".GetStartedActivity"
-            android:screenOrientation="portrait" >
+           android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".RegistrationActivity"
-            android:screenOrientation="portrait" >
+          	android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".EssentialDetailsActivity"
@@ -84,9 +84,15 @@
         <activity
             android:name=".NewConversationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" >
+       >
         </activity>
+        
         <activity
+            android:name="eu.janmuller.android.simplecropimage.CropImage"
+            android:screenOrientation="portrait"
+       >
+        </activity>
+    <activity
             android:name=".BlockListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeActivityTheme" >

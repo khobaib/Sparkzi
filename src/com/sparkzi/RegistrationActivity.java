@@ -10,8 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -40,6 +44,10 @@ public class RegistrationActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
+		
+	
+		
+		
 		setContentView(R.layout.register);
 
 		jsonParser = new JsonParser();        
@@ -58,6 +66,7 @@ public class RegistrationActivity extends Activity {
 			GraphUser user=GetStartedActivity.graphuser;
 			etFirstName.setText(user.getFirstName());
 			etLastName.setText(user.getLastName());
+			etUserName.setText(user.getUsername());
 			etEmail.setText(user.getProperty("email").toString());
 		}
 
@@ -148,10 +157,6 @@ public class RegistrationActivity extends Activity {
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "user/" + regInfo.getUserName();
 
-			//            List<NameValuePair> urlParam = new ArrayList<NameValuePair>();
-			//            urlParam.add(new BasicNameValuePair("user", email.substring(0, email.lastIndexOf("@"))));
-
-
 			try {
 				JSONObject regObj = new JSONObject();
 				regObj.put("password", regInfo.getPassword());
@@ -174,14 +179,7 @@ public class RegistrationActivity extends Activity {
 						null, regData, null);
 				if(response.getStatus() == 200){
 					JSONObject responseObj = response.getjObj();
-					//                    String status = responseObj.getString("status");
-					//                    Log.d(">>>>>", "status = " + status);
-					//                    if(status.equals("OK")){
-					//                        String desc = responseObj.getString("description");
-					//                        return true;
-					//                    }
-					//                    return false;
-					return responseObj;
+						return responseObj;
 				}
 				else{
 					return null;

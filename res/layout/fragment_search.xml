@@ -59,18 +59,19 @@
         android:layout_below="@+id/ll_age"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
-        android:text="Living near"
+        android:text="Living in"
         android:textColor="@color/black"
         android:textSize="18dp"
         android:textStyle="bold" />
 
-    <Spinner
-        android:id="@+id/s_country"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_alignBottom="@+id/tv_live_near"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/tv_live_near" />
+    <AutoCompleteTextView
+                android:id="@+id/s_country"
+                android:layout_width="150dp"
+       			android:layout_height="40dp"
+        		android:layout_alignBottom="@+id/tv_live_near"
+        		android:layout_marginLeft="10dp"
+       		 	android:layout_toRightOf="@+id/tv_live_near" />
+  
 
     <Button
         android:id="@+id/b_search"

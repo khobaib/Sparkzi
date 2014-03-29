@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.sparkzi.NewConversationActivity.SendMessageToServer;
 import com.sparkzi.adapter.ThreadMessageAdapter;
 import com.sparkzi.loader.ConversationListLoader;
 import com.sparkzi.model.Conversation;
@@ -36,10 +37,10 @@ public class ThreadMessageActivity extends FragmentActivity implements
 	private static final int LOADER_ID = 1;
 
 	ListView ThreadMessageList;
-
+	 SparkziApplication appInstance;
 	ThreadMessageAdapter threadMessageAdapter;
 	List<Conversation> messageList;
-
+	String msgBody;
 	JsonParser jsonParser;
 	ProgressDialog pDialog;
 
@@ -57,7 +58,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.thread_message);
-
+		 appInstance = (SparkziApplication) getApplication();
 		UserCred userCred = ((SparkziApplication) getApplication())
 				.getUserCred();
 		myUId = userCred.getUid();
@@ -66,6 +67,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 
 		threadUserName = getIntent().getExtras().getString("user_name");
 		threadUserId = getIntent().getExtras().getInt("user_id");
+		//Toast.makeText(ThreadMessageActivity.this, threadUserName, 10000).show();
 
 		jsonParser = new JsonParser();
 
@@ -99,16 +101,23 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		super.onStop();
 		BugSenseHandler.closeSession(this);
 	}
+	
+
 
 	public void onClickReply(View v) {
-		String msgBody = MessageBody.getText().toString().trim();
+		msgBody = MessageBody.getText().toString().trim();
 
 		if (msgBody == null || msgBody.equals(""))
 			Toast.makeText(ThreadMessageActivity.this, "Message is empty.",
 					Toast.LENGTH_SHORT).show();
-		else {
-			// send message
-		}
+		 else{
+			 	if(threadUserName == null || threadUserName.equals("")){
+	                Toast.makeText(ThreadMessageActivity.this, "Please select a user.", Toast.LENGTH_SHORT).show();
+	            }
+	            else{
+	                new SendMessageToServer().execute();
+	            }
+	        }
 	}
 
 	public void onClickDelete(View v) {
@@ -186,6 +195,87 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		}
 
 	}
+	
+	public class SendMessageToServer extends AsyncTask<Void, Void, JSONObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.setMessage("Please wait while your message is being sent...");
+            pDialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(Void... params) {
+            String url = Constants.URL_ROOT + "messages/" + threadUserName;
+
+            UserCred userCred = appInstance.getUserCred();
+            String token = userCred.getToken();
+
+            try {
+                JSONObject msgObj = new JSONObject();
+                msgObj.put("message", msgBody);
+
+                String msgData = msgObj.toString();
+                ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
+                        null, msgData, token);
+                if(response.getStatus() == 200){
+                    JSONObject responseObj = response.getjObj();
+                    return responseObj;
+                }
+                else{
+                    return null;
+                }
+            } catch (JSONException e) {                
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject responseObj) {
+            super.onPostExecute(responseObj);
+            if(pDialog.isShowing())
+                pDialog.dismiss();
+            if(responseObj != null){
+                try {
+                    String status = responseObj.getString("status");
+                    if(status.equals("OK")){
+                        alert("Message Sent.", true);
+                    }
+                    else{
+                      }
+                } catch (JSONException e) {
+                    alert("Registration Exception.", false);
+                    e.printStackTrace();
+                }
+
+            }
+            else{
+                alert("Message sending error, please try again.", false);
+            }
+        }               
+
+    }
+
+    void alert(String message, final Boolean success) {
+        AlertDialog.Builder bld = new AlertDialog.Builder(ThreadMessageActivity.this);
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(success){
+                     finish();
+                }
+
+
+            }
+        });
+        bld.create().show();
+    }
+
+	
 
 	void alert(String message) {
 		AlertDialog.Builder bld = new AlertDialog.Builder(this);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
@@ -26,17 +27,8 @@
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@drawable/drawer_list_item_text" />
+        android:textColor="@drawable/drawer_list_item_text"
+        tools:ignore="NewApi" />
 
-    <!--
-         <TextView
-        android:id="@+id/left_drawer_info"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
-        android:gravity="center_vertical"
-        android:textColor="@color/whiteAlphaFF"
-        android:textSize="17sp" />
-    -->
 
 </LinearLayout>

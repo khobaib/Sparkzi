@@ -1,5 +1,6 @@
 package com.sparkzi;
 
+import java.lang.reflect.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,13 +17,17 @@ import android.app.ProgressDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.os.AsyncTask;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -39,6 +44,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 
 import com.sparkzi.fragment.DatePickerFragment;
@@ -53,8 +59,10 @@ import com.sparkzi.utility.Utility;
 public class GetStartedActivity extends FragmentActivity implements OnDateSetListener{
 
    Spinner sWhoIAm, sStartAge, sEndAge;
-   AutoCompleteTextView sCountry1, sCity1;
+AutoCompleteTextView sCountry1, sCity1;
     TextView tvDoB;
+
+    
     Button b_facebook;
     String whoAmI, startAge, endAge, selectedCityName;
     int countryId;
@@ -64,12 +72,15 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
     ProgressDialog pDialog;
 
     List<Country> countryList;
-    List<City> cityList;
+  List<City> cityList;
     Session session1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+      //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         BugSenseHandler.initAndStartSession(this, "2c5ced14");
+        if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
+       }
         setContentView(R.layout.get_started);
         
         jsonParser = new JsonParser();
@@ -88,7 +99,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 			}
 		});
         
-        
+      
         
         tvDoB = (TextView) findViewById(R.id.tv_dob);
         tvDoB.setText(String.format("%04d-%02d-%02d", calendar.get(Calendar.YEAR),
@@ -158,7 +169,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
         
       
         sCountry1=(AutoCompleteTextView) findViewById(R.id.s_country);
-        
+      
         
         sCountry1.setThreshold(1);
         sCountry1.setOnItemClickListener(new OnItemClickListener() {
@@ -172,29 +183,51 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 
             }
         });
-
         
-        
-    /*    sCountry = (Spinner) findViewById(R.id.s_country);
-        sCountry.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-//                selectedCountryName = (String)parent.getItemAtPosition(position);
-                countryId = countryList.get(position).getId();
-                List<String> cityList = getCityList(countryList.get(position).getId());
-                Log.e(">>>", "city list size = " + cityList);
-                generateSpinner(sCity, cityList.toArray(new String[cityList.size()]));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });*/
+    
 
         new GetCountryList().execute();
     }
+    
+    
+    public void setAllAutotextview(GraphObject go){
+		 try {
+			JSONObject  jso = go.getInnerJSONObject();
+			String name   = jso.getString( "name");
+			Log.i("name", name);
+			String[]locationdata=name.split(",");
+			String country="India";//locationdata[1];
+			String city="Delhi";//locationdata[0];
+			// countrylist
+			List<String> cityList=new ArrayList<String>()  ;
+			for(int position=0;position<countryList.size();position++){
+				if(countryList.get(position).getValue().equalsIgnoreCase(country)){
+					sCountry1.setText(country);
+					  countryId = countryList.get(position).getId();
+			       cityList = getCityList(countryList.get(position).getId());
+			          Log.e(">>>", "city list size = " + cityList);
+			          generateautocomplete(sCity1, cityList.toArray(new String[cityList.size()]));
+				}
+			}
+			
+			
+		//	List<String> getCityList(int countryId)
+			
+			for(int position=0;position<cityList.size();position++){
+				if(cityList.get(position).equalsIgnoreCase(city)){
+					sCity1.setText(city);
+				 	selectedCityName = cityList.get(position);
+				}
+			}
+			
+			
+			
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
     
     
     @Override
@@ -368,6 +401,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
                         cityList = City.parseCity(ctyArray);
                         
                         final List<String> cntryList = new ArrayList<String>();
+                       
                         for(Country country : countryList){
                             cntryList.add(country.getValue());
                         }
@@ -412,6 +446,7 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 		 
 		 List<String> permissions = new ArrayList<String>();
 		 permissions.add("email");
+		 permissions.add("email");
 		 permissions.add("user_birthday");
 		// openActiveSession(activity, allowLoginUI, callback, permissions)
 		 session1=openActiveSession(this, true, new Session.StatusCallback() {
@@ -429,12 +464,47 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 							// TODO Auto-generated method stub
 							
 							  if (user != null) {
-			                    	 
+								///  graphuser.ge
 			                    	 graphuser=user;
 			                    	String Name =  user.getUsername();
 			                         Log.d("result", Name);
 			                         String lastName = user.getLastName();
 			                         String id = user.getId();
+			                         
+			                         
+			                         try
+			                         {
+			                             GraphObject go  = graphuser.getLocation();
+			                             setAllAutotextview(go);
+			                            
+			                                
+			                         }
+			                         catch ( Throwable t )
+			                         {
+			                             t.printStackTrace();
+			                         }
+			                       
+			                        
+			                        
+			                        
+			                      // GraphObject{graphObjectClass=GraphLocation, state={"id":"101889586519301","name":"Dhaka, Bangladesh"}}
+
+			                      
+			                         
+			                        /* if(graphuser.getLocation().getCountry()!=null){
+			                        	   		String country=graphuser.getLocation().getCountry();
+			                        	   		Toast.makeText(GetStartedActivity.this,country, 1000).show();
+			                        	   		for(int i=0;i<countryList.size();i++){
+			                        	   		Log.i("country", countryList.get(i).getValue());
+			                        	   		if(countryList.get(i).getValue().equalsIgnoreCase(country)){
+			                    	 			
+			                    	 		}
+			                    	 		
+			                    	 	}
+			                    	 	
+			                    	  }*/
+			                           
+			                           
 			                         String email = user.getProperty("email").toString();
 			                         Log.d("resonse", Name+"  "+id+" "+email);
 			                         b_facebook.setVisibility(View.GONE);
@@ -458,7 +528,6 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 			                        	 else{
 			                        		 sWhoIAm.setSelection(1);
 			                        	 }
-			                        	 
 			                         }
 			                         session.getActiveSession().closeAndClearTokenInformation();
 			                      
@@ -467,7 +536,6 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 			                    	 Log.d("resonse", "not found");
 			                    	 
 			                     }
-							
 						}
 		             });
 		             
@@ -502,6 +570,10 @@ public class GetStartedActivity extends FragmentActivity implements OnDateSetLis
 	      
 	      
 	  }
+	 
+	 
+	 
+	
 	 
 
 }

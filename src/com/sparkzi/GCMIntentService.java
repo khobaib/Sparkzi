@@ -29,6 +29,7 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
+import com.sparkzi.utility.SparkziApplication;
 import com.sparkzi.utility.Utility;
 
 /**
@@ -41,9 +42,12 @@ public class GCMIntentService extends GCMBaseIntentService {
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
+    SparkziApplication appInstance;
+    
 Context context;
     public GCMIntentService() {
         super(Utility.SENDER_ID);
+        
     }
 
     @Override
@@ -132,9 +136,22 @@ Context context;
     
     
     private void sendNotification(String msg) {
-    	
+    	appInstance = (SparkziApplication) getApplication();
+    	Boolean rememberMeFlag = appInstance.isRememberMe();
+    	 Intent myIntent;
    	 int MY_NOTIFICATION_ID=1;
-   	 Intent myIntent = new Intent(this, LoginActivity.class);
+   	 
+   	 		if (rememberMeFlag){
+   	 				myIntent = new Intent(this, MainActivity.class);
+   	 		}
+   	 		else{
+   	 				myIntent = new Intent(this, SplashActivity.class);
+   	 			}
+   	 
+   	 
+   	  
+   	 
+   	 
         PendingIntent pendingIntent = PendingIntent.getActivity(
        	this, 
                0, 

@@ -200,8 +200,14 @@ public class Utility {
 			long millis = c.getTimeInMillis();
 			if (isToday(millis)) {
 				return formatTOdayTime(millis);
-			} else {
-				return formatTime(millis);
+			} 
+			else if (getDaysago(millis)<3){
+				if(getDaysago(millis)==1)return "yesterday";
+				return getDaysago(millis)+" days ago";
+			}
+			
+			else {
+				return "more than 3 days ago";
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -226,6 +232,19 @@ public class Utility {
 		if (millis > today.getTimeInMillis())
 			return true;
 		return false;
+	}
+	
+	public static int getDaysago(long millis) {
+		Calendar today = Calendar.getInstance();
+		today = clearTimes(today);
+		
+		float daysago=((today.getTimeInMillis()-millis)/(24*60*60*1000));
+		int dayagoinint=(int) daysago;
+		if(daysago>(float)dayagoinint){
+			dayagoinint++;
+		}
+
+		return dayagoinint;
 	}
 
 	public static String formatTime(long millis) {

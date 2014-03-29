@@ -20,13 +20,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.sparkzi.GetStartedActivity;
 import com.sparkzi.R;
 import com.sparkzi.adapter.SearchAdapter;
 import com.sparkzi.model.Country;
@@ -44,10 +47,10 @@ public class SearchFragment extends Fragment {
 	private static final String TAG = SearchFragment.class.getSimpleName();
 	private Activity activity;
 
-	Spinner sStartAge, sEndAge, sCountry;
+	Spinner sStartAge, sEndAge;
 	Button bSearch;
 	ListView lvSearchResult;
-
+	AutoCompleteTextView sCountry1;
 	JsonParser jsonParser;
 	ProgressDialog pDialog;
 
@@ -62,22 +65,6 @@ public class SearchFragment extends Fragment {
 			Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_search, null);
-
-		// sShowMe = (Spinner) view.findViewById(R.id.s_gender);
-		// sShowMe.setOnItemSelectedListener(new OnItemSelectedListener() {
-		//
-		// @Override
-		// public void onItemSelected(AdapterView<?> parent, View v, int
-		// position, long id) {
-		// oppositeGender = position;
-		// }
-		//
-		// @Override
-		// public void onNothingSelected(AdapterView<?> arg0) {
-		//
-		// }
-		// });
-
 		sStartAge = (Spinner) view.findViewById(R.id.s_start_age);
 		sStartAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -110,20 +97,17 @@ public class SearchFragment extends Fragment {
 			}
 		});
 
-		sCountry = (Spinner) view.findViewById(R.id.s_country);
-		sCountry.setOnItemSelectedListener(new OnItemSelectedListener() {
+		sCountry1 =  (AutoCompleteTextView) view.findViewById(R.id.s_country);
+		
+		  sCountry1.setThreshold(1);
+	        sCountry1.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
-				selectedCountryId = countryList.get(position).getId();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-
-			}
-		});
+	            @Override
+	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+	            		selectedCountryId = countryList.get(position).getId();
+	            	}
+	        });
+		
 
 		bSearch = (Button) view.findViewById(R.id.b_search);
 		bSearch.setOnClickListener(new OnClickListener() {
@@ -279,8 +263,8 @@ public class SearchFragment extends Fragment {
 						for (Country country : countryList) {
 							cntryList.add(country.getValue());
 						}
-						generateSpinner(sCountry,
-								cntryList.toArray(new String[cntryList.size()]));
+				        generateautocomplete(sCountry1, cntryList.toArray(new String[cntryList.size()]));
+		                 
 					} else {
 						alert("Invalid token.");
 					}
@@ -295,6 +279,13 @@ public class SearchFragment extends Fragment {
 		}
 
 	}
+	
+	private void generateautocomplete(AutoCompleteTextView autextview,String[] arrayToSpinner){
+		   ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
+	               getActivity(),  R.layout.my_autocomplete_text_style, arrayToSpinner);
+		   autextview.setAdapter(myAdapter);
+		   
+	   }
 
 	private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
 		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity,

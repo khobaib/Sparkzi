@@ -58,6 +58,7 @@ public class LoginActivity extends Activity {
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.login);
 
+	//	03-27 19:37:58.095: E/MY KEY HASH:(26626):
 
 		try {
 			PackageInfo info = getPackageManager().getPackageInfo(
