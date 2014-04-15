@@ -12,8 +12,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -33,7 +35,7 @@ public class RegistrationActivity extends Activity {
 	String whoAmI, startAge, endAge, cityName, dob;
 	String userName, firstname, lastName, email, password, confirmPass;
 	int countryId;
-
+ImageView iv_app_logo;
 	Bundle b;
 	RegistrationInfo regInfo;
 
@@ -49,6 +51,15 @@ public class RegistrationActivity extends Activity {
 		
 		
 		setContentView(R.layout.register);
+		iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo1);
+		iv_app_logo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 
 		jsonParser = new JsonParser();        
 		pDialog = new ProgressDialog(RegistrationActivity.this);

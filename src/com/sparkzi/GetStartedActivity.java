@@ -35,6 +35,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,7 +83,15 @@ AutoCompleteTextView sCountry1, sCity1;
         if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
        }
         setContentView(R.layout.get_started);
-        
+        ImageView iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo1);
+		iv_app_logo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
         jsonParser = new JsonParser();
         pDialog = new ProgressDialog(GetStartedActivity.this);
         calendar = Calendar.getInstance();

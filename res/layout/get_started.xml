@@ -2,52 +2,94 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true" >
+  
+      android:background="@color/gray70_transparent_back"
+   >
+			<RelativeLayout
+                android:id="@+id/iv_app_logo"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+         
+                android:background="@color/white" >
 
-    <ImageView
-        android:id="@+id/iv_app_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/sparkzi_logo" />
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="68dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp" >
+
+                    <ImageView
+                        android:id="@+id/iv_app_logo1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/ic_launcher" />
+                     <TextView
+                    android:id="@+id/txt_sparkzi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                     android:layout_marginLeft="8dp"
+                     android:layout_marginTop="5dp"
+                     android:textSize="16dp"
+                     android:textColor="#000000"
+                    android:layout_below="@+id/iv_app_logo1"
+                    android:text="Sparkzi" />
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/b_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="13dp"
+                    android:background="@drawable/rounded_button"
+                     android:onClick="onClickNext"
+                    android:padding="3dp"
+                     android:text="Next"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+               
+            </RelativeLayout>
+            
+			<Button
+                android:id="@+id/b_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_app_logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:padding="15dp"
+                android:text="Register with facebook"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+			
+    
 
     <ScrollView
         android:id="@+id/scroll_pan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_app_logo"
+        android:layout_below="@+id/b_facebook"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/background_login" >
+       >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+            android:background="#ffffff">
 
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Let&apos;s Get Started"
-                android:textColor="@color/app_theme"
-                android:textSize="22dp"
-                android:textStyle="bold" />
+            
 
-            <View
-                android:id="@+id/view1"
-                android:layout_width="280dp"
-                android:layout_height="2dp"
-                android:layout_below="@+id/tv_title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray70_transparent_back" />
 
             <TextView
                 android:id="@+id/tv_i_am_title"
@@ -207,14 +249,7 @@
                 android:textColor="#800080"
                 android:textSize="16dp" />
 
-            <View
-                android:id="@+id/view2"
-                android:layout_width="280dp"
-                android:layout_height="2dp"
-                android:layout_below="@+id/tv_city"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray70_transparent_back" />
+            
 
             <Button
                 android:id="@+id/b_next"
@@ -226,32 +261,14 @@
                 android:onClick="onClickNext"
                 android:padding="15dp"
                 android:text="Next"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <View
-                android:id="@+id/view3"
-                android:layout_width="280dp"
-                android:layout_height="2dp"
-                android:layout_below="@+id/b_next"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:background="@color/gray70_transparent_back" />
+            
 
-            <Button
-                android:id="@+id/b_facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view3"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:padding="15dp"
-                android:text="Register with facebook"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                    </RelativeLayout>
     </ScrollView>
 
     <View

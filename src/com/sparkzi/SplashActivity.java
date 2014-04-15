@@ -10,7 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.model.ServerResponse;
@@ -25,16 +30,41 @@ public class SplashActivity extends Activity {
 	SparkziApplication appInstance;
 	private ProgressDialog pDialog;
 	JsonParser jsonParser;
-
+    Button btn_create_account;
 	String userName, password;
 	String imageUrl;
+	TextView txt_signin,txt_go;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.splash_new);
-
+		btn_create_account=(Button) findViewById(R.id.btn_create_account);
+		txt_signin=(TextView) findViewById(R.id.txt_signin);
+		txt_go=(TextView) findViewById(R.id.txt_go);
+		String str="<html><body><u>Sign In</u></body></html>";
+		txt_go.setText(Html.fromHtml(str));
+		txt_go.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				gologinn();
+			}
+		});
+		txt_signin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				gologinn();
+			}
+		});
+		
+		
+		
+		
 		appInstance = (SparkziApplication) getApplication();
 		jsonParser = new JsonParser();
 		pDialog = new ProgressDialog(SplashActivity.this);
@@ -64,16 +94,28 @@ public class SplashActivity extends Activity {
 						e.printStackTrace();
 					} finally {
 
-						startActivity(new Intent(SplashActivity.this,
-								LoginActivity.class));
-						finish();
+//						startActivity(new Intent(SplashActivity.this,
+//								LoginActivity.class));
+					//	finish();
 					}
 				}
 			};
 			timer.start();
 		}
 	}
+	
+	
+	public void gogetstartedactivity(View view){
+		Intent intent=new Intent(SplashActivity.this, GetStartedActivity.class);
+		startActivity(intent);
+	}
 
+	public void gologinn(){
+		Intent intent=new Intent(SplashActivity.this, LoginActivity.class);
+		startActivity(intent);
+	}
+	
+	
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub

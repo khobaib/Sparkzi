@@ -20,13 +20,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +49,7 @@ public class LoginActivity extends Activity {
 	private ProgressDialog pDialog;
 	EditText Username, Password;
 	CheckBox RememberMe;
+	ImageView iv_app_logo;
 	TextView ForgetPassword;
 	SparkziApplication appInstance;
 	String userName, password;
@@ -57,24 +62,15 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.login);
-
-	//	03-27 19:37:58.095: E/MY KEY HASH:(26626):
-
-		try {
-			PackageInfo info = getPackageManager().getPackageInfo(
-					"com.sparkzi", 
-					PackageManager.GET_SIGNATURES);
-			for (Signature signature : info.signatures) {
-				MessageDigest md = MessageDigest.getInstance("SHA");
-				md.update(signature.toByteArray());
-				Log.e("MY KEY HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
+		iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo);
+		iv_app_logo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
 			}
-		} catch (NameNotFoundException e) {
-
-		} catch (NoSuchAlgorithmException e) {
-
-		}
+		});
 
 
 
@@ -85,7 +81,7 @@ public class LoginActivity extends Activity {
 		Username = (EditText) findViewById(R.id.et_user_name);
 		Password = (EditText) findViewById(R.id.et_password);   
 
-		ForgetPassword = (TextView) findViewById(R.id.tv_click_here);
+		ForgetPassword = (TextView) findViewById(R.id.tv_forget_pass);
 		ForgetPassword.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -153,7 +149,14 @@ public class LoginActivity extends Activity {
 		View textEntryView = inflater.inflate(R.layout.dialog_forget_password, null);
 		final AlertDialog alert = new AlertDialog.Builder(LoginActivity.this).create();
 		alert.setView(textEntryView, 0, 0, 0, 0);
+		
+		Window window = alert.getWindow();
+		WindowManager.LayoutParams wlp = window.getAttributes();
 
+		wlp.gravity = Gravity.TOP;
+		wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+		window.setAttributes(wlp);
+		
 		final EditText etUserName = (EditText) textEntryView.findViewById(R.id.et_username);
 
 		Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
@@ -297,7 +300,7 @@ public class LoginActivity extends Activity {
 						imm.hideSoftInputFromWindow(Username.getWindowToken(), 0);
 						imm.hideSoftInputFromWindow(Password.getWindowToken(), 0);
 
-						if(RememberMe.isChecked()){
+						//if(RememberMe.isChecked()){
 							appInstance.setRememberMe(true);
 
 							userCred = appInstance.getUserCred();
@@ -305,7 +308,7 @@ public class LoginActivity extends Activity {
 							userCred.setPassword(password);
 							appInstance.setUserCred(userCred);
 							//                                    appInstance.setCredentials(userName, password);
-						}
+					//	}
 
 						Intent i = new Intent();
 						//                        imageUrl = null;            // TEST PURPOSE
