@@ -5,18 +5,19 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true" >
 
-    <ListView
+    <com.sparkzi.utility.CustomListView
         android:id="@+id/lv_thread_messages"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_above="@+id/et_msg_body"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="@color/app_theme_purple_transparent"
-        android:dividerHeight="1dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
-        android:stackFromBottom="true" />
+        android:stackFromBottom="true" >
+    </com.sparkzi.utility.CustomListView>
 
     <View
         android:layout_width="fill_parent"

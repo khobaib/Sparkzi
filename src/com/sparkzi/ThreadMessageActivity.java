@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
-import com.sparkzi.NewConversationActivity.SendMessageToServer;
 import com.sparkzi.adapter.ThreadMessageAdapter;
 import com.sparkzi.loader.ConversationListLoader;
 import com.sparkzi.model.Conversation;
@@ -29,6 +28,7 @@ import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
+import com.sparkzi.utility.CustomListView;
 import com.sparkzi.utility.SparkziApplication;
 
 public class ThreadMessageActivity extends FragmentActivity implements
@@ -36,7 +36,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 
 	private static final int LOADER_ID = 1;
 
-	ListView ThreadMessageList;
+	CustomListView ThreadMessageList;
 	 SparkziApplication appInstance;
 	ThreadMessageAdapter threadMessageAdapter;
 	List<Conversation> messageList;
@@ -74,7 +74,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		pDialog = new ProgressDialog(ThreadMessageActivity.this);
 		pDialog.setMessage("Loading...");
 
-		ThreadMessageList = (ListView) findViewById(R.id.lv_thread_messages);
+		ThreadMessageList = (CustomListView) findViewById(R.id.lv_thread_messages);
 
 		MessageBody = (EditText) findViewById(R.id.et_msg_body);
 
