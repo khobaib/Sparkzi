@@ -26,6 +26,7 @@ import com.facebook.AppEventsLogger;
 import com.facebook.FacebookException;
 import com.facebook.Request;
 import com.facebook.Session;
+import com.facebook.android.R;
 
 import com.facebook.internal.AnalyticsEvents;
 import com.facebook.model.GraphUser;
