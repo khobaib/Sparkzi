@@ -1,34 +1,29 @@
 package com.sparkzi;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,20 +31,21 @@ import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.facebook.Session;
+import com.sparkzi.fragment.LastNightFragment.SendLastNightActivity;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends FragmentActivity {
 
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	private ProgressDialog pDialog;
 	EditText Username, Password;
-//	CheckBox RememberMe;
-	ImageView iv_app_logo;
+	//	CheckBox RememberMe;
+//	ImageView iv_app_logo;
 	TextView ForgetPassword;
 	SparkziApplication appInstance;
 	String userName, password;
@@ -62,17 +58,15 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.login);
-		iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo);
-		iv_app_logo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		});
-
-
+//		iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo);
+//		iv_app_logo.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				finish();
+//			}
+//		});
 
 		pDialog = new ProgressDialog(LoginActivity.this);
 		appInstance = (SparkziApplication) getApplication();
@@ -91,21 +85,45 @@ public class LoginActivity extends Activity {
 			}
 		});
 
-//		RememberMe = (CheckBox) findViewById(R.id.cb_remember_me);
-//		RememberMe.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				if(((CheckBox)v).isChecked()){
-//					Log.d(TAG, "Remember Me checked");
-//					//                    appInstance.setRememberMe(true);
-//				}
-//				else{
-//					Log.d(TAG, "Remember Me unchecked");
-//					//                    appInstance.setRememberMe(false);
-//				}               
-//			}
-//		});
+		//		RememberMe = (CheckBox) findViewById(R.id.cb_remember_me);
+		//		RememberMe.setOnClickListener(new OnClickListener() {
+		//
+		//			@Override
+		//			public void onClick(View v) {
+		//				if(((CheckBox)v).isChecked()){
+		//					Log.d(TAG, "Remember Me checked");
+		//					//                    appInstance.setRememberMe(true);
+		//				}
+		//				else{
+		//					Log.d(TAG, "Remember Me unchecked");
+		//					//                    appInstance.setRememberMe(false);
+		//				}               
+		//			}
+		//		});
+	}
+
+
+	//	@Override
+	//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	//		inflater.inflate(R.menu.menu_login, menu);
+	//	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_login, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_login:
+			onClickLogin();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 
@@ -123,7 +141,7 @@ public class LoginActivity extends Activity {
 	}
 
 
-	public void onClickLogin(View v){
+	public void onClickLogin(){
 		userName = Username.getText().toString().trim();
 		password = Password.getText().toString().trim();
 
@@ -149,14 +167,14 @@ public class LoginActivity extends Activity {
 		View textEntryView = inflater.inflate(R.layout.dialog_forget_password, null);
 		final AlertDialog alert = new AlertDialog.Builder(LoginActivity.this).create();
 		alert.setView(textEntryView, 0, 0, 0, 0);
-		
+
 		Window window = alert.getWindow();
 		WindowManager.LayoutParams wlp = window.getAttributes();
 
 		wlp.gravity = Gravity.TOP;
 		wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
 		window.setAttributes(wlp);
-		
+
 		final EditText etUserName = (EditText) textEntryView.findViewById(R.id.et_username);
 
 		Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
@@ -267,6 +285,7 @@ public class LoginActivity extends Activity {
 		}
 
 
+		@SuppressLint("InlinedApi")
 		@Override
 		protected void onPostExecute(JSONObject responseObj) {
 			if(pDialog.isShowing())
@@ -301,14 +320,14 @@ public class LoginActivity extends Activity {
 						imm.hideSoftInputFromWindow(Password.getWindowToken(), 0);
 
 						//if(RememberMe.isChecked()){
-							appInstance.setRememberMe(true);
+						appInstance.setRememberMe(true);
 
-							userCred = appInstance.getUserCred();
-							userCred.setUsername(userName);
-							userCred.setPassword(password);
-							appInstance.setUserCred(userCred);
-							//                                    appInstance.setCredentials(userName, password);
-					//	}
+						userCred = appInstance.getUserCred();
+						userCred.setUsername(userName);
+						userCred.setPassword(password);
+						appInstance.setUserCred(userCred);
+						//                                    appInstance.setCredentials(userName, password);
+						//	}
 
 						Intent i = new Intent();
 						//                        imageUrl = null;            // TEST PURPOSE
@@ -324,7 +343,9 @@ public class LoginActivity extends Activity {
 						else{
 							i = new Intent(LoginActivity.this, MainActivity.class);
 						}
-						i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//						i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+						i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(i);
 						finish();
 						//                            }

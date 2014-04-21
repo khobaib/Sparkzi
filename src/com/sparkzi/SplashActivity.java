@@ -40,6 +40,9 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.splash_new);
+		
+		Log.e(">>>>>>>", "I am in splash");
+		
 		btn_create_account=(Button) findViewById(R.id.btn_create_account);
 		txt_signin=(TextView) findViewById(R.id.txt_signin);
 		txt_go=(TextView) findViewById(R.id.txt_go);
@@ -229,16 +232,17 @@ public class SplashActivity extends Activity {
 						// }
 						// });
 					} else {
-						alert("Invalid username/password.", false);
+						alert("Invalid username/password.");
 						appInstance.setRememberMe(false);
 					}
 				} catch (JSONException e) {
-					alert("Registration Exception.", false);
-					e.printStackTrace();
+					alert("Registration Exception.");
+					appInstance.setRememberMe(false);
 				}
 
 			} else {
-				alert("Registration error, please try again.", false);
+				alert("Registration error, please try again.");
+				appInstance.setRememberMe(false);
 			}
 
 		}
@@ -259,7 +263,7 @@ public class SplashActivity extends Activity {
 	// bld.create().show();
 	// }
 
-	void alert(String message, final Boolean success) {
+	void alert(String message) {
 		AlertDialog.Builder bld = new AlertDialog.Builder(SplashActivity.this);
 		bld.setMessage(message);
 		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -267,12 +271,8 @@ public class SplashActivity extends Activity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Intent i = null;
-				if (success) {
-					i = new Intent(SplashActivity.this, MainActivity.class);
-				} else {
-					i = new Intent(SplashActivity.this, LoginActivity.class);
+				i = new Intent(SplashActivity.this, LoginActivity.class);
 
-				}
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 				finish();

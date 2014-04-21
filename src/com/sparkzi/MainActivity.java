@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -22,6 +23,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -82,6 +84,7 @@ public class MainActivity extends FragmentActivity {
 	ImageView ivProfilePic;
 	TextView tvUserName;
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -304,6 +307,7 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout.closeDrawer(mDrawerLinear);
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void setTitle(CharSequence title) {
 		mTitle = title;
@@ -402,6 +406,7 @@ public class MainActivity extends FragmentActivity {
 				try {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
+						appInstance.setRememberMe(false);
 						alert("Successfully logged out.");
 					} else {
 						alert("Couldn't log out successfully.");
@@ -418,13 +423,12 @@ public class MainActivity extends FragmentActivity {
 	void alert(String message) {
 		AlertDialog.Builder bld = new AlertDialog.Builder(MainActivity.this);
 		bld.setMessage(message);
+		bld.setCancelable(false);
 		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-
-				appInstance.setRememberMe(false);
 
 				Intent i = new Intent(MainActivity.this, LoginActivity.class);
 				startActivity(i);
@@ -528,6 +532,17 @@ public class MainActivity extends FragmentActivity {
 			String newMessage = intent.getExtras().getString(Utility.EXTRA_MESSAGE);
 		}
 	};
+	
+	
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) { // Back key pressed
+            finish();
+            overridePendingTransition(R.anim.prev_slide_in, R.anim.prev_slide_out);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }
 
