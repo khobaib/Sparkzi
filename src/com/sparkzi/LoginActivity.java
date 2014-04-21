@@ -48,7 +48,7 @@ public class LoginActivity extends Activity {
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	private ProgressDialog pDialog;
 	EditText Username, Password;
-	CheckBox RememberMe;
+//	CheckBox RememberMe;
 	ImageView iv_app_logo;
 	TextView ForgetPassword;
 	SparkziApplication appInstance;
@@ -91,21 +91,21 @@ public class LoginActivity extends Activity {
 			}
 		});
 
-		RememberMe = (CheckBox) findViewById(R.id.cb_remember_me);
-		RememberMe.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if(((CheckBox)v).isChecked()){
-					Log.d(TAG, "Remember Me checked");
-					//                    appInstance.setRememberMe(true);
-				}
-				else{
-					Log.d(TAG, "Remember Me unchecked");
-					//                    appInstance.setRememberMe(false);
-				}               
-			}
-		});
+//		RememberMe = (CheckBox) findViewById(R.id.cb_remember_me);
+//		RememberMe.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				if(((CheckBox)v).isChecked()){
+//					Log.d(TAG, "Remember Me checked");
+//					//                    appInstance.setRememberMe(true);
+//				}
+//				else{
+//					Log.d(TAG, "Remember Me unchecked");
+//					//                    appInstance.setRememberMe(false);
+//				}               
+//			}
+//		});
 	}
 
 
