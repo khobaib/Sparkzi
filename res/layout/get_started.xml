@@ -1,106 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  
-      android:background="@color/gray70_transparent_back"
-   >
-			<RelativeLayout
-                android:id="@+id/iv_app_logo"
-                android:layout_width="match_parent"
-                android:layout_height="68dp"
-         
-                android:background="@color/white" >
+    android:background="@color/white"
+    tools:ignore="HardcodedText" >
 
-                <RelativeLayout
-                    android:id="@+id/relativeLayout1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="68dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp" >
+    <!-- <RelativeLayout -->
+    <!-- android:id="@+id/iv_app_logo" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="68dp" -->
 
-                    <ImageView
-                        android:id="@+id/iv_app_logo1"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="8dp"
-                        android:background="@drawable/ic_launcher" />
-                     <TextView
-                    android:id="@+id/txt_sparkzi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     android:layout_marginLeft="8dp"
-                     android:layout_marginTop="5dp"
-                     android:textSize="16dp"
-                     android:textColor="#000000"
-                    android:layout_below="@+id/iv_app_logo1"
-                    android:text="Sparkzi" />
-                </RelativeLayout>
 
-                <Button
-                    android:id="@+id/b_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="13dp"
-                    android:background="@drawable/rounded_button"
-                     android:onClick="onClickNext"
-                    android:padding="3dp"
-                     android:text="Next"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+    <!-- android:background="@color/white" > -->
 
-               
-            </RelativeLayout>
-            
-			<Button
-                android:id="@+id/b_facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_app_logo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:padding="15dp"
-                android:text="Register with facebook"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-			
-    
+
+    <!-- <RelativeLayout -->
+    <!-- android:id="@+id/relativeLayout1" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="68dp" -->
+    <!-- android:layout_alignParentLeft="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:layout_marginLeft="20dp" > -->
+
+
+    <!-- <ImageView -->
+    <!-- android:id="@+id/iv_app_logo1" -->
+    <!-- android:layout_width="40dp" -->
+    <!-- android:layout_height="40dp" -->
+    <!-- android:layout_alignParentLeft="true" -->
+    <!-- android:layout_marginLeft="8dp" -->
+    <!-- android:background="@drawable/ic_launcher" /> -->
+    <!-- <TextView -->
+    <!-- android:id="@+id/txt_sparkzi" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_marginLeft="8dp" -->
+    <!-- android:layout_marginTop="5dp" -->
+    <!-- android:textSize="16dp" -->
+    <!-- android:textColor="#000000" -->
+    <!-- android:layout_below="@+id/iv_app_logo1" -->
+    <!-- android:text="Sparkzi" /> -->
+    <!-- </RelativeLayout> -->
+
+
+    <!-- <Button -->
+    <!-- android:id="@+id/b_next" -->
+    <!-- android:layout_width="wrap_content" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_centerVertical="true" -->
+    <!-- android:layout_marginRight="13dp" -->
+    <!-- android:background="@drawable/rounded_button" -->
+    <!-- android:onClick="onClickNext" -->
+    <!-- android:padding="3dp" -->
+    <!-- android:text="Next" -->
+    <!-- android:textColor="@color/white" -->
+    <!-- android:textSize="20dp" -->
+    <!-- android:textStyle="bold" /> -->
+
+
+    <!-- </RelativeLayout> -->
 
     <ScrollView
         android:id="@+id/scroll_pan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/b_facebook"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-       >
+        android:layout_marginTop="10dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:background="#ffffff">
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_layout"
+            android:padding="7dp" >
 
-            
-
+            <Button
+                android:id="@+id/b_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:padding="15dp"
+                android:text="Register with facebook"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_i_am_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view1"
+                android:layout_below="@+id/b_facebook"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:text="I&apos;m a"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -110,7 +109,7 @@
                 android:layout_below="@+id/tv_i_am_title"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_age_title"
@@ -121,7 +120,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Between ages"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -133,7 +132,7 @@
                 android:layout_marginTop="10dp"
                 android:text="to"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -144,7 +143,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/tv_to"
                 android:singleLine="true"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
 
             <Spinner
                 android:id="@+id/s_end_age"
@@ -154,7 +153,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_to"
                 android:singleLine="true"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_dob_title"
@@ -164,7 +163,7 @@
                 android:layout_marginTop="20dp"
                 android:text="My Birthday:"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_dob"
@@ -180,7 +179,7 @@
                 android:padding="5dp"
                 android:singleLine="true"
                 android:textColor="@color/app_theme"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/b_calendar"
@@ -200,7 +199,7 @@
                 android:layout_marginTop="10dp"
                 android:text="I live in"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -212,7 +211,7 @@
                 android:gravity="right"
                 android:text="Country:"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <AutoCompleteTextView
@@ -224,7 +223,7 @@
                 android:layout_toRightOf="@+id/tv_country"
                 android:singleLine="true"
                 android:textColor="#800080"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_city"
@@ -235,7 +234,7 @@
                 android:gravity="right"
                 android:text="City:"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <AutoCompleteTextView
@@ -247,34 +246,30 @@
                 android:layout_toRightOf="@+id/tv_city"
                 android:singleLine="true"
                 android:textColor="#800080"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
-            
+            <!-- <Button -->
+            <!-- android:id="@+id/b_next" -->
+            <!-- android:layout_width="wrap_content" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:layout_below="@+id/view2" -->
+            <!-- android:layout_centerHorizontal="true" -->
+            <!-- android:layout_marginTop="10dp" -->
+            <!-- android:onClick="onClickNext" -->
+            <!-- android:padding="15dp" -->
+            <!-- android:text="Next" -->
+            <!-- android:textColor="@color/white" -->
+            <!-- android:textSize="20sp" -->
+            <!-- android:textStyle="bold" -->
+            <!-- android:visibility="gone" /> -->
 
-            <Button
-                android:id="@+id/b_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:onClick="onClickNext"
-                android:padding="15dp"
-                android:text="Next"
-                android:visibility="gone"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            
-
-                    </RelativeLayout>
+        </RelativeLayout>
     </ScrollView>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/scroll_pan" />
+        android:layout_below="@+id/scroll_pan"
+        android:layout_marginTop="30dp" />
 
 </RelativeLayout>

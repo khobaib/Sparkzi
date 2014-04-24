@@ -169,7 +169,7 @@ public class UploadPicActivity extends Activity {
 		// Intent intent = new Intent(Intent.ACTION_PICK,
 		// android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		// startActivityForResult(Intent.createChooser(intent,
-		//  TODO "Select Picture"),
+		// TODO "Select Picture"),
 		startActivityForResult(intent, GALLERY_REQ_CODE);
 	}
 
@@ -195,16 +195,21 @@ public class UploadPicActivity extends Activity {
 				try {
 					Bitmap bmp = decodeFile(picFile, 500);
 					int angle = getCorrectionAngleForCam();
+					int w = bmp.getWidth();
+					if (w < 200)
+						w = 200;
+					int h = bmp.getHeight();
+					if (h < 200)
+						h = 200;
 					if (angle == 0) {
-						scaledBmp = Bitmap.createScaledBitmap(bmp, 200, 200,
-								true);
+						scaledBmp = Bitmap.createScaledBitmap(bmp, w, h, true);
 					} else {
 						Matrix mat = new Matrix();
 						mat.postRotate(angle);
 						Bitmap correctBmp = Bitmap.createBitmap(bmp, 0, 0,
 								bmp.getWidth(), bmp.getHeight(), mat, true);
-						scaledBmp = Bitmap.createScaledBitmap(correctBmp, 200,
-								200, true);
+						scaledBmp = Bitmap.createScaledBitmap(correctBmp, w, h,
+								true);
 						Log.d("", "scaled");
 					}
 

@@ -129,7 +129,6 @@ public class LoginActivity extends FragmentActivity {
 
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
 		BugSenseHandler.startSession(this);
 	}

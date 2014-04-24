@@ -3,6 +3,7 @@ package com.sparkzi;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -10,14 +11,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -29,13 +28,13 @@ import com.sparkzi.utility.Constants;
 
 public class RegistrationActivity extends Activity {
 
-
-	EditText etUserName, etFirstName, etLastName, etEmail, etPassword, etConfirmPass;
+	EditText etUserName, etFirstName, etLastName, etEmail, etPassword,
+			etConfirmPass;
 
 	String whoAmI, startAge, endAge, cityName, dob;
 	String userName, firstname, lastName, email, password, confirmPass;
 	int countryId;
-ImageView iv_app_logo;
+	ImageView iv_app_logo;
 	Bundle b;
 	RegistrationInfo regInfo;
 
@@ -46,22 +45,20 @@ ImageView iv_app_logo;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
-		
-	
-		
-		
-		setContentView(R.layout.register);
-		iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo1);
-		iv_app_logo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		});
 
-		jsonParser = new JsonParser();        
+		setContentView(R.layout.register);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		// iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo1);
+		// iv_app_logo.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// finish();
+		// }
+		// });
+
+		jsonParser = new JsonParser();
 		pDialog = new ProgressDialog(RegistrationActivity.this);
 
 		b = getIntent().getExtras();
@@ -71,22 +68,19 @@ ImageView iv_app_logo;
 		etLastName = (EditText) findViewById(R.id.et_last_name);
 		etEmail = (EditText) findViewById(R.id.et_email);
 		etPassword = (EditText) findViewById(R.id.et_password);
-		etConfirmPass = (EditText) findViewById(R.id.et_confirm_password);     
+		etConfirmPass = (EditText) findViewById(R.id.et_confirm_password);
 
-		if(GetStartedActivity.graphuser!=null){
-			GraphUser user=GetStartedActivity.graphuser;
+		if (GetStartedActivity.graphuser != null) {
+			GraphUser user = GetStartedActivity.graphuser;
 			etFirstName.setText(user.getFirstName());
 			etLastName.setText(user.getLastName());
 			etUserName.setText(user.getUsername());
 			etEmail.setText(user.getProperty("email").toString());
 		}
-
 	}
-
 
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
 		BugSenseHandler.startSession(this);
 	}
@@ -97,9 +91,28 @@ ImageView iv_app_logo;
 		BugSenseHandler.closeSession(this);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_enter, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_enter_sparkzi:
+			onClickRegister(null);
+			return true;
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-	public void onClickRegister(View v){
+	public void onClickRegister(View v) {
 
 		whoAmI = b.getString("who_am_i");
 		startAge = b.getString("min_age");
@@ -117,26 +130,27 @@ ImageView iv_app_logo;
 		password = etPassword.getText().toString().trim();
 		confirmPass = etConfirmPass.getText().toString().trim();
 
-		if(userName == null || userName.equals("")){
-			Toast.makeText(RegistrationActivity.this, "Please choose a username.", Toast.LENGTH_SHORT).show();
-		}
-		else if(firstname == null || firstname.equals("")){
-			Toast.makeText(RegistrationActivity.this, "Please insert your first name.", Toast.LENGTH_SHORT).show();
-		}
-		else if(lastName == null || lastName.equals("")){
-			Toast.makeText(RegistrationActivity.this, "Please insert your last name.", Toast.LENGTH_SHORT).show();
-		}
-		else if(email == null || email.equals("")){
-			Toast.makeText(RegistrationActivity.this, "Please insert your email.", Toast.LENGTH_SHORT).show();
-		}
-		else if(password == null || password.equals("")){
-			Toast.makeText(RegistrationActivity.this, "Please select your password.", Toast.LENGTH_SHORT).show();
-		}
-		else if(!password.equals(confirmPass)){
-			Toast.makeText(RegistrationActivity.this, "Password mismatch.", Toast.LENGTH_SHORT).show();
-		}
-		else{
-			regInfo.setGender((whoAmI.startsWith("M"))? 1 : 2);
+		if (userName == null || userName.equals("")) {
+			Toast.makeText(RegistrationActivity.this,
+					"Please choose a username.", Toast.LENGTH_SHORT).show();
+		} else if (firstname == null || firstname.equals("")) {
+			Toast.makeText(RegistrationActivity.this,
+					"Please insert your first name.", Toast.LENGTH_SHORT)
+					.show();
+		} else if (lastName == null || lastName.equals("")) {
+			Toast.makeText(RegistrationActivity.this,
+					"Please insert your last name.", Toast.LENGTH_SHORT).show();
+		} else if (email == null || email.equals("")) {
+			Toast.makeText(RegistrationActivity.this,
+					"Please insert your email.", Toast.LENGTH_SHORT).show();
+		} else if (password == null || password.equals("")) {
+			Toast.makeText(RegistrationActivity.this,
+					"Please select your password.", Toast.LENGTH_SHORT).show();
+		} else if (!password.equals(confirmPass)) {
+			Toast.makeText(RegistrationActivity.this, "Password mismatch.",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			regInfo.setGender((whoAmI.startsWith("M")) ? 1 : 2);
 			regInfo.setLowerAge(startAge);
 			regInfo.setUpperAge(endAge);
 			regInfo.setDob(dob);
@@ -149,13 +163,12 @@ ImageView iv_app_logo;
 			regInfo.setEmail(email);
 			regInfo.setPassword(password);
 
-
 			new SendRegistrationRequest().execute();
 		}
 	}
 
-
-	public class SendRegistrationRequest extends AsyncTask<Void, Void, JSONObject> {
+	public class SendRegistrationRequest extends
+			AsyncTask<Void, Void, JSONObject> {
 
 		@Override
 		protected void onPreExecute() {
@@ -179,23 +192,22 @@ ImageView iv_app_logo;
 				regObj.put("hometown", regInfo.getCity());
 				regObj.put("bdate", regInfo.getbDate());
 				regObj.put("bmonth", regInfo.getbMonth());
-				regObj.put("byear", regInfo.getbYear());                
+				regObj.put("byear", regInfo.getbYear());
 
 				regObj.put("firstname", regInfo.getFirstName());
 				regObj.put("lastname", regInfo.getLastName());
 
 				String regData = regObj.toString();
-				//                Log.d("<<>>", "req data = " + regData);
-				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
-						null, regData, null);
-				if(response.getStatus() == 200){
+				// Log.d("<<>>", "req data = " + regData);
+				ServerResponse response = jsonParser.retrieveServerData(
+						Constants.REQUEST_TYPE_PUT, url, null, regData, null);
+				if (response.getStatus() == 200) {
 					JSONObject responseObj = response.getjObj();
-						return responseObj;
-				}
-				else{
+					return responseObj;
+				} else {
 					return null;
 				}
-			} catch (JSONException e) {                
+			} catch (JSONException e) {
 				e.printStackTrace();
 				return null;
 			}
@@ -204,53 +216,53 @@ ImageView iv_app_logo;
 		@Override
 		protected void onPostExecute(JSONObject responseObj) {
 			super.onPostExecute(responseObj);
-			if(pDialog.isShowing())
+			if (pDialog.isShowing())
 				pDialog.dismiss();
-			if(responseObj != null){
+			if (responseObj != null) {
 				try {
 					String status = responseObj.getString("status");
-					if(status.equals("OK")){
+					if (status.equals("OK")) {
 						alert("Registration Successful.", true);
-					}
-					else{
+					} else {
 						String desc = responseObj.getString("description");
-						if(desc.equals("User already exists"))
-							alert("This user already exists, please choose another username.", false);
+						if (desc.equals("User already exists"))
+							alert("This user already exists, please choose another username.",
+									false);
 						else
-							alert("Please check all the info & try again.", false);
+							alert("Please check all the info & try again.",
+									false);
 					}
 				} catch (JSONException e) {
 					alert("Registration Exception.", false);
 					e.printStackTrace();
 				}
 
-			}
-			else{
+			} else {
 				alert("Registration error, please try again.", false);
 			}
-		}               
+		}
 
 	}
 
 	void alert(String message, final Boolean success) {
-		AlertDialog.Builder bld = new AlertDialog.Builder(RegistrationActivity.this);
+		AlertDialog.Builder bld = new AlertDialog.Builder(
+				RegistrationActivity.this);
 		bld.setMessage(message);
 		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				if(success){
-					Intent i = new Intent(RegistrationActivity.this, LoginActivity.class);
+				if (success) {
+					Intent i = new Intent(RegistrationActivity.this,
+							LoginActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(i);
 					finish();
 				}
 
-
 			}
 		});
 		bld.create().show();
 	}
-
 
 }
