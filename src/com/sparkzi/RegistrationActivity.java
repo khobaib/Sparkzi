@@ -3,6 +3,7 @@ package com.sparkzi;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,6 +27,7 @@ import com.sparkzi.model.ServerResponse;
 import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 
+@SuppressLint("NewApi")
 public class RegistrationActivity extends Activity {
 
 	EditText etUserName, etFirstName, etLastName, etEmail, etPassword,
