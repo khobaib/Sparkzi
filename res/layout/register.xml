@@ -8,71 +8,26 @@
     android:focusableInTouchMode="true"
     tools:ignore="HardcodedText" >
 
-    <!-- <RelativeLayout -->
-    <!-- android:id="@+id/iv_app_logo" -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:layout_height="68dp" -->
-
-
-    <!-- android:background="@color/white" > -->
-
-
-    <!-- <RelativeLayout -->
-    <!-- android:id="@+id/relativeLayout1" -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="68dp" -->
-    <!-- android:layout_alignParentLeft="true" -->
-    <!-- android:layout_centerVertical="true" -->
-    <!-- android:layout_marginLeft="20dp" > -->
-
-
-    <!-- <ImageView -->
-    <!-- android:id="@+id/iv_app_logo1" -->
-    <!-- android:layout_width="40dp" -->
-    <!-- android:layout_height="40dp" -->
-    <!-- android:layout_alignParentLeft="true" -->
-    <!-- android:layout_marginLeft="8dp" -->
-    <!-- android:background="@drawable/ic_launcher" /> -->
-    <!-- <TextView -->
-    <!-- android:id="@+id/txt_sparkzi" -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_marginLeft="8dp" -->
-    <!-- android:layout_marginTop="5dp" -->
-    <!-- android:textSize="16dp" -->
-    <!-- android:textColor="#000000" -->
-    <!-- android:layout_below="@+id/iv_app_logo1" -->
-    <!-- android:text="Sparkzi" /> -->
-    <!-- </RelativeLayout> -->
-
-
-    <!-- <Button -->
-    <!-- android:id="@+id/b_enter_sparkzi" -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_alignParentRight="true" -->
-    <!-- android:layout_centerVertical="true" -->
-    <!-- android:layout_marginRight="13dp" -->
-    <!-- android:background="@drawable/rounded_button" -->
-    <!-- android:onClick="onClickRegister" -->
-    <!-- android:paddingLeft="5dp" -->
-    <!-- android:paddingRight="5dp" -->
-    <!-- android:textColor="@color/white" -->
-    <!-- android:text="Enter Sparkzi" -->
-    <!-- android:textSize="16dp" -->
-    <!-- android:textStyle="bold" /> -->
-
-
-    <!-- </RelativeLayout> -->
-
-    <ScrollView
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_warning"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:text="* All fields are required."
+        android:textColor="@color/app_theme"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:id="@+id/sv_pan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_warning"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:fillViewport="true"
         android:paddingBottom="10dp"
@@ -124,7 +79,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/v1"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_contact"
+                android:background="@drawable/ic_contact_first"
                 android:contentDescription="et side image" />
 
             <EditText
@@ -157,7 +112,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/v2"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_contact"
+                android:background="@drawable/ic_contact_last"
                 android:contentDescription="et side image" />
 
             <EditText
@@ -191,7 +146,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/v3"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_contact"
+                android:background="@drawable/ic_email"
                 android:contentDescription="et side image" />
 
             <EditText
@@ -225,7 +180,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/v4"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_contact"
+                android:background="@drawable/ic_pass"
                 android:contentDescription="et side image" />
 
             <EditText
@@ -259,7 +214,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/v5"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_contact"
+                android:background="@drawable/ic_pass_confirm"
                 android:contentDescription="et side image" />
 
             <EditText
@@ -278,102 +233,6 @@
                 android:singleLine="true"
                 android:textColor="@color/app_theme"
                 android:textSize="15sp" />
-
-            <View
-                android:id="@+id/v6"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_below="@+id/et_confirm_password"
-                android:background="@color/abs__background_holo_dark" />
-
-            <!-- <TextView -->
-            <!-- android:id="@+id/tv_first_name" -->
-            <!-- android:layout_width="140dp" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:layout_alignLeft="@+id/tv_user_name" -->
-            <!-- android:layout_below="@+id/tv_user_name" -->
-            <!-- android:layout_marginTop="10dp" -->
-            <!-- android:gravity="right" -->
-            <!-- android:text="First Name:" -->
-            <!-- android:textColor="@color/black" -->
-            <!-- android:textSize="17dp" /> -->
-
-
-            <!-- <TextView -->
-            <!-- android:id="@+id/tv_last_name" -->
-            <!-- android:layout_width="140dp" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:layout_alignLeft="@+id/tv_first_name" -->
-            <!-- android:layout_below="@+id/tv_first_name" -->
-            <!-- android:layout_marginTop="10dp" -->
-            <!-- android:gravity="right" -->
-            <!-- android:text="Last Name:" -->
-            <!-- android:textColor="@color/black" -->
-            <!-- android:textSize="17dp" /> -->
-
-
-            <!-- <TextView -->
-            <!-- android:id="@+id/tv_email" -->
-            <!-- android:layout_width="140dp" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:layout_alignLeft="@+id/tv_first_name" -->
-            <!-- android:layout_below="@+id/tv_last_name" -->
-            <!-- android:layout_marginTop="10dp" -->
-            <!-- android:gravity="right" -->
-            <!-- android:text="Email:" -->
-            <!-- android:textColor="@color/black" -->
-            <!-- android:textSize="17dp" /> -->
-
-
-            <!-- <TextView -->
-            <!-- android:id="@+id/tv_password" -->
-            <!-- android:layout_width="140dp" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:layout_alignLeft="@+id/tv_first_name" -->
-            <!-- android:layout_below="@+id/tv_email" -->
-            <!-- android:layout_marginTop="10dp" -->
-            <!-- android:gravity="right" -->
-            <!-- android:text="Password:" -->
-            <!-- android:textColor="@color/black" -->
-            <!-- android:textSize="17dp" /> -->
-
-
-            <!-- <View -->
-            <!-- android:id="@+id/view2" -->
-            <!-- android:layout_width="280dp" -->
-            <!-- android:layout_height="2dp" -->
-            <!-- android:layout_below="@+id/et_confirm_password" -->
-            <!-- android:layout_centerHorizontal="true" -->
-            <!-- android:layout_marginTop="10dp" -->
-            <!-- android:background="@color/gray70_transparent_back" /> -->
-
-
-            <!-- <Button -->
-            <!-- android:id="@+id/b_enter_sparkzi" -->
-            <!-- android:layout_width="wrap_content" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:layout_below="@+id/et_confirm_password" -->
-            <!-- android:layout_centerHorizontal="true" -->
-            <!-- android:layout_marginTop="20dp" -->
-            <!-- android:onClick="onClickRegister" -->
-            <!-- android:padding="20dp" -->
-            <!-- android:text="Enter Sparkzi" -->
-            <!-- android:textColor="@color/white" -->
-            <!-- android:textSize="20dp" -->
-            <!-- android:textStyle="bold" -->
-            <!-- android:visibility="gone" /> -->
-
-            <TextView
-                android:id="@+id/tv_warning"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/et_confirm_password"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:text="* All fields are required."
-                android:textColor="@color/app_theme"
-                android:textSize="14sp"
-                android:textStyle="bold" />
         </RelativeLayout>
     </ScrollView>
 

@@ -67,34 +67,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp" >
+        android:layout_margin="10dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_layout"
-            android:padding="7dp" >
+            android:padding="5dp" >
 
             <Button
                 android:id="@+id/b_facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="240dp"
+                android:layout_height="40dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:padding="15dp"
+                android:background="@drawable/com_facebook_button"
+                android:gravity="center_horizontal"
+                android:paddingLeft="38dp"
+                android:paddingTop="8dp"
                 android:text="Register with facebook"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_fb_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/b_facebook"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="1dp"
+                android:text="We will never post anything to your Facebook."
+                android:textColor="@color/app_theme"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tv_i_am_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/b_facebook"
+                android:layout_below="@+id/tv_fb_warning"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:text="I&apos;m a"
@@ -248,6 +260,12 @@
                 android:textColor="#800080"
                 android:textSize="16sp" />
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_below="@+id/s_city"
+                android:layout_marginTop="10dp" />
+
             <!-- <Button -->
             <!-- android:id="@+id/b_next" -->
             <!-- android:layout_width="wrap_content" -->
@@ -270,6 +288,6 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_below="@+id/scroll_pan"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

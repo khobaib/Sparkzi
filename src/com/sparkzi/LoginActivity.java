@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,6 +39,7 @@ import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
+@SuppressLint("NewApi")
 public class LoginActivity extends FragmentActivity {
 
 
@@ -58,6 +60,9 @@ public class LoginActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.login);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 //		iv_app_logo=(ImageView) findViewById(R.id.iv_app_logo);
 //		iv_app_logo.setOnClickListener(new OnClickListener() {
 //
@@ -120,6 +125,9 @@ public class LoginActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.action_login:
 			onClickLogin();
+			return true;
+		case android.R.id.home:
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -162,7 +162,6 @@ public class GetStartedActivity extends FragmentActivity implements
 		});
 
 		sCity1 = (AutoCompleteTextView) findViewById(R.id.s_city);
-
 		sCity1.setThreshold(1);
 
 		sCity1.setOnItemClickListener(new OnItemClickListener() {
@@ -176,7 +175,6 @@ public class GetStartedActivity extends FragmentActivity implements
 		});
 
 		sCountry1 = (AutoCompleteTextView) findViewById(R.id.s_country);
-
 		sCountry1.setThreshold(1);
 		sCountry1.setOnItemClickListener(new OnItemClickListener() {
 
@@ -192,6 +190,10 @@ public class GetStartedActivity extends FragmentActivity implements
 
 			}
 		});
+		
+		((TextView) findViewById(R.id.tv_fb_warning)).setFocusableInTouchMode(true);
+		((TextView) findViewById(R.id.tv_fb_warning)).requestFocus();
+
 
 		new GetCountryList().execute();
 	}
