@@ -29,8 +29,8 @@ import com.sparkzi.utility.Constants;
 
 @SuppressLint("NewApi")
 public class RegistrationActivity extends Activity {
-
-	EditText etUserName, etFirstName, etLastName, etEmail, etPassword,
+//etUserName,
+	EditText  etUserName,etFirstName, etLastName, etEmail, etPassword,
 			etConfirmPass;
 
 	String whoAmI, startAge, endAge, cityName, dob;
@@ -76,7 +76,6 @@ public class RegistrationActivity extends Activity {
 			GraphUser user = GetStartedActivity.graphuser;
 			etFirstName.setText(user.getFirstName());
 			etLastName.setText(user.getLastName());
-			etUserName.setText(user.getUsername());
 			etEmail.setText(user.getProperty("email").toString());
 		}
 	}
@@ -188,19 +187,16 @@ public class RegistrationActivity extends Activity {
 				regObj.put("password", regInfo.getPassword());
 				regObj.put("email", regInfo.getEmail());
 				regObj.put("gender", regInfo.getGender());
-				regObj.put("lowerage", regInfo.getGender());
-				regObj.put("upperage", regInfo.getGender());
+				regObj.put("lowerage", regInfo.getLowerAge());
+				regObj.put("upperage", regInfo.getUpperAge());
 				regObj.put("country", regInfo.getCountry());
 				regObj.put("hometown", regInfo.getCity());
 				regObj.put("bdate", regInfo.getbDate());
 				regObj.put("bmonth", regInfo.getbMonth());
 				regObj.put("byear", regInfo.getbYear());
-
 				regObj.put("firstname", regInfo.getFirstName());
 				regObj.put("lastname", regInfo.getLastName());
-
 				String regData = regObj.toString();
-				// Log.d("<<>>", "req data = " + regData);
 				ServerResponse response = jsonParser.retrieveServerData(
 						Constants.REQUEST_TYPE_PUT, url, null, regData, null);
 				if (response.getStatus() == 200) {

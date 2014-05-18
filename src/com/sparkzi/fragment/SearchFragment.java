@@ -104,7 +104,17 @@ public class SearchFragment extends Fragment {
 
 	            @Override
 	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-	            		selectedCountryId = countryList.get(position).getId();
+	            		//selectedCountryId = countryList.get(position).getId();
+	            		 String selection = (String) parent.getItemAtPosition(position);
+	 			        int pos = -1;
+
+	 			        for (int i = 0; i < countryList.size(); i++) {
+	 			            if (countryList.get(i).getValue().equals(selection)) {
+	 			                pos = i;
+	 			                break;
+	 			            }
+	 			        }
+	 			       selectedCountryId = countryList.get(pos).getId();
 	            	}
 	        });
 		

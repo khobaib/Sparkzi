@@ -181,10 +181,19 @@ public class GetStartedActivity extends FragmentActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
-				countryId = countryList.get(position).getId();
-				List<String> cityList = getCityList(countryList.get(position)
+				
+				 String selection = (String) parent.getItemAtPosition(position);
+			        int pos = -1;
+
+			        for (int i = 0; i < countryList.size(); i++) {
+			            if (countryList.get(i).getValue().equals(selection)) {
+			                pos = i;
+			                break;
+			            }
+			        }
+				countryId = countryList.get(pos).getId();
+				List<String> cityList = getCityList(countryList.get(pos)
 						.getId());
-				Log.e(">>>", "city list size = " + cityList);
 				generateautocomplete(sCity1,
 						cityList.toArray(new String[cityList.size()]));
 

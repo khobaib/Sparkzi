@@ -533,35 +533,35 @@ public class UploadPicActivity extends Activity {
 	}
 
 	private void showUpdateEssentialsDialog() {
-		LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-		View addDIalogView = inflater.inflate(
-				R.layout.dialog_answer_essentials, null);
-		final AlertDialog alert = new AlertDialog.Builder(
-				UploadPicActivity.this).create();
-		alert.setView(addDIalogView);
-		alert.setCancelable(false);
-
-		Button bLater = (Button) addDIalogView.findViewById(R.id.b_later);
-		bLater.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				alert.dismiss();
-				Intent i = new Intent(UploadPicActivity.this,
-						MainActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-				finish();
-			}
-
-		});
-
-		Button bTryOut = (Button) addDIalogView.findViewById(R.id.b_try_out);
-		bTryOut.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				alert.dismiss();
+//		LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+//		View addDIalogView = inflater.inflate(
+//				R.layout.dialog_answer_essentials, null);
+//		final AlertDialog alert = new AlertDialog.Builder(
+//				UploadPicActivity.this).create();
+//		alert.setView(addDIalogView);
+//		alert.setCancelable(false);
+//
+//		Button bLater = (Button) addDIalogView.findViewById(R.id.b_later);
+//		bLater.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				alert.dismiss();
+//				Intent i = new Intent(UploadPicActivity.this,
+//						MainActivity.class);
+//				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				startActivity(i);
+//				finish();
+//			}
+//
+//		});
+//
+//		Button bTryOut = (Button) addDIalogView.findViewById(R.id.b_try_out);
+//		bTryOut.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				alert.dismiss();
 				Intent i = new Intent(UploadPicActivity.this,
 						EssentialDetailsActivity.class);
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -573,10 +573,10 @@ public class UploadPicActivity extends Activity {
 
 				startActivity(i);
 				finish();
-			}
-
-		});
-		alert.show();
+//			}
+//
+//		});
+//		alert.show();
 	}
 
 	void alert(String message) {
