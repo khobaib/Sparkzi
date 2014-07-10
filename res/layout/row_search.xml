@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_row_search"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
+    tools:ignore="HardcodedText" >
 
     <ImageView
         android:id="@+id/iv_pic"
@@ -11,7 +15,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/ic_contact_picture_holo_light"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tv_age_gender"
@@ -23,7 +28,7 @@
         android:layout_marginTop="1dp"
         android:text="34 | F"
         android:textColor="@color/black"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -38,7 +43,7 @@
         android:minLines="1"
         android:text="Khobaib"
         android:textColor="@color/black"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <Button
@@ -49,6 +54,6 @@
         android:layout_alignParentRight="true"
         android:text="Add to Favorite"
         android:textColor="@color/white"
-        android:textSize="13dp" />
+        android:textSize="13sp" />
 
 </RelativeLayout>

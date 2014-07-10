@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    tools:ignore="HardcodedText" >
 
     <RelativeLayout
         android:id="@+id/rl_profile"
@@ -20,7 +22,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/ic_contact_picture_holo_light_rounded"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -34,7 +37,7 @@
             android:minLines="1"
             android:text="Khobaib"
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -47,7 +50,7 @@
             android:layout_marginRight="5dp"
             android:text="34 | F"
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -58,7 +61,7 @@
             android:layout_below="@+id/tv_name"
             android:text="lives in Dhaka, Bangladesh"
             android:textColor="@color/white"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_look_for"
@@ -68,7 +71,7 @@
             android:layout_below="@+id/tv_lives_in"
             android:text="looking for woman"
             android:textColor="@color/white"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <LinearLayout

@@ -65,10 +65,10 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 
 	private String token;
-	
-	//for push notification
+
+	// for push notification
 	AsyncTask<Void, Void, Void> mRegisterTask;
-	//for push notification
+	// for push notification
 
 	// private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
@@ -121,7 +121,7 @@ public class MainActivity extends FragmentActivity {
 
 		token = userCred.getToken();
 
-		// imageLoader.DisplayImage(imageUrl, ivProfilePic); // TODO
+		// imageLoader.DisplayImage(imageUrl, ivProfilePic); // 
 		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
 				ivProfilePic));
 		tvUserName.setText(userName);
@@ -141,11 +141,11 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-				mDrawerLayout, /* DrawerLayout object */
-				R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-				R.string.drawer_open, /* "open drawer" description for accessibility */
-				R.string.drawer_close /* "close drawer" description for accessibility */
-				) {
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description for accessibility */
+		R.string.drawer_close /* "close drawer" description for accessibility */
+		) {
 			public void onDrawerClosed(View view) {
 				getActionBar().setTitle(mTitle);
 				invalidateOptionsMenu(); // creates call to
@@ -164,8 +164,9 @@ public class MainActivity extends FragmentActivity {
 			selectItem(0);
 		}
 
-		Utility.token=token;
+		Utility.token = token;
 
+		// FIX_ME uncomment
 		newgetGCMDeviceID();
 	}
 
@@ -242,14 +243,14 @@ public class MainActivity extends FragmentActivity {
 		UserCred userCred = appInstance.getUserCred();
 		String imageUrl = userCred.getPicUrl();
 
-		// imageLoader.DisplayImage(imageUrl, ivProfilePic); TODO
+		// imageLoader.DisplayImage(imageUrl, ivProfilePic); 
 		ivProfilePic.setBackgroundResource(android.R.color.transparent);
 		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
 				ivProfilePic));
 	}
 
 	private class DrawerItemClickListener implements
-	ListView.OnItemClickListener {
+			ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -300,7 +301,7 @@ public class MainActivity extends FragmentActivity {
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
-		.replace(R.id.content_frame, myFragment).commit();
+				.replace(R.id.content_frame, myFragment).commit();
 
 		mDrawerList.setItemChecked(position, true);
 		setTitle(drawerItemList.get(position).getName());
@@ -439,7 +440,6 @@ public class MainActivity extends FragmentActivity {
 		bld.create().show();
 	}
 
-
 	@Override
 	protected void onDestroy() {
 		if (mRegisterTask != null) {
@@ -456,40 +456,46 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
 		super.onBackPressed();
-
 
 	}
 
 	private void newgetGCMDeviceID() {
-		if(Utility.hasInternet(MainActivity.this)){
+		if (Utility.hasInternet(MainActivity.this)) {
 
 			// Make sure the device has the proper dependencies.
-			GCMRegistrar.checkDevice(MainActivity.this);
+			// GCMRegistrar.checkDevice(MainActivity.this);
 
 			// Make sure the manifest was properly set - comment out this line
 			// while developing the app, then uncomment it when it's ready.
 			GCMRegistrar.checkManifest(MainActivity.this);
 
-			registerReceiver(mHandleMessageReceiver, new IntentFilter(Utility.DISPLAY_MESSAGE_ACTION));
+			registerReceiver(mHandleMessageReceiver, new IntentFilter(
+					Utility.DISPLAY_MESSAGE_ACTION));
 
 			// Get GCM registration id
-			final String regId = GCMRegistrar.getRegistrationId(MainActivity.this);
+			final String regId = GCMRegistrar
+					.getRegistrationId(MainActivity.this);
 			Log.d(">>>>><<<<<", "already registered, regId = " + regId);
 
 			// Check if regid already presents
 			if (regId.equals("")) {
-				// Registration is not present, register now with GCM          
+				// Registration is not present, register now with GCM
 				GCMRegistrar.register(this, Utility.SENDER_ID);
-				Log.d(">>>>><<<<<", "just registered, regId = " + GCMRegistrar.getRegistrationId(MainActivity.this));
+				Log.d(">>>>><<<<<",
+						"just registered, regId = "
+								+ GCMRegistrar
+										.getRegistrationId(MainActivity.this));
 			} else {
 
-				// if the device is already registered in our server?? this flag becomes true when we get success response
+				// if the device is already registered in our server?? this flag
+				// becomes true when we get success response
 				// while connecting to our server earlier.
 				if (GCMRegistrar.isRegisteredOnServer(MainActivity.this)) {
-					// Skips registration in the server         
-					//                       Toast.makeText(getApplicationContext(), "Already registered in server", Toast.LENGTH_LONG).show();
+					// Skips registration in the server
+					// Toast.makeText(getApplicationContext(),
+					// "Already registered in server",
+					// Toast.LENGTH_LONG).show();
 				} else {
 
 					// Try to register again, but not in the UI thread.
@@ -498,14 +504,16 @@ public class MainActivity extends FragmentActivity {
 					final Context context = this;
 					mRegisterTask = new AsyncTask<Void, Void, Void>() {
 
+						@SuppressWarnings("unused")
 						@Override
 						protected Void doInBackground(Void... params) {
 							// Register on our server
 							// On server creates a new user
-							boolean registered = ServerUtilities.register(context, regId);
-							//                            if (!registered) {
-							//                                GCMRegistrar.unregister(context);
-							//                            }
+							boolean registered = ServerUtilities.register(
+									context, regId);
+							// if (!registered) {
+							// GCMRegistrar.unregister(context);
+							// }
 							return null;
 						}
 
@@ -521,7 +529,6 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-
 	/**
 	 * Receiving push messages
 	 * */
@@ -529,20 +536,21 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			String newMessage = intent.getExtras().getString(Utility.EXTRA_MESSAGE);
+			@SuppressWarnings("unused")
+			String newMessage = intent.getExtras().getString(
+					Utility.EXTRA_MESSAGE);
 		}
 	};
-	
-	
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) { // Back key pressed
-            finish();
-            overridePendingTransition(R.anim.prev_slide_in, R.anim.prev_slide_out);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) { // Back key pressed
+			finish();
+			overridePendingTransition(R.anim.prev_slide_in,
+					R.anim.prev_slide_out);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
 }
-

@@ -7,10 +7,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,8 +31,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.sparkzi.GetStartedActivity;
 import com.sparkzi.R;
+import com.sparkzi.OtherProfileShowActivity;
 import com.sparkzi.adapter.SearchAdapter;
 import com.sparkzi.model.Country;
 import com.sparkzi.model.Favorite;
@@ -57,9 +59,11 @@ public class SearchFragment extends Fragment {
 	SearchAdapter searchAdapter;
 
 	List<Country> countryList;
+	List<Favorite> peopleList;
 
 	int oppositeGender, selectedMinAge, selectedMaxAge, selectedCountryId;
 
+	@SuppressLint("InflateParams")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -97,27 +101,27 @@ public class SearchFragment extends Fragment {
 			}
 		});
 
-		sCountry1 =  (AutoCompleteTextView) view.findViewById(R.id.s_country);
-		
-		  sCountry1.setThreshold(1);
-	        sCountry1.setOnItemClickListener(new OnItemClickListener() {
+		sCountry1 = (AutoCompleteTextView) view.findViewById(R.id.s_country);
 
-	            @Override
-	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-	            		//selectedCountryId = countryList.get(position).getId();
-	            		 String selection = (String) parent.getItemAtPosition(position);
-	 			        int pos = -1;
+		sCountry1.setThreshold(1);
+		sCountry1.setOnItemClickListener(new OnItemClickListener() {
 
-	 			        for (int i = 0; i < countryList.size(); i++) {
-	 			            if (countryList.get(i).getValue().equals(selection)) {
-	 			                pos = i;
-	 			                break;
-	 			            }
-	 			        }
-	 			       selectedCountryId = countryList.get(pos).getId();
-	            	}
-	        });
-		
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				// selectedCountryId = countryList.get(position).getId();
+				String selection = (String) parent.getItemAtPosition(position);
+				int pos = -1;
+
+				for (int i = 0; i < countryList.size(); i++) {
+					if (countryList.get(i).getValue().equals(selection)) {
+						pos = i;
+						break;
+					}
+				}
+				selectedCountryId = countryList.get(pos).getId();
+			}
+		});
 
 		bSearch = (Button) view.findViewById(R.id.b_search);
 		bSearch.setOnClickListener(new OnClickListener() {
@@ -152,9 +156,20 @@ public class SearchFragment extends Fragment {
 			jsonParser = new JsonParser();
 			pDialog = new ProgressDialog(activity);
 
-			searchAdapter = new SearchAdapter(activity, null);
+			peopleList = new ArrayList<Favorite>();
+			searchAdapter = new SearchAdapter(activity, peopleList);
 			lvSearchResult.setAdapter(searchAdapter);
 			// lvSearchResult.setVisibility(View.GONE);
+			// TODO setOnItemClickListener
+			lvSearchResult.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Favorite user = (Favorite) parent
+							.getItemAtPosition(position);
+					showUserProfile(user);
+				}
+			});
 
 			new GetCountryList().execute();
 
@@ -163,6 +178,18 @@ public class SearchFragment extends Fragment {
 			generateSpinner(sEndAge, Utility.AGE_RANGE);
 
 		}
+	}
+
+	private void showUserProfile(Favorite user) {
+		Intent intent = new Intent(getActivity(),
+				OtherProfileShowActivity.class);
+		intent.putExtra(Constants.USER_NAME, user.getUsername());
+		intent.putExtra(Constants.PROFILE_PIC_URL, user.getPicUrl());
+		intent.putExtra(Constants.HOME_TOWN, user.getHometown());
+		intent.putExtra(Constants.AGE, user.getAge());
+		intent.putExtra(Constants.GENDER, user.getGender());
+		intent.putExtra(Constants.COUNTRY, user.getCountry());
+		startActivity(intent);
 	}
 
 	private class GetSearchResult extends AsyncTask<Void, Void, JSONObject> {
@@ -200,7 +227,6 @@ public class SearchFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(JSONObject responseObj) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(responseObj);
 			if (responseObj != null) {
 				try {
@@ -208,7 +234,7 @@ public class SearchFragment extends Fragment {
 					if (status.equals("OK")) {
 						JSONArray searchArray = responseObj
 								.getJSONArray("result");
-						List<Favorite> peopleList = Favorite
+						peopleList = Favorite
 								.parseFavorite(searchArray);
 						Log.e("???????", "search count = " + peopleList.size());
 
@@ -260,7 +286,6 @@ public class SearchFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(JSONObject responseObj) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(responseObj);
 			if (responseObj != null) {
 				try {
@@ -273,8 +298,9 @@ public class SearchFragment extends Fragment {
 						for (Country country : countryList) {
 							cntryList.add(country.getValue());
 						}
-				        generateautocomplete(sCountry1, cntryList.toArray(new String[cntryList.size()]));
-		                 
+						generateautocomplete(sCountry1,
+								cntryList.toArray(new String[cntryList.size()]));
+
 					} else {
 						alert("Invalid token.");
 					}
@@ -289,13 +315,15 @@ public class SearchFragment extends Fragment {
 		}
 
 	}
-	
-	private void generateautocomplete(AutoCompleteTextView autextview,String[] arrayToSpinner){
-		   ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
-	               getActivity(),  R.layout.my_autocomplete_text_style, arrayToSpinner);
-		   autextview.setAdapter(myAdapter);
-		   
-	   }
+
+	private void generateautocomplete(AutoCompleteTextView autextview,
+			String[] arrayToSpinner) {
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
+				getActivity(), R.layout.my_autocomplete_text_style,
+				arrayToSpinner);
+		autextview.setAdapter(myAdapter);
+
+	}
 
 	private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
 		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity,
