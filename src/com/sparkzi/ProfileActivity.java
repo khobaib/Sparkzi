@@ -22,8 +22,7 @@ public class ProfileActivity extends FragmentActivity {
 
 	@SuppressWarnings("unused")
 	private static final String TAG = ProfileActivity.class.getSimpleName();
-	private static final String[] CONTENT = new String[] { "Questions",
-			"Essentials" };
+	private static final String[] CONTENT = new String[] { "Questions", "Essentials" };
 
 	private static final String[] looking_for = new String[] { "woman", "man" };
 
@@ -58,19 +57,14 @@ public class ProfileActivity extends FragmentActivity {
 		ImageLoader imageLoader = new ImageLoader(ProfileActivity.this);
 		// imageLoader.DisplayImage(imageUrl, ivProfilePic);
 		ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-				ivProfilePic));
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 
 		tvUserName.setText(userCred.getUsername());
-		tvLookingFor
-				.setText("looking for " + looking_for[userCred.getGender()]);
-		tvLivesIn.setText("lives in " + userCred.getHometown() + ", "
-				+ Utility.COUNTRY_LIST[userCred.getCountry()]);
-		tvAgeGender.setText(userCred.getAge() + " | "
-				+ Utility.Gender[userCred.getGender()].substring(0, 1));
+		tvLookingFor.setText("looking for " + looking_for[userCred.getGender()]);
+		tvLivesIn.setText("lives in " + userCred.getHometown() + ", " + Utility.COUNTRY_LIST[userCred.getCountry()]);
+		tvAgeGender.setText(userCred.getAge() + " | " + Utility.Gender[userCred.getGender()].substring(0, 1));
 
-		FragmentPagerAdapter adapter = new ProfileAdapter(
-				getSupportFragmentManager());
+		FragmentPagerAdapter adapter = new ProfileAdapter(getSupportFragmentManager());
 
 		final ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(adapter);
@@ -88,8 +82,7 @@ public class ProfileActivity extends FragmentActivity {
 		ImageLoader imageLoader = new ImageLoader(ProfileActivity.this);
 		// imageLoader.DisplayImage(imageUrl, ivProfilePic);
 		ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-				ivProfilePic));
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 	}
 
 	@Override

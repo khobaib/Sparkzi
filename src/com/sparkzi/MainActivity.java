@@ -121,15 +121,13 @@ public class MainActivity extends FragmentActivity {
 
 		token = userCred.getToken();
 
-		// imageLoader.DisplayImage(imageUrl, ivProfilePic); // 
-		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-				ivProfilePic));
+		// imageLoader.DisplayImage(imageUrl, ivProfilePic); //
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 		tvUserName.setText(userName);
 
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 		// set up the drawer's list view with items and click listener
 		// mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 		// R.layout.drawer_list_item, mDrawerItems));
@@ -166,8 +164,8 @@ public class MainActivity extends FragmentActivity {
 
 		Utility.token = token;
 
-		// FIX_ME uncomment
-		newgetGCMDeviceID();
+		// FIXME uncomment
+//		 newgetGCMDeviceID();
 	}
 
 	@Override
@@ -243,17 +241,14 @@ public class MainActivity extends FragmentActivity {
 		UserCred userCred = appInstance.getUserCred();
 		String imageUrl = userCred.getPicUrl();
 
-		// imageLoader.DisplayImage(imageUrl, ivProfilePic); 
+		// imageLoader.DisplayImage(imageUrl, ivProfilePic);
 		ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-				ivProfilePic));
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 	}
 
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			if (currentFragmentIndex != position) {
 				selectItem(position);
 			} else
@@ -300,8 +295,7 @@ public class MainActivity extends FragmentActivity {
 		// update selected item and title, then close the drawer
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, myFragment).commit();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, myFragment).commit();
 
 		mDrawerList.setItemChecked(position, true);
 		setTitle(drawerItemList.get(position).getName());
@@ -325,50 +319,42 @@ public class MainActivity extends FragmentActivity {
 	private void setDrawerMenuItems() {
 		DrawerItem leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Home");
-		leftDrawerItem.setImage(getResources()
-				.getDrawable(R.drawable.icon_home));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_home));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Conversations");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_conversation));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_conversation));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Last Night");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_last_night));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_last_night));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Search");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_search));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_search));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Favorites");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_favorite));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_favorite));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Profile");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_profile));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_profile));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Settings");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_settings));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_settings));
 		drawerItemList.add(leftDrawerItem);
 
 		leftDrawerItem = new DrawerItem();
 		leftDrawerItem.setName("Log out");
-		leftDrawerItem.setImage(getResources().getDrawable(
-				R.drawable.icon_logout));
+		leftDrawerItem.setImage(getResources().getDrawable(R.drawable.icon_logout));
 		drawerItemList.add(leftDrawerItem);
 
 	}
@@ -386,8 +372,8 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "session";
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_DELETE, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_DELETE, url, null, null,
+					token);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving favorite info");
 				JSONObject responseObj = response.getjObj();
@@ -470,22 +456,17 @@ public class MainActivity extends FragmentActivity {
 			// while developing the app, then uncomment it when it's ready.
 			GCMRegistrar.checkManifest(MainActivity.this);
 
-			registerReceiver(mHandleMessageReceiver, new IntentFilter(
-					Utility.DISPLAY_MESSAGE_ACTION));
+			registerReceiver(mHandleMessageReceiver, new IntentFilter(Utility.DISPLAY_MESSAGE_ACTION));
 
 			// Get GCM registration id
-			final String regId = GCMRegistrar
-					.getRegistrationId(MainActivity.this);
+			final String regId = GCMRegistrar.getRegistrationId(MainActivity.this);
 			Log.d(">>>>><<<<<", "already registered, regId = " + regId);
 
 			// Check if regid already presents
 			if (regId.equals("")) {
 				// Registration is not present, register now with GCM
 				GCMRegistrar.register(this, Utility.SENDER_ID);
-				Log.d(">>>>><<<<<",
-						"just registered, regId = "
-								+ GCMRegistrar
-										.getRegistrationId(MainActivity.this));
+				Log.d(">>>>><<<<<", "just registered, regId = " + GCMRegistrar.getRegistrationId(MainActivity.this));
 			} else {
 
 				// if the device is already registered in our server?? this flag
@@ -509,8 +490,7 @@ public class MainActivity extends FragmentActivity {
 						protected Void doInBackground(Void... params) {
 							// Register on our server
 							// On server creates a new user
-							boolean registered = ServerUtilities.register(
-									context, regId);
+							boolean registered = ServerUtilities.register(context, regId);
 							// if (!registered) {
 							// GCMRegistrar.unregister(context);
 							// }
@@ -537,8 +517,7 @@ public class MainActivity extends FragmentActivity {
 		public void onReceive(Context context, Intent intent) {
 
 			@SuppressWarnings("unused")
-			String newMessage = intent.getExtras().getString(
-					Utility.EXTRA_MESSAGE);
+			String newMessage = intent.getExtras().getString(Utility.EXTRA_MESSAGE);
 		}
 	};
 
@@ -546,8 +525,7 @@ public class MainActivity extends FragmentActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) { // Back key pressed
 			finish();
-			overridePendingTransition(R.anim.prev_slide_in,
-					R.anim.prev_slide_out);
+			overridePendingTransition(R.anim.prev_slide_in, R.anim.prev_slide_out);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

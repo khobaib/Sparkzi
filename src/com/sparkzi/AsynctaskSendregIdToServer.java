@@ -57,8 +57,7 @@ public class AsynctaskSendregIdToServer extends AsyncTask<Void, Void, String> {
 
 		String loginData = loginObj.toString();
 
-		ServerResponse response = jsonParser.retrieveServerData(
-				Constants.REQUEST_TYPE_PUT, url, null, null, token);
+		ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null, null, token);
 
 		// int reqType, String url, List<NameValuePair> urlParams, String
 		// content, String appToken

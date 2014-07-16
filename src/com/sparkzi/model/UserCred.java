@@ -19,8 +19,8 @@ public class UserCred {
 	public UserCred() {
 	}
 
-	public UserCred(String token, int uid, String username, String password,
-			int gender, String hometown, int country, int age, String picUrl) {
+	public UserCred(String token, int uid, String username, String password, int gender, String hometown, int country,
+			int age, String picUrl) {
 		this.token = token;
 		this.uid = uid;
 		this.username = username;

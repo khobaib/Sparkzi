@@ -30,26 +30,26 @@ public class SplashActivity extends Activity {
 	SparkziApplication appInstance;
 	private ProgressDialog pDialog;
 	JsonParser jsonParser;
-    Button btn_create_account;
+	Button btn_create_account;
 	String userName, password;
 	String imageUrl;
-	TextView txt_signin,txt_go;
+	TextView txt_signin, txt_go;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.splash_new);
-		
+
 		Log.e(">>>>>>>", "I am in splash");
-		
-		btn_create_account=(Button) findViewById(R.id.btn_create_account);
-		txt_signin=(TextView) findViewById(R.id.txt_signin);
-		txt_go=(TextView) findViewById(R.id.txt_go);
-		String str="<html><body><u>Sign In</u></body></html>";
+
+		btn_create_account = (Button) findViewById(R.id.btn_create_account);
+		txt_signin = (TextView) findViewById(R.id.txt_signin);
+		txt_go = (TextView) findViewById(R.id.txt_go);
+		String str = "<html><body><u>Sign In</u></body></html>";
 		txt_go.setText(Html.fromHtml(str));
 		txt_go.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -57,17 +57,14 @@ public class SplashActivity extends Activity {
 			}
 		});
 		txt_signin.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				gologinn();
 			}
 		});
-		
-		
-		
-		
+
 		appInstance = (SparkziApplication) getApplication();
 		jsonParser = new JsonParser();
 		pDialog = new ProgressDialog(SplashActivity.this);
@@ -97,28 +94,26 @@ public class SplashActivity extends Activity {
 						e.printStackTrace();
 					} finally {
 
-//						startActivity(new Intent(SplashActivity.this,
-//								LoginActivity.class));
-					//	finish();
+						// startActivity(new Intent(SplashActivity.this,
+						// LoginActivity.class));
+						// finish();
 					}
 				}
 			};
 			timer.start();
 		}
 	}
-	
-	
-	public void gogetstartedactivity(View view){
-		Intent intent=new Intent(SplashActivity.this, GetStartedActivity.class);
+
+	public void gogetstartedactivity(View view) {
+		Intent intent = new Intent(SplashActivity.this, GetStartedActivity.class);
 		startActivity(intent);
 	}
 
-	public void gologinn(){
-		Intent intent=new Intent(SplashActivity.this, LoginActivity.class);
+	public void gologinn() {
+		Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 		startActivity(intent);
 	}
-	
-	
+
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
@@ -156,8 +151,8 @@ public class SplashActivity extends Activity {
 				loginObj.put("password", password);
 				String loginData = loginObj.toString();
 
-				ServerResponse response = jsonParser.retrieveServerData(
-						Constants.REQUEST_TYPE_PUT, url, null, loginData, null);
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null,
+						loginData, null);
 				if (response.getStatus() == 200) {
 					Log.d(">>>><<<<", "success in retrieving response in login");
 					JSONObject responseObj = response.getjObj();
@@ -196,11 +191,9 @@ public class SplashActivity extends Activity {
 						// imageUrl = responseObj.getString("pic");
 						// Log.d("??????????", "image url = " + imageUrl);
 						imageUrl = userCred.getPicUrl();
-						if (!(imageUrl == null) && !imageUrl.equals("null")
-								&& !imageUrl.startsWith("http://")
+						if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://")
 								&& !imageUrl.startsWith("https://")) {
-							imageUrl = "http://sparkzi.com/api/apinew/"
-									+ imageUrl;
+							imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
 							// Log.d("??????????", "image url = " + imageUrl);
 							userCred.setPicUrl(imageUrl);
 						}
@@ -215,16 +208,13 @@ public class SplashActivity extends Activity {
 						// public void run() {
 						Intent i = new Intent();
 						if (imageUrl == null) {
-							i = new Intent(SplashActivity.this,
-									UploadPicActivity.class);
+							i = new Intent(SplashActivity.this, UploadPicActivity.class);
 
 							Bundle bundle = new Bundle();
-							bundle.putInt(Constants.FROM_ACTIVITY,
-									Constants.PARENT_ACTIVITY_LOGIN);
+							bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_LOGIN);
 							i.putExtras(bundle);
 						} else {
-							i = new Intent(SplashActivity.this,
-									MainActivity.class);
+							i = new Intent(SplashActivity.this, MainActivity.class);
 						}
 						i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(i);

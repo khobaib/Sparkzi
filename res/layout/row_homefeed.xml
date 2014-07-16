@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white" >
+    android:background="@color/white"
+    tools:ignore="HardcodedText" >
 
     <ImageView
         android:id="@+id/iv_pic"
@@ -13,7 +15,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/ic_contact_picture_holo_light"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tv_age_gender"
@@ -26,7 +29,7 @@
         android:layout_marginTop="3dp"
         android:text="34 | F"
         android:textColor="@color/black"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
@@ -41,10 +44,10 @@
         android:minLines="1"
         android:text="Khobaib"
         android:textColor="@color/black"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textStyle="bold" />
-    
-        <TextView
+
+    <TextView
         android:id="@+id/tv_timestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +55,7 @@
         android:layout_below="@+id/tv_name"
         android:text="2013-09-29 11:28:40"
         android:textColor="@color/black"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <View
         android:id="@+id/view1"
@@ -73,7 +76,7 @@
         android:layout_marginTop="2dp"
         android:text="listened"
         android:textColor="@color/app_theme"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -87,7 +90,7 @@
         android:maxLines="2"
         android:text="Tagore at TSC"
         android:textColor="@color/black"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -96,12 +99,12 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tv_name"
         android:layout_alignRight="@+id/tv_age_gender"
-        android:layout_below="@+id/tv_verb"
+        android:layout_below="@+id/tv_feed_title"
         android:ellipsize="end"
         android:maxLines="3"
         android:text="Concert at hallroom, wow! I enjoyed that... what a class"
         android:textColor="@color/black"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <View
         android:id="@+id/view2"

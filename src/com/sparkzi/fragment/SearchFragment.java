@@ -45,7 +45,8 @@ import com.sparkzi.utility.Utility;
 
 public class SearchFragment extends Fragment {
 
-	@SuppressWarnings("unused")
+	private static final int PROFILE_SHOW_REQ = 101;
+
 	private static final String TAG = SearchFragment.class.getSimpleName();
 	private Activity activity;
 
@@ -61,22 +62,19 @@ public class SearchFragment extends Fragment {
 	List<Country> countryList;
 	List<Favorite> peopleList;
 
-	int oppositeGender, selectedMinAge, selectedMaxAge, selectedCountryId;
+	private static int oppositeGender, selectedMinAge, selectedMaxAge, selectedCountryId;
 
 	@SuppressLint("InflateParams")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.fragment_search, null);
 		sStartAge = (Spinner) view.findViewById(R.id.s_start_age);
 		sStartAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
-				selectedMinAge = Integer.parseInt((String) parent
-						.getItemAtPosition(position));
+			public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+				selectedMinAge = Integer.parseInt((String) parent.getItemAtPosition(position));
 			}
 
 			@Override
@@ -89,10 +87,8 @@ public class SearchFragment extends Fragment {
 		sEndAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
-				selectedMaxAge = Integer.parseInt((String) parent
-						.getItemAtPosition(position));
+			public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+				selectedMaxAge = Integer.parseInt((String) parent.getItemAtPosition(position));
 			}
 
 			@Override
@@ -107,8 +103,7 @@ public class SearchFragment extends Fragment {
 		sCountry1.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				// selectedCountryId = countryList.get(position).getId();
 				String selection = (String) parent.getItemAtPosition(position);
 				int pos = -1;
@@ -129,12 +124,9 @@ public class SearchFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				if (selectedMinAge >= selectedMaxAge) {
-					Toast.makeText(activity,
-							"Please choose a valid age interval.",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "Please choose a valid age interval.", Toast.LENGTH_SHORT).show();
 				} else {
-					UserCred userCred = ((SparkziApplication) activity
-							.getApplication()).getUserCred();
+					UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 					oppositeGender = (userCred.getGender() == 1) ? 2 : 1;
 					new GetSearchResult().execute();
 				}
@@ -163,10 +155,8 @@ public class SearchFragment extends Fragment {
 			// TODO setOnItemClickListener
 			lvSearchResult.setOnItemClickListener(new OnItemClickListener() {
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					Favorite user = (Favorite) parent
-							.getItemAtPosition(position);
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Favorite user = (Favorite) parent.getItemAtPosition(position);
 					showUserProfile(user);
 				}
 			});
@@ -181,15 +171,26 @@ public class SearchFragment extends Fragment {
 	}
 
 	private void showUserProfile(Favorite user) {
-		Intent intent = new Intent(getActivity(),
-				OtherProfileShowActivity.class);
+		Intent intent = new Intent(getActivity(), OtherProfileShowActivity.class);
 		intent.putExtra(Constants.USER_NAME, user.getUsername());
 		intent.putExtra(Constants.PROFILE_PIC_URL, user.getPicUrl());
 		intent.putExtra(Constants.HOME_TOWN, user.getHometown());
 		intent.putExtra(Constants.AGE, user.getAge());
 		intent.putExtra(Constants.GENDER, user.getGender());
 		intent.putExtra(Constants.COUNTRY, user.getCountry());
-		startActivity(intent);
+		intent.putExtra(Constants.EXTRA_MESSAGE, user.getFavStatus());
+		startActivityForResult(intent, PROFILE_SHOW_REQ);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK && requestCode == PROFILE_SHOW_REQ) {
+			boolean favStatusChange = data.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
+			Log.d(TAG, "onActiivtyResult : favStatusChange=" + favStatusChange);
+			if(favStatusChange){
+				new GetSearchResult().execute();
+			}
+		}
 	}
 
 	private class GetSearchResult extends AsyncTask<Void, Void, JSONObject> {
@@ -207,16 +208,13 @@ public class SearchFragment extends Fragment {
 
 		@Override
 		protected JSONObject doInBackground(Void... params) {
-			String url = Constants.URL_ROOT + "user/search" + "/gender/"
-					+ oppositeGender + "/country/" + selectedCountryId
-					+ "/minage/" + selectedMinAge + "/maxage/" + selectedMaxAge;
+			String url = Constants.URL_ROOT + "user/search" + "/gender/" + oppositeGender + "/country/"
+					+ selectedCountryId + "/minage/" + selectedMinAge + "/maxage/" + selectedMaxAge;
 
-			UserCred userCred = ((SparkziApplication) activity.getApplication())
-					.getUserCred();
+			UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 			String token = userCred.getToken();
 
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, token);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving country info");
 				JSONObject responseObj = response.getjObj();
@@ -232,10 +230,8 @@ public class SearchFragment extends Fragment {
 				try {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
-						JSONArray searchArray = responseObj
-								.getJSONArray("result");
-						peopleList = Favorite
-								.parseFavorite(searchArray);
+						JSONArray searchArray = responseObj.getJSONArray("result");
+						peopleList = Favorite.parseFavorite(searchArray);
 						Log.e("???????", "search count = " + peopleList.size());
 
 						searchAdapter.setData(peopleList);
@@ -274,8 +270,7 @@ public class SearchFragment extends Fragment {
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "enum/country";
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, null);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, null);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving country info");
 				JSONObject responseObj = response.getjObj();
@@ -298,8 +293,7 @@ public class SearchFragment extends Fragment {
 						for (Country country : countryList) {
 							cntryList.add(country.getValue());
 						}
-						generateautocomplete(sCountry1,
-								cntryList.toArray(new String[cntryList.size()]));
+						generateautocomplete(sCountry1, cntryList.toArray(new String[cntryList.size()]));
 
 					} else {
 						alert("Invalid token.");
@@ -316,21 +310,18 @@ public class SearchFragment extends Fragment {
 
 	}
 
-	private void generateautocomplete(AutoCompleteTextView autextview,
-			String[] arrayToSpinner) {
-		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
-				getActivity(), R.layout.my_autocomplete_text_style,
+	private void generateautocomplete(AutoCompleteTextView autextview, String[] arrayToSpinner) {
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(getActivity(), R.layout.my_autocomplete_text_style,
 				arrayToSpinner);
 		autextview.setAdapter(myAdapter);
 
 	}
 
 	private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
-		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity,
-				R.layout.my_simple_spinner_item, arrayToSpinner);
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity, R.layout.my_simple_spinner_item,
+				arrayToSpinner);
 		spinner.setAdapter(myAdapter);
-		myAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 	}
 

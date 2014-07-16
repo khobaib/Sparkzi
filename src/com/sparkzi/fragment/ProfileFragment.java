@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.sparkzi.R;
 import com.sparkzi.UploadPicActivity;
 import com.sparkzi.lazylist.ImageLoader;
@@ -27,8 +26,7 @@ import com.viewpagerindicator.TabPageIndicator;
 public class ProfileFragment extends Fragment {
 
 	private static final String TAG = ProfileFragment.class.getSimpleName();
-	private static final String[] CONTENT = new String[] { "Questions",
-			"Essentials" };
+	private static final String[] CONTENT = new String[] { "Questions", "Essentials" };
 
 	private static final String[] looking_for = new String[] { "woman", "man" };
 	private Activity activity;
@@ -42,8 +40,7 @@ public class ProfileFragment extends Fragment {
 	ImageLoader imageLoader;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.profile, null);
 
@@ -56,8 +53,7 @@ public class ProfileFragment extends Fragment {
 					Intent i = new Intent(activity, UploadPicActivity.class);
 
 					Bundle bundle = new Bundle();
-					bundle.putInt(Constants.FROM_ACTIVITY,
-							Constants.PARENT_ACTIVITY_PROFILE);
+					bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_PROFILE);
 					i.putExtras(bundle);
 
 					startActivity(i);
@@ -88,15 +84,12 @@ public class ProfileFragment extends Fragment {
 			UserCred userCred = appInstance.getUserCred();
 
 			UserName.setText(userCred.getUsername());
-			LookingFor.setText("looking for "
-					+ looking_for[userCred.getGender() - 1]);
+			LookingFor.setText("looking for " + looking_for[userCred.getGender() - 1]);
 			LivesIn.setText("lives in " + userCred.getHometown() + ", "
 					+ Utility.COUNTRY_LIST[userCred.getCountry() - 1]);
-			AgeGender.setText(userCred.getAge() + " | "
-					+ Utility.Gender[userCred.getGender() - 1].substring(0, 1));
+			AgeGender.setText(userCred.getAge() + " | " + Utility.Gender[userCred.getGender() - 1].substring(0, 1));
 
-			FragmentPagerAdapter adapter = new ProfileAdapter(
-					getChildFragmentManager());
+			FragmentPagerAdapter adapter = new ProfileAdapter(getChildFragmentManager());
 
 			pager.setAdapter(adapter);
 			indicator.setViewPager(pager);
@@ -113,8 +106,7 @@ public class ProfileFragment extends Fragment {
 		Log.d(TAG, "imageUrl = " + imageUrl);
 		// imageLoader.DisplayImage(imageUrl, ivProfilePic);
 		ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-				ivProfilePic));
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 	}
 
 	class ProfileAdapter extends FragmentPagerAdapter {

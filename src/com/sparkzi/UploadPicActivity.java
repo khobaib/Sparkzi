@@ -30,9 +30,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -98,25 +96,19 @@ public class UploadPicActivity extends Activity {
 		if (fromActivity == Constants.PARENT_ACTIVITY_PROFILE) {
 			// imageLoader.DisplayImage(imageUrl, ivProfilePic);
 			ivProfilePic.setBackgroundResource(android.R.color.transparent);
-			ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(
-					imageUrl, ivProfilePic));
+			ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 			btnUpdate.setVisibility(View.VISIBLE);
 		}
 
 		token = userCred.getToken();
 		// imageLoader.DisplayImage(imageUrl, ivProfilePic);
 		ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-				ivProfilePic));
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl, ivProfilePic));
 		if (isSDCardMounted()) {
-			picFile = new File(Constants.APP_DIRECTORY.toString(),
-					"profile_pic.png");
-			Log.d(TAG,
-					"SD Card mounted and picFile initialized as: "
-							+ picFile.toString());
+			picFile = new File(Constants.APP_DIRECTORY.toString(), "profile_pic.png");
+			Log.d(TAG, "SD Card mounted and picFile initialized as: " + picFile.toString());
 		} else {
-			Toast.makeText(UploadPicActivity.this, "SD Card not mounted!",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(UploadPicActivity.this, "SD Card not mounted!", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -147,13 +139,11 @@ public class UploadPicActivity extends Activity {
 			if (isSDCardMounted()) {
 				mImageCaptureUri = Uri.fromFile(picFile);
 			} else {
-				Toast.makeText(UploadPicActivity.this, "Media Not Mounted!",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(UploadPicActivity.this, "Media Not Mounted!", Toast.LENGTH_LONG).show();
 				return;
 			}
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-			intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-					mImageCaptureUri);
+			intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
 			intent.putExtra("return-data", true);
 			Log.d(TAG, "cam intent starting");
 			startActivityForResult(intent, CAMERA_REQ_CODE);
@@ -206,10 +196,8 @@ public class UploadPicActivity extends Activity {
 					} else {
 						Matrix mat = new Matrix();
 						mat.postRotate(angle);
-						Bitmap correctBmp = Bitmap.createBitmap(bmp, 0, 0,
-								bmp.getWidth(), bmp.getHeight(), mat, true);
-						scaledBmp = Bitmap.createScaledBitmap(correctBmp, w, h,
-								true);
+						Bitmap correctBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
+						scaledBmp = Bitmap.createScaledBitmap(correctBmp, w, h, true);
 						Log.d("", "scaled");
 					}
 
@@ -224,14 +212,10 @@ public class UploadPicActivity extends Activity {
 					// code b4 crop: ivProfilePic.setImageBitmap(scaledBmp);
 					// btnUpdate.setVisibility(View.VISIBLE);
 				} catch (IOException e) {
-					Toast.makeText(UploadPicActivity.this,
-							"IOException - Failed to load", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(UploadPicActivity.this, "IOException - Failed to load", Toast.LENGTH_SHORT).show();
 					Log.e("Camera", e.toString());
 				} catch (OutOfMemoryError oom) {
-					Toast.makeText(UploadPicActivity.this,
-							"OOM error - Failed to load", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(UploadPicActivity.this, "OOM error - Failed to load", Toast.LENGTH_SHORT).show();
 					Log.e("Camera", oom.toString());
 				}
 				Log.d(TAG, "starting crop");
@@ -247,10 +231,8 @@ public class UploadPicActivity extends Activity {
 
 					if (getPath(mImageCaptureUri) != null) {
 
-						InputStream inputStream = getContentResolver()
-								.openInputStream(mImageCaptureUri);
-						FileOutputStream fileOutputStream = new FileOutputStream(
-								picFile);
+						InputStream inputStream = getContentResolver().openInputStream(mImageCaptureUri);
+						FileOutputStream fileOutputStream = new FileOutputStream(picFile);
 						copyStream(inputStream, fileOutputStream);
 						fileOutputStream.close();
 						inputStream.close();
@@ -277,8 +259,7 @@ public class UploadPicActivity extends Activity {
 					return;
 				}
 				scaledBmp = BitmapFactory.decodeFile(picFile.getPath());
-				scaledBmp = Bitmap
-						.createScaledBitmap(scaledBmp, 200, 200, true);
+				scaledBmp = Bitmap.createScaledBitmap(scaledBmp, 200, 200, true);
 				ivProfilePic.setBackgroundResource(android.R.color.transparent);
 				ivProfilePic.setImageBitmap(getRoundedImage(scaledBmp, 200));
 				btnUpdate.setVisibility(View.VISIBLE);
@@ -290,17 +271,14 @@ public class UploadPicActivity extends Activity {
 
 	/** @author Touhid */
 	private Bitmap getRoundedImage(Bitmap bitmap, int cornerRadius) {
-		Bitmap scaled = Bitmap.createScaledBitmap(bitmap, cornerRadius,
-				cornerRadius, false);
-		return RoundedDrawable.fromBitmap(scaled)
-				.setScaleType(ImageView.ScaleType.CENTER_CROP)
+		Bitmap scaled = Bitmap.createScaledBitmap(bitmap, cornerRadius, cornerRadius, false);
+		return RoundedDrawable.fromBitmap(scaled).setScaleType(ImageView.ScaleType.CENTER_CROP)
 				.setCornerRadius(cornerRadius).setOval(true).toBitmap();
 	}
 
 	private int getCorrectionAngleForCam() throws IOException {
 		ExifInterface exif = new ExifInterface(picFile.getPath());
-		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-				ExifInterface.ORIENTATION_NORMAL);
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
 		int angle = 0;
 		if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
@@ -316,8 +294,7 @@ public class UploadPicActivity extends Activity {
 
 	private void loadPicasaImageFromGallery(final Uri uri) {
 		String[] projection = { MediaColumns.DATA, MediaColumns.DISPLAY_NAME };
-		Cursor cursor = getContentResolver().query(uri, projection, null, null,
-				null);
+		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 
@@ -326,22 +303,17 @@ public class UploadPicActivity extends Activity {
 				new Thread(new Runnable() {
 					public void run() {
 						try {
-							Bitmap bitmap = android.provider.MediaStore.Images.Media
-									.getBitmap(getContentResolver(), uri);
-							scaledBmp = Bitmap.createScaledBitmap(bitmap, 200,
-									200, true);
+							Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(getContentResolver(),
+									uri);
+							scaledBmp = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
 
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 									try {
-										FileOutputStream out = new FileOutputStream(
-												picFile);
-										scaledBmp.compress(
-												Bitmap.CompressFormat.PNG, 90,
-												out);
-										mImageCaptureUri = Uri
-												.fromFile(picFile);
+										FileOutputStream out = new FileOutputStream(picFile);
+										scaledBmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+										mImageCaptureUri = Uri.fromFile(picFile);
 										out.close();
 										// ivProfilePic.setImageBitmap(scaledBmp);
 										// btnUpdate.setVisibility(View.VISIBLE);
@@ -366,8 +338,7 @@ public class UploadPicActivity extends Activity {
 
 	public String getPath(Uri uri) {
 		String[] projection = { MediaColumns.DATA };
-		Cursor cursor = getContentResolver().query(uri, projection, null, null,
-				null);
+		Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
 		if (cursor != null) {
 			// HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
 			// THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
@@ -401,8 +372,7 @@ public class UploadPicActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	private class UploadProfilePicture extends
-			AsyncTask<Void, Void, JSONObject> {
+	private class UploadProfilePicture extends AsyncTask<Void, Void, JSONObject> {
 
 		protected void onPreExecute() {
 			pDialog = new ProgressDialog(UploadPicActivity.this);
@@ -419,8 +389,7 @@ public class UploadPicActivity extends Activity {
 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
 			scaledBmp.compress(Bitmap.CompressFormat.PNG, 90, bao);
 			byte[] ba = bao.toByteArray();
-			Log.d("BITMAP SIZE in asynctask", "bitmap size after compress = "
-					+ ba.length);
+			Log.d("BITMAP SIZE in asynctask", "bitmap size after compress = " + ba.length);
 
 			String base64Str = Base64.encodeBytes(ba);
 			// ArrayList<NameValuePair> contentParams = new
@@ -441,9 +410,8 @@ public class UploadPicActivity extends Activity {
 				Log.d(">>>><<<<<", "content = " + contentData);
 
 				// String appToken = appInstance.getAccessToken();
-				ServerResponse response = jsonParser.retrieveServerData(
-						Constants.REQUEST_TYPE_PUT, url, null, contentData,
-						token);
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null,
+						contentData, token);
 
 				if (response.getStatus() == 200) {
 					Log.d(">>>><<<<", "success in retrieving response in login");
@@ -488,14 +456,10 @@ public class UploadPicActivity extends Activity {
 					if (status.equals("OK")) {
 
 						String imageUrl = responseObj.getString("picUrl");
-						if (!(imageUrl == null) && !imageUrl.equals("null")
-								&& !imageUrl.startsWith("http://")
+						if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://")
 								&& !imageUrl.startsWith("https://")) {
-							imageUrl = "http://sparkzi.com/api/apinew/"
-									+ imageUrl;
-							Log.d(TAG,
-									"imageUrl after uploading in UploadPicActivity = "
-											+ imageUrl);
+							imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
+							Log.d(TAG, "imageUrl after uploading in UploadPicActivity = " + imageUrl);
 							// Log.d("??????????", "image url = " + imageUrl);
 							UserCred userCred = appInstance.getUserCred();
 							userCred.setPicUrl(imageUrl);
@@ -533,55 +497,52 @@ public class UploadPicActivity extends Activity {
 	}
 
 	private void showUpdateEssentialsDialog() {
-//		LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
-//		View addDIalogView = inflater.inflate(
-//				R.layout.dialog_answer_essentials, null);
-//		final AlertDialog alert = new AlertDialog.Builder(
-//				UploadPicActivity.this).create();
-//		alert.setView(addDIalogView);
-//		alert.setCancelable(false);
-//
-//		Button bLater = (Button) addDIalogView.findViewById(R.id.b_later);
-//		bLater.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				alert.dismiss();
-//				Intent i = new Intent(UploadPicActivity.this,
-//						MainActivity.class);
-//				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				startActivity(i);
-//				finish();
-//			}
-//
-//		});
-//
-//		Button bTryOut = (Button) addDIalogView.findViewById(R.id.b_try_out);
-//		bTryOut.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				alert.dismiss();
-				Intent i = new Intent(UploadPicActivity.this,
-						EssentialDetailsActivity.class);
-				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// LayoutInflater inflater = (LayoutInflater) getLayoutInflater();
+		// View addDIalogView = inflater.inflate(
+		// R.layout.dialog_answer_essentials, null);
+		// final AlertDialog alert = new AlertDialog.Builder(
+		// UploadPicActivity.this).create();
+		// alert.setView(addDIalogView);
+		// alert.setCancelable(false);
+		//
+		// Button bLater = (Button) addDIalogView.findViewById(R.id.b_later);
+		// bLater.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// alert.dismiss();
+		// Intent i = new Intent(UploadPicActivity.this,
+		// MainActivity.class);
+		// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		// startActivity(i);
+		// finish();
+		// }
+		//
+		// });
+		//
+		// Button bTryOut = (Button) addDIalogView.findViewById(R.id.b_try_out);
+		// bTryOut.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// alert.dismiss();
+		Intent i = new Intent(UploadPicActivity.this, EssentialDetailsActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-				Bundle bundle = new Bundle();
-				bundle.putInt(Constants.FROM_ACTIVITY,
-						Constants.PARENT_ACTIVITY_LOGIN);
-				i.putExtras(bundle);
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_LOGIN);
+		i.putExtras(bundle);
 
-				startActivity(i);
-				finish();
-//			}
-//
-//		});
-//		alert.show();
+		startActivity(i);
+		finish();
+		// }
+		//
+		// });
+		// alert.show();
 	}
 
 	void alert(String message) {
-		AlertDialog.Builder bld = new AlertDialog.Builder(
-				UploadPicActivity.this);
+		AlertDialog.Builder bld = new AlertDialog.Builder(UploadPicActivity.this);
 		bld.setMessage(message);
 		bld.setNeutralButton("OK", null);
 		bld.create().show();
@@ -602,8 +563,7 @@ public class UploadPicActivity extends Activity {
 			int scale = 1;
 
 			while (true) {
-				if (width_tmp / 2 < REQUIRED_SIZE
-						|| height_tmp / 2 < REQUIRED_SIZE)
+				if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
 					break;
 				width_tmp /= 2;
 				height_tmp /= 2;
@@ -633,8 +593,7 @@ public class UploadPicActivity extends Activity {
 		return false;
 	}
 
-	public static void copyStream(InputStream input, OutputStream output)
-			throws IOException {
+	public static void copyStream(InputStream input, OutputStream output) throws IOException {
 
 		byte[] buffer = new byte[1024];
 		int bytesRead;

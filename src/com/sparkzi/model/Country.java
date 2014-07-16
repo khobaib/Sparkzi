@@ -11,54 +11,53 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Country {
-    private int id;
-    private String value;
-    
-    public Country() {
-    }
+	private int id;
+	private String value;
 
-    public Country(int id, String value) {
-        this.id = id;
-        this.value = value;
-    }
-    
-    
-    public static List<Country> parseCountry(JSONArray ctyArray){
-        List<Country> ctyList = new ArrayList<Country>(); 
-                
-        GsonBuilder gsonb = new GsonBuilder();
-        Gson gson = gsonb.create();
-        
-        try {
-            for(int i=0; i<ctyArray.length(); i++){
+	public Country() {
+	}
 
-                JSONObject thisCty = ctyArray.getJSONObject(i);
-                if(thisCty != null){
-                    String jsonString = thisCty.toString();
-                    Country country = gson.fromJson(jsonString, Country.class);
-                    ctyList.add(country);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-         
-        return ctyList;
-    }
+	public Country(int id, String value) {
+		this.id = id;
+		this.value = value;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public static List<Country> parseCountry(JSONArray ctyArray) {
+		List<Country> ctyList = new ArrayList<Country>();
 
-    public void setId(int id) {
-        this.id = id;
-    }
+		GsonBuilder gsonb = new GsonBuilder();
+		Gson gson = gsonb.create();
 
-    public String getValue() {
-        return value;
-    }
+		try {
+			for (int i = 0; i < ctyArray.length(); i++) {
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+				JSONObject thisCty = ctyArray.getJSONObject(i);
+				if (thisCty != null) {
+					String jsonString = thisCty.toString();
+					Country country = gson.fromJson(jsonString, Country.class);
+					ctyList.add(country);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return ctyList;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
 }

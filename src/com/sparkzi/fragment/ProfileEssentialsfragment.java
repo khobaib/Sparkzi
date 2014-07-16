@@ -56,26 +56,21 @@ public class ProfileEssentialsfragment extends ListFragment {
 		activity = getActivity();
 		jsonParser = new JsonParser();
 
-		UserCred userCred = ((SparkziApplication) activity.getApplication())
-				.getUserCred();
+		UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 		token = userCred.getToken();
 		ListView lv = getListView();
-		lv.setDivider(activity.getResources().getDrawable(
-				com.sparkzi.R.color.app_theme));
+		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
 		lv.setDividerHeight(0);
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				if (eList.size() > 0) {
-					Intent i = new Intent(activity,
-							EssentialDetailsActivity.class);
+					Intent i = new Intent(activity, EssentialDetailsActivity.class);
 
 					Bundle bundle = new Bundle();
-					bundle.putInt(Constants.FROM_ACTIVITY,
-							Constants.PARENT_ACTIVITY_PROFILE);
+					bundle.putInt(Constants.FROM_ACTIVITY, Constants.PARENT_ACTIVITY_PROFILE);
 					i.putExtras(bundle);
 
 					startActivity(i);
@@ -103,8 +98,7 @@ public class ProfileEssentialsfragment extends ListFragment {
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "user";
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, token);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving user info");
 				JSONObject responseObj = response.getjObj();

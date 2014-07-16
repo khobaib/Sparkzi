@@ -29,9 +29,8 @@ import com.sparkzi.utility.Constants;
 
 @SuppressLint("NewApi")
 public class RegistrationActivity extends Activity {
-//etUserName,
-	EditText  etUserName,etFirstName, etLastName, etEmail, etPassword,
-			etConfirmPass;
+	// etUserName,
+	EditText etUserName, etFirstName, etLastName, etEmail, etPassword, etConfirmPass;
 
 	String whoAmI, startAge, endAge, cityName, dob;
 	String userName, firstname, lastName, email, password, confirmPass;
@@ -132,24 +131,17 @@ public class RegistrationActivity extends Activity {
 		confirmPass = etConfirmPass.getText().toString().trim();
 
 		if (userName == null || userName.equals("")) {
-			Toast.makeText(RegistrationActivity.this,
-					"Please choose a username.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(RegistrationActivity.this, "Please choose a username.", Toast.LENGTH_SHORT).show();
 		} else if (firstname == null || firstname.equals("")) {
-			Toast.makeText(RegistrationActivity.this,
-					"Please insert your first name.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(RegistrationActivity.this, "Please insert your first name.", Toast.LENGTH_SHORT).show();
 		} else if (lastName == null || lastName.equals("")) {
-			Toast.makeText(RegistrationActivity.this,
-					"Please insert your last name.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(RegistrationActivity.this, "Please insert your last name.", Toast.LENGTH_SHORT).show();
 		} else if (email == null || email.equals("")) {
-			Toast.makeText(RegistrationActivity.this,
-					"Please insert your email.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(RegistrationActivity.this, "Please insert your email.", Toast.LENGTH_SHORT).show();
 		} else if (password == null || password.equals("")) {
-			Toast.makeText(RegistrationActivity.this,
-					"Please select your password.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(RegistrationActivity.this, "Please select your password.", Toast.LENGTH_SHORT).show();
 		} else if (!password.equals(confirmPass)) {
-			Toast.makeText(RegistrationActivity.this, "Password mismatch.",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(RegistrationActivity.this, "Password mismatch.", Toast.LENGTH_SHORT).show();
 		} else {
 			regInfo.setGender((whoAmI.startsWith("M")) ? 1 : 2);
 			regInfo.setLowerAge(startAge);
@@ -168,8 +160,7 @@ public class RegistrationActivity extends Activity {
 		}
 	}
 
-	public class SendRegistrationRequest extends
-			AsyncTask<Void, Void, JSONObject> {
+	public class SendRegistrationRequest extends AsyncTask<Void, Void, JSONObject> {
 
 		@Override
 		protected void onPreExecute() {
@@ -197,8 +188,8 @@ public class RegistrationActivity extends Activity {
 				regObj.put("firstname", regInfo.getFirstName());
 				regObj.put("lastname", regInfo.getLastName());
 				String regData = regObj.toString();
-				ServerResponse response = jsonParser.retrieveServerData(
-						Constants.REQUEST_TYPE_PUT, url, null, regData, null);
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null, regData,
+						null);
 				if (response.getStatus() == 200) {
 					JSONObject responseObj = response.getjObj();
 					return responseObj;
@@ -224,11 +215,9 @@ public class RegistrationActivity extends Activity {
 					} else {
 						String desc = responseObj.getString("description");
 						if (desc.equals("User already exists"))
-							alert("This user already exists, please choose another username.",
-									false);
+							alert("This user already exists, please choose another username.", false);
 						else
-							alert("Please check all the info & try again.",
-									false);
+							alert("Please check all the info & try again.", false);
 					}
 				} catch (JSONException e) {
 					alert("Registration Exception.", false);
@@ -243,16 +232,14 @@ public class RegistrationActivity extends Activity {
 	}
 
 	void alert(String message, final Boolean success) {
-		AlertDialog.Builder bld = new AlertDialog.Builder(
-				RegistrationActivity.this);
+		AlertDialog.Builder bld = new AlertDialog.Builder(RegistrationActivity.this);
 		bld.setMessage(message);
 		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (success) {
-					Intent i = new Intent(RegistrationActivity.this,
-							LoginActivity.class);
+					Intent i = new Intent(RegistrationActivity.this, LoginActivity.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(i);
 					finish();

@@ -17,7 +17,6 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -37,7 +36,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 	private static final int LOADER_ID = 1;
 
 	CustomListView ThreadMessageList;
-	 SparkziApplication appInstance;
+	SparkziApplication appInstance;
 	ThreadMessageAdapter threadMessageAdapter;
 	List<Conversation> messageList;
 	String msgBody;
@@ -58,16 +57,16 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.thread_message);
-		 appInstance = (SparkziApplication) getApplication();
-		UserCred userCred = ((SparkziApplication) getApplication())
-				.getUserCred();
+		appInstance = (SparkziApplication) getApplication();
+		UserCred userCred = ((SparkziApplication) getApplication()).getUserCred();
 		myUId = userCred.getUid();
 		myImageUrl = userCred.getPicUrl();
 		token = userCred.getToken();
 
 		threadUserName = getIntent().getExtras().getString("user_name");
 		threadUserId = getIntent().getExtras().getInt("user_id");
-		//Toast.makeText(ThreadMessageActivity.this, threadUserName, 10000).show();
+		// Toast.makeText(ThreadMessageActivity.this, threadUserName,
+		// 10000).show();
 
 		jsonParser = new JsonParser();
 
@@ -78,13 +77,11 @@ public class ThreadMessageActivity extends FragmentActivity implements
 
 		MessageBody = (EditText) findViewById(R.id.et_msg_body);
 
-		threadMessageAdapter = new ThreadMessageAdapter(
-				ThreadMessageActivity.this, new ArrayList<Conversation>(),
+		threadMessageAdapter = new ThreadMessageAdapter(ThreadMessageActivity.this, new ArrayList<Conversation>(),
 				myUId, myImageUrl);
 		ThreadMessageList.setAdapter(threadMessageAdapter);
 
-		getSupportLoaderManager().initLoader(LOADER_ID, null,
-				ThreadMessageActivity.this);
+		getSupportLoaderManager().initLoader(LOADER_ID, null, ThreadMessageActivity.this);
 		if (!pDialog.isShowing())
 			pDialog.show();
 	}
@@ -101,23 +98,19 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		super.onStop();
 		BugSenseHandler.closeSession(this);
 	}
-	
-
 
 	public void onClickReply(View v) {
 		msgBody = MessageBody.getText().toString().trim();
 
 		if (msgBody == null || msgBody.equals(""))
-			Toast.makeText(ThreadMessageActivity.this, "Message is empty.",
-					Toast.LENGTH_SHORT).show();
-		 else{
-			 	if(threadUserName == null || threadUserName.equals("")){
-	                Toast.makeText(ThreadMessageActivity.this, "Please select a user.", Toast.LENGTH_SHORT).show();
-	            }
-	            else{
-	                new SendMessageToServer().execute();
-	            }
-	        }
+			Toast.makeText(ThreadMessageActivity.this, "Message is empty.", Toast.LENGTH_SHORT).show();
+		else {
+			if (threadUserName == null || threadUserName.equals("")) {
+				Toast.makeText(ThreadMessageActivity.this, "Please select a user.", Toast.LENGTH_SHORT).show();
+			} else {
+				new SendMessageToServer().execute();
+			}
+		}
 	}
 
 	public void onClickDelete(View v) {
@@ -135,8 +128,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<Conversation>> loader,
-			List<Conversation> data) {
+	public void onLoadFinished(Loader<List<Conversation>> loader, List<Conversation> data) {
 		threadMessageAdapter.setData(data);
 		threadMessageAdapter.notifyDataSetChanged();
 		if (pDialog.isShowing())
@@ -162,11 +154,9 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "block/" + threadUserId;
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_PUT, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null, null, token);
 			if (response.getStatus() == 200) {
-				Log.d(">>>><<<<", "success in blocking user = "
-						+ threadUserName);
+				Log.d(">>>><<<<", "success in blocking user = " + threadUserName);
 				JSONObject responseObj = response.getjObj();
 				return responseObj;
 			} else
@@ -182,8 +172,7 @@ public class ThreadMessageActivity extends FragmentActivity implements
 				try {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
-						alert(threadUserName
-								+ " is blocked. You can unblock from settings.");
+						alert(threadUserName + " is blocked. You can unblock from settings.");
 					} else {
 						alert("Invalid token.");
 					}
@@ -195,87 +184,81 @@ public class ThreadMessageActivity extends FragmentActivity implements
 		}
 
 	}
-	
+
 	public class SendMessageToServer extends AsyncTask<Void, Void, JSONObject> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog.setMessage("Please wait while your message is being sent...");
-            pDialog.show();
-        }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog.setMessage("Please wait while your message is being sent...");
+			pDialog.show();
+		}
 
-        @Override
-        protected JSONObject doInBackground(Void... params) {
-            String url = Constants.URL_ROOT + "messages/" + threadUserName;
+		@Override
+		protected JSONObject doInBackground(Void... params) {
+			String url = Constants.URL_ROOT + "messages/" + threadUserName;
 
-            UserCred userCred = appInstance.getUserCred();
-            String token = userCred.getToken();
+			UserCred userCred = appInstance.getUserCred();
+			String token = userCred.getToken();
 
-            try {
-                JSONObject msgObj = new JSONObject();
-                msgObj.put("message", msgBody);
+			try {
+				JSONObject msgObj = new JSONObject();
+				msgObj.put("message", msgBody);
 
-                String msgData = msgObj.toString();
-                ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url,
-                        null, msgData, token);
-                if(response.getStatus() == 200){
-                    JSONObject responseObj = response.getjObj();
-                    return responseObj;
-                }
-                else{
-                    return null;
-                }
-            } catch (JSONException e) {                
-                e.printStackTrace();
-                return null;
-            }
-        }
+				String msgData = msgObj.toString();
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null, msgData,
+						token);
+				if (response.getStatus() == 200) {
+					JSONObject responseObj = response.getjObj();
+					return responseObj;
+				} else {
+					return null;
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 
-        @Override
-        protected void onPostExecute(JSONObject responseObj) {
-            super.onPostExecute(responseObj);
-            if(pDialog.isShowing())
-                pDialog.dismiss();
-            if(responseObj != null){
-                try {
-                    String status = responseObj.getString("status");
-                    if(status.equals("OK")){
-                        alert("Message Sent.", true);
-                    }
-                    else{
-                      }
-                } catch (JSONException e) {
-                    alert("Registration Exception.", false);
-                    e.printStackTrace();
-                }
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			super.onPostExecute(responseObj);
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						alert("Message Sent.", true);
+					} else {
+					}
+				} catch (JSONException e) {
+					alert("Registration Exception.", false);
+					e.printStackTrace();
+				}
 
-            }
-            else{
-                alert("Message sending error, please try again.", false);
-            }
-        }               
+			} else {
+				alert("Message sending error, please try again.", false);
+			}
+		}
 
-    }
+	}
 
-    void alert(String message, final Boolean success) {
-        AlertDialog.Builder bld = new AlertDialog.Builder(ThreadMessageActivity.this);
-        bld.setMessage(message);
-        bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+	void alert(String message, final Boolean success) {
+		AlertDialog.Builder bld = new AlertDialog.Builder(ThreadMessageActivity.this);
+		bld.setMessage(message);
+		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(success){
-                     finish();
-                }
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (success) {
+					finish();
+				}
 
-
-            }
-        });
-        bld.create().show();
-    }
-
-	
+			}
+		});
+		bld.create().show();
+	}
 
 	void alert(String message) {
 		AlertDialog.Builder bld = new AlertDialog.Builder(this);

@@ -44,8 +44,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 	public SearchAdapter(Context context, List<Favorite> qList) {
 		super(context, R.layout.row_search);
 		this.mContext = context;
-		mInflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader((Activity) mContext);
 		jsonParser = new JsonParser();
 		pDialog = new ProgressDialog(mContext);
@@ -68,13 +67,10 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 			convertView = mInflater.inflate(R.layout.row_search, null);
 
 			holder = new ViewHolder();
-			holder.UserImage = (ImageView) convertView
-					.findViewById(R.id.iv_pic);
+			holder.UserImage = (ImageView) convertView.findViewById(R.id.iv_pic);
 			holder.userName = (TextView) convertView.findViewById(R.id.tv_name);
-			holder.userAgeGender = (TextView) convertView
-					.findViewById(R.id.tv_age_gender);
-			holder.bAddToFav = (Button) convertView
-					.findViewById(R.id.b_add_to_fav);
+			holder.userAgeGender = (TextView) convertView.findViewById(R.id.tv_age_gender);
+			holder.bAddToFav = (Button) convertView.findViewById(R.id.b_add_to_fav);
 
 			convertView.setTag(holder);
 		} else {
@@ -83,7 +79,8 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 
 		final Favorite item = getItem(position);
 
-		int favStatus = item.getFavStatus();
+		final int favStatus = item.getFavStatus();
+		// Log.d("Fav Status", "fav status code: "+favStatus);
 		if (favStatus == Constants.FAVORITE_STATUS_FRIEND) {
 			holder.bAddToFav.setVisibility(View.INVISIBLE);
 		} else if (favStatus == Constants.FAVORITE_STATUS_SENT) {
@@ -111,7 +108,10 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 					return;
 				}
 				String username = item.getUsername();
-				new RequestAddFav(holder.bAddToFav).execute(username);
+				if (favStatus == Constants.FAVORITE_STATUS_WAITING)
+					new RequestApproveFav(holder.bAddToFav).execute(username);
+				else
+					new RequestAddFav(holder.bAddToFav).execute(username);
 
 			}
 		});
@@ -120,8 +120,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 		imageLoader.DisplayImage(imageUrl, holder.UserImage);
 
 		holder.userName.setText(item.getUsername());
-		holder.userAgeGender.setText(item.getAge() + " | "
-				+ Utility.Gender[item.getGender() - 1].substring(0, 1));
+		holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender() - 1].substring(0, 1));
 
 		return convertView;
 	}
@@ -161,12 +160,10 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 		protected JSONObject doInBackground(String... params) {
 			String url = Constants.URL_ROOT + "favs/" + params[0];
 
-			UserCred userCred = ((SparkziApplication) ((Activity) mContext)
-					.getApplication()).getUserCred();
+			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
 			String token = userCred.getToken();
 
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_PUT, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null, null, token);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success - getting response");
 				JSONObject responseObj = response.getjObj();
@@ -177,13 +174,74 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 
 		@Override
 		protected void onPostExecute(JSONObject responseObj) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(responseObj);
 			if (responseObj != null) {
 				try {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
 						((Button) v).setText("Request sent");
+					} else {
+						alert("Invalid token.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+		}
+
+	}
+
+	private class RequestApproveFav extends AsyncTask<String, Void, JSONObject> {
+
+		private Button btn;
+
+		// public RequestAddFav() {
+		// }
+
+		public RequestApproveFav(View v) {
+			this.btn = (Button) v;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!pDialog.isShowing()) {
+				pDialog.setMessage("A moment...");
+				pDialog.setCancelable(false);
+				pDialog.setIndeterminate(true);
+				pDialog.show();
+			}
+		}
+
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			String url = Constants.URL_ROOT + "favs/" + params[0];
+
+			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
+			String token = userCred.getToken();
+
+			ServerResponse response = jsonParser
+					.retrieveServerData(Constants.REQUEST_TYPE_POST, url, null, null, token);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success - getting response");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			super.onPostExecute(responseObj);
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						((Button) btn).setVisibility(View.INVISIBLE);
 					} else {
 						alert("Invalid token.");
 					}

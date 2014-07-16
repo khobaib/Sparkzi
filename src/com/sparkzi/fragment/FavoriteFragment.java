@@ -17,8 +17,7 @@ public class FavoriteFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	private static final String TAG = FavoriteFragment.class.getSimpleName();
-	private static final String[] CONTENT = new String[] { "Favorites",
-			"Pending", "Req sent" };
+	private static final String[] CONTENT = new String[] { "Favorites", "Pending", "Req sent" };
 
 	private Activity activity;
 
@@ -26,10 +25,8 @@ public class FavoriteFragment extends Fragment {
 	private TabPageIndicator indicator;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater
-				.inflate(R.layout.layout_favorite, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.layout_favorite, container, false);
 		mViewPager = (ViewPager) view.findViewById(R.id.pager);
 		indicator = (TabPageIndicator) view.findViewById(R.id.indicator);
 
@@ -41,8 +38,7 @@ public class FavoriteFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		activity = getActivity();
 		if (activity != null) {
-			final FragmentPagerAdapter adapter = new FavoriteListAdapter(
-					getChildFragmentManager());
+			final FragmentPagerAdapter adapter = new FavoriteListAdapter(getChildFragmentManager());
 			mViewPager.setAdapter(adapter);
 			mViewPager.setOffscreenPageLimit(2);
 

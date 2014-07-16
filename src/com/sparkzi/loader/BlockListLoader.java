@@ -40,8 +40,7 @@ public class BlockListLoader extends AsyncTaskLoader<List<BlockedUser>> {
 
 		String url = Constants.URL_ROOT + "block";
 
-		ServerResponse response = jsonParser.retrieveServerData(
-				Constants.REQUEST_TYPE_GET, url, null, null, token);
+		ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, token);
 
 		if (response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
 			JSONObject responseObj = response.getjObj();
@@ -50,8 +49,7 @@ public class BlockListLoader extends AsyncTaskLoader<List<BlockedUser>> {
 				String desc = responseObj.getString("description");
 				JSONArray bUserArray = responseObj.getJSONArray("result");
 
-				List<BlockedUser> bUserList = BlockedUser
-						.parseBlockedUserList(bUserArray);
+				List<BlockedUser> bUserList = BlockedUser.parseBlockedUserList(bUserArray);
 				return bUserList;
 
 			} catch (JSONException e) {

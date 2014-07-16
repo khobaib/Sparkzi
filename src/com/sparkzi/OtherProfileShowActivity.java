@@ -1,15 +1,22 @@
 package com.sparkzi;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,150 +25,132 @@ import com.bugsense.trace.BugSenseHandler;
 import com.sparkzi.fragment.OtherProfileEssentialsfragment;
 import com.sparkzi.fragment.OtherProfileQuestionsFragment;
 import com.sparkzi.lazylist.ImageLoader;
+import com.sparkzi.model.ServerResponse;
+import com.sparkzi.model.UserCred;
+import com.sparkzi.parser.JsonParser;
 import com.sparkzi.utility.Constants;
+import com.sparkzi.utility.SparkziApplication;
 import com.sparkzi.utility.Utility;
 import com.viewpagerindicator.TabPageIndicator;
 
 public class OtherProfileShowActivity extends FragmentActivity {
 
-	@SuppressWarnings("unused")
-	private static final String TAG = OtherProfileShowActivity.class
-			.getSimpleName();
-	private static final String[] CONTENT = new String[] { "Questions",
-			"Essentials" };
+	private static final String TAG = OtherProfileShowActivity.class.getSimpleName();
+	private static final String[] CONTENT = new String[] { "Questions", "Essentials" };
 
-	// private static final String[] looking_for = new String[] { "woman", "man"
-	// };
-
+	private JsonParser jsonParser;
+	private ProgressDialog pDialog;
 	private ImageView ivProfilePic;
 	private TextView tvUserName, tvAgeGender, tvLivesIn;// tvLookingFor,
+	private int favStatus;
+	private String uName;
+	private boolean favStatusChange = false;
 
-	// private static SparkziApplication appInstance;
-
-	// private static ImageLoader imageLoader;
-
-	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, "2c5ced14");
 		setContentView(R.layout.profile);
 
-		Intent intent = getIntent();
-		String uName = intent.getStringExtra(Constants.USER_NAME);
-		getActionBar().setTitle(uName);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		jsonParser = new JsonParser();
+		pDialog = new ProgressDialog(OtherProfileShowActivity.this);
+		initViews();
 
-		// new GetEssentialInfo().execute();
-
-		ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
-		tvUserName = (TextView) findViewById(R.id.tv_name);
-		// tvLookingFor = (TextView) findViewById(R.id.tv_look_for);
-		tvAgeGender = (TextView) findViewById(R.id.tv_age_gender);
-		tvLivesIn = (TextView) findViewById(R.id.tv_lives_in);
-
-		// appInstance = (SparkziApplication) getApplication();
-		// UserCred userCred = appInstance.getUserCred();
-		// String imageUrl = userCred.getPicUrl();
-
-		ImageLoader imageLoader = new ImageLoader(OtherProfileShowActivity.this);
-		// imageLoader.DisplayImage(imageUrl, ivProfilePic);
-		ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		ivProfilePic
-				.setImageBitmap(imageLoader.getRoundedPicFromURL(
-						intent.getStringExtra(Constants.PROFILE_PIC_URL),
-						ivProfilePic));
-
-		tvUserName.setText(uName);
-		// tvLookingFor
-		// .setText("looking for " + looking_for[intent.getIntExtra("", 0)]);
-		tvLivesIn.setText("lives in "
-				+ intent.getStringExtra(Constants.HOME_TOWN) + ", " // TODO get
-																	// home town
-																	// array
-				+ Utility.COUNTRY_LIST[intent.getIntExtra("country", 1) - 1]);
-		tvAgeGender.setText(intent.getIntExtra("age", 18)
-				+ " | "
-				+ Utility.Gender[intent.getIntExtra("gender", 1) - 1]
-						.substring(0, 1));
-
-		FragmentPagerAdapter adapter = new OtherProfileAdapter( // TODO change
-																// for
-				// others
-				getSupportFragmentManager());
-
+		FragmentPagerAdapter adapter = new OtherProfileAdapter(getSupportFragmentManager());
 		final ViewPager pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(adapter);
-
 		final TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);
 	}
-	
+
+	@SuppressLint("NewApi")
+	private void initViews() {
+		Intent intent = getIntent();
+		favStatus = intent.getIntExtra(Constants.EXTRA_MESSAGE, Constants.FAVORITE_STATUS_STRANGER);
+		uName = intent.getStringExtra(Constants.USER_NAME);
+		getActionBar().setTitle(uName);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		ivProfilePic = (ImageView) findViewById(R.id.iv_profile_pic);
+		tvUserName = (TextView) findViewById(R.id.tv_name);
+		tvAgeGender = (TextView) findViewById(R.id.tv_age_gender);
+		tvLivesIn = (TextView) findViewById(R.id.tv_lives_in);
+
+		ImageLoader imageLoader = new ImageLoader(OtherProfileShowActivity.this);
+		ivProfilePic.setBackgroundResource(android.R.color.transparent);
+		ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(intent.getStringExtra(Constants.PROFILE_PIC_URL),
+				ivProfilePic));
+
+		tvUserName.setText(uName);
+		// TODO get home town array
+		tvLivesIn.setText("lives in " + intent.getStringExtra(Constants.HOME_TOWN) + ", "
+				+ Utility.COUNTRY_LIST[intent.getIntExtra("country", 1) - 1]);
+		tvAgeGender.setText(intent.getIntExtra("age", 18) + " | "
+				+ Utility.Gender[intent.getIntExtra("gender", 1) - 1].substring(0, 1));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.fav_add, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId()==android.R.id.home){
+		int id = item.getItemId();
+		if (id == android.R.id.home) {
 			finish();
 			return true;
+		} else if (id == R.id.action_add_fav) {
+			Log.d(TAG, "Add to favorite: favStatus=" + favStatus);
+			handleAddFavReq();
 		}
 		return false;
+	}
+
+	private void handleAddFavReq() {
+		favStatusChange = false;
+		switch (favStatus) {
+		case Constants.FAVORITE_STATUS_STRANGER:
+			// TODO Check whether the same API handles both cases or not
+		case Constants.FAVORITE_STATUS_WAITING:
+			new RequestAddFav().execute(uName);
+			break;
+		case Constants.FAVORITE_STATUS_SENT:
+			alert("You've already sent a request!");
+			break;
+		case Constants.FAVORITE_STATUS_FRIEND:
+			// FIXME may be hide/deactivate the button
+			alert("You two are already friends!");
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	// @Override
+	// public void onBackPressed() {
+	// Log.d(TAG, "onBackPressed()");
+	// Intent data = new Intent();
+	// data.putExtra(Constants.EXTRA_MESSAGE, favStatusChange);
+	// setResult(RESULT_OK, data);
+	// super.onBackPressed();
+	// }
+
+	@Override
+	public void finish() {
+		Log.d(TAG, "finish()");
+		Intent data = new Intent();
+		data.putExtra(Constants.EXTRA_MESSAGE, favStatusChange);
+		setResult(RESULT_OK, data);
+		super.finish();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// UserCred userCred = appInstance.getUserCred();
-		// String imageUrl = userCred.getPicUrl();
-		// ImageLoader imageLoader = new
-		// ImageLoader(OtherProfileShowActivity.this);
-		// // imageLoader.DisplayImage(imageUrl, ivProfilePic);
-		// ivProfilePic.setBackgroundResource(android.R.color.transparent);
-		// ivProfilePic.setImageBitmap(imageLoader.getRoundedPicFromURL(imageUrl,
-		// ivProfilePic));
 	}
-
-	// private class GetEssentialInfo extends AsyncTask<Void, Void, JSONObject>
-	// {
-	//
-	// @Override
-	// protected JSONObject doInBackground(Void... params) {
-	// String url = Constants.URL_ROOT + "user/"
-	// + getIntent().getStringExtra(Constants.USER_NAME); // TODO
-	// UserCred userCred = ((SparkziApplication) getApplication())
-	// .getUserCred();
-	// String token = userCred.getToken();
-	// ServerResponse response = new JsonParser().retrieveServerData(
-	// Constants.REQUEST_TYPE_GET, url, null, null, token);
-	// if (response.getStatus() == 200) {
-	// Log.d(">>>><<<<", "success in retrieving user info");
-	// JSONObject responseObj = response.getjObj();
-	// return responseObj;
-	// } else
-	// return null;
-	// }
-	//
-	// @Override
-	// protected void onPostExecute(JSONObject responseObj) {
-	// super.onPostExecute(responseObj);
-	// if (responseObj != null) {
-	// try {
-	// String status = responseObj.getString("status");
-	// if (status.equals("OK")) {
-	// JSONObject userObj = responseObj.getJSONObject("user");
-	// // final List<Essential> eList =
-	// // Essential.parseEssentialList(userObj);
-	// Log.d("T_UserObj", userObj.toString());
-	// } else {
-	// alert("Invalid token.");
-	// }
-	// } catch (JSONException e) {
-	// alert("Exception.");
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	//
-	// }
 
 	void alert(String message) {
 		AlertDialog.Builder bld = new AlertDialog.Builder(this);
@@ -197,11 +186,9 @@ public class OtherProfileShowActivity extends FragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			if (position == 0) {
-				return OtherProfileQuestionsFragment.newInstance(getIntent()
-						.getStringExtra(Constants.USER_NAME));
+				return OtherProfileQuestionsFragment.newInstance(getIntent().getStringExtra(Constants.USER_NAME));
 			} else if (position == 1) {
-				return OtherProfileEssentialsfragment.newInstance(getIntent()
-						.getStringExtra(Constants.USER_NAME));
+				return OtherProfileEssentialsfragment.newInstance(getIntent().getStringExtra(Constants.USER_NAME));
 			} else
 				return null;
 		}
@@ -217,4 +204,60 @@ public class OtherProfileShowActivity extends FragmentActivity {
 		}
 	}
 
+	private class RequestAddFav extends AsyncTask<String, Void, JSONObject> {
+
+		public RequestAddFav() {
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!pDialog.isShowing()) {
+				pDialog.setMessage("A moment...");
+				pDialog.setCancelable(false);
+				pDialog.setIndeterminate(true);
+				pDialog.show();
+			}
+		}
+
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			String url = Constants.URL_ROOT + "favs/" + params[0];
+
+			UserCred userCred = ((SparkziApplication) getApplication()).getUserCred();
+			String token = userCred.getToken();
+
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null, null, token);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success - getting response");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			super.onPostExecute(responseObj);
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						// ((Button) v).setText("Request sent");
+						favStatus = Constants.FAVORITE_STATUS_SENT;
+						favStatusChange = true;
+					} else {
+						alert("Invalid token.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+		}
+
+	}
 }

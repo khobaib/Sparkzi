@@ -23,10 +23,9 @@ public class EssentialDbManager {
 	private static String ID = "id";
 	private static String VALUE = "value";
 
-	private static final String CREATE_TABLE_ESSENTIAL_LIST = "create table "
-			+ TABLE_ESSENTIAL_LIST + " ( " + TABLE_PRIMARY_KEY
-			+ " integer primary key autoincrement, " + ESSENTIAL_TYPE
-			+ " integer, " + ID + " integer, " + VALUE + " text);";
+	private static final String CREATE_TABLE_ESSENTIAL_LIST = "create table " + TABLE_ESSENTIAL_LIST + " ( "
+			+ TABLE_PRIMARY_KEY + " integer primary key autoincrement, " + ESSENTIAL_TYPE + " integer, " + ID
+			+ " integer, " + VALUE + " text);";
 
 	public static void createTable(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE_ESSENTIAL_LIST);
@@ -36,8 +35,7 @@ public class EssentialDbManager {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ESSENTIAL_LIST);
 	}
 
-	public static long insert(SQLiteDatabase db, Essential essential,
-			int essentialType) throws SQLException {
+	public static long insert(SQLiteDatabase db, Essential essential, int essentialType) throws SQLException {
 
 		ContentValues cv = new ContentValues();
 
@@ -48,13 +46,11 @@ public class EssentialDbManager {
 		return db.insert(TABLE_ESSENTIAL_LIST, null, cv);
 	}
 
-	public static Essential retrieve(SQLiteDatabase db, int essentialType,
-			int id) throws SQLException {
+	public static Essential retrieve(SQLiteDatabase db, int essentialType, int id) throws SQLException {
 		Essential essential = new Essential();
 
-		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, ESSENTIAL_TYPE + "="
-				+ essentialType + " AND " + ID + "=" + id, null, null, null,
-				null);
+		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, ESSENTIAL_TYPE + "=" + essentialType + " AND " + ID + "=" + id,
+				null, null, null, null);
 		if (c != null && c.getCount() > 0) {
 			c.moveToFirst();
 			String value = c.getString(c.getColumnIndex(VALUE));
@@ -63,12 +59,10 @@ public class EssentialDbManager {
 		return essential;
 	}
 
-	public static List<Essential> retrieve(SQLiteDatabase db, int essentialType)
-			throws SQLException {
+	public static List<Essential> retrieve(SQLiteDatabase db, int essentialType) throws SQLException {
 		List<Essential> essentialList = new ArrayList<Essential>();
 
-		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, ESSENTIAL_TYPE + "="
-				+ essentialType, null, null, null, null);
+		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, ESSENTIAL_TYPE + "=" + essentialType, null, null, null, null);
 		if (c != null && c.getCount() > 0) {
 			c.moveToFirst();
 			while (!c.isAfterLast()) {
@@ -84,12 +78,10 @@ public class EssentialDbManager {
 		return essentialList;
 	}
 
-	public static List<Essential> retrieve(SQLiteDatabase db)
-			throws SQLException {
+	public static List<Essential> retrieve(SQLiteDatabase db) throws SQLException {
 		List<Essential> essentialList = new ArrayList<Essential>();
 
-		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, null, null, null, null,
-				null);
+		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, null, null, null, null, null);
 		if (c != null && c.getCount() > 0) {
 			c.moveToFirst();
 			while (!c.isAfterLast()) {
@@ -105,31 +97,27 @@ public class EssentialDbManager {
 		return essentialList;
 	}
 
-	public static long update(SQLiteDatabase db, Essential essential,
-			int essentialType) throws SQLException {
+	public static long update(SQLiteDatabase db, Essential essential, int essentialType) throws SQLException {
 
 		ContentValues cv = new ContentValues();
 		cv.put(VALUE, essential.getValue());
 
-		return db.update(TABLE_ESSENTIAL_LIST, cv, ESSENTIAL_TYPE + "="
-				+ essentialType + " AND " + ID + "=" + essential.getId(), null);
+		return db.update(TABLE_ESSENTIAL_LIST, cv, ESSENTIAL_TYPE + "=" + essentialType + " AND " + ID + "="
+				+ essential.getId(), null);
 	}
 
-	public static boolean isExist(SQLiteDatabase db, int id, int essentialType)
-			throws SQLException {
+	public static boolean isExist(SQLiteDatabase db, int id, int essentialType) throws SQLException {
 		boolean itemExist = false;
 
-		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, ESSENTIAL_TYPE + "="
-				+ essentialType + " AND " + ID + "=" + id, null, null, null,
-				null);
+		Cursor c = db.query(TABLE_ESSENTIAL_LIST, null, ESSENTIAL_TYPE + "=" + essentialType + " AND " + ID + "=" + id,
+				null, null, null, null);
 		if ((c != null) && (c.getCount() > 0)) {
 			itemExist = true;
 		}
 		return itemExist;
 	}
 
-	public static void insertOrupdate(SQLiteDatabase db, Essential essential,
-			int essentialType) throws SQLException {
+	public static void insertOrupdate(SQLiteDatabase db, Essential essential, int essentialType) throws SQLException {
 		if (isExist(db, essential.getId(), essentialType)) {
 			update(db, essential, essentialType);
 		} else {

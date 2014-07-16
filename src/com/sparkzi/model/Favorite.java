@@ -23,8 +23,8 @@ public class Favorite {
 	public Favorite() {
 	}
 
-	public Favorite(int uid, String username, int gender, String hometown,
-			int country, String picUrl, int age, int favStatus) {
+	public Favorite(int uid, String username, int gender, String hometown, int country, String picUrl, int age,
+			int favStatus) {
 		this.uid = uid;
 		this.username = username;
 		this.gender = gender;
@@ -50,8 +50,7 @@ public class Favorite {
 					Favorite fav = gson.fromJson(jsonString, Favorite.class);
 
 					String imageUrl = fav.getPicUrl();
-					if (!(imageUrl == null) && !imageUrl.equals("null")
-							&& !imageUrl.startsWith("http://")
+					if (!(imageUrl == null) && !imageUrl.equals("null") && !imageUrl.startsWith("http://")
 							&& !imageUrl.startsWith("https://")) {
 						imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
 					}

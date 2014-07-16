@@ -38,13 +38,12 @@ public class OtherProfileQuestionsAdapter extends ArrayAdapter<Question> {
 
 	private QuestionListInterface listener;
 
-	public OtherProfileQuestionsAdapter(Context context,
-			QuestionListInterface listener, List<Question> qList, String token) {
+	public OtherProfileQuestionsAdapter(Context context, QuestionListInterface listener, List<Question> qList,
+			String token) {
 		super(context, R.layout.row_profile_question);
 		this.mContext = context;
 		this.listener = listener;
-		mInflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		jsonParser = new JsonParser();
 		pDialog = new ProgressDialog(mContext);
@@ -64,16 +63,12 @@ public class OtherProfileQuestionsAdapter extends ArrayAdapter<Question> {
 		ViewHolder holder;
 
 		if (convertView == null) {
-			convertView = mInflater
-					.inflate(R.layout.row_profile_question, null);
+			convertView = mInflater.inflate(R.layout.row_profile_question, null);
 
 			holder = new ViewHolder();
-			holder.qText = (TextView) convertView
-					.findViewById(R.id.tv_question);
-			holder.ansText = (TextView) convertView
-					.findViewById(R.id.tv_answer);
-			holder.imgButton = (ImageButton) convertView
-					.findViewById(R.id.iv_edit);
+			holder.qText = (TextView) convertView.findViewById(R.id.tv_question);
+			holder.ansText = (TextView) convertView.findViewById(R.id.tv_answer);
+			holder.imgButton = (ImageButton) convertView.findViewById(R.id.iv_edit);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -135,8 +130,7 @@ public class OtherProfileQuestionsAdapter extends ArrayAdapter<Question> {
 		}
 	}
 
-	public class SendQuestionUpdateRequest extends
-			AsyncTask<Question, Void, JSONObject> {
+	public class SendQuestionUpdateRequest extends AsyncTask<Question, Void, JSONObject> {
 
 		private String ansText;
 
@@ -171,8 +165,8 @@ public class OtherProfileQuestionsAdapter extends ArrayAdapter<Question> {
 				String ansData = contentObj.toString();
 				Log.e(">>>>>", "ansData = " + ansData);
 
-				ServerResponse response = jsonParser.retrieveServerData(
-						Constants.REQUEST_TYPE_POST, url, null, ansData, token);
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, url, null,
+						ansData, token);
 				if (response.getStatus() == 200) {
 					JSONObject responseObj = response.getjObj();
 					return responseObj;

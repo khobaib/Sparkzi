@@ -25,8 +25,7 @@ public class FavoriteAdapter extends ArrayAdapter<Favorite> {
 	public FavoriteAdapter(Context context, List<Favorite> qList) {
 		super(context, R.layout.row_favorite);
 		this.mContext = context;
-		mInflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader((Activity) mContext);
 	}
 
@@ -45,11 +44,9 @@ public class FavoriteAdapter extends ArrayAdapter<Favorite> {
 			convertView = mInflater.inflate(R.layout.row_favorite, null);
 
 			holder = new ViewHolder();
-			holder.UserImage = (ImageView) convertView
-					.findViewById(R.id.iv_pic);
+			holder.UserImage = (ImageView) convertView.findViewById(R.id.iv_pic);
 			holder.userName = (TextView) convertView.findViewById(R.id.tv_name);
-			holder.userAgeGender = (TextView) convertView
-					.findViewById(R.id.tv_age_gender);
+			holder.userAgeGender = (TextView) convertView.findViewById(R.id.tv_age_gender);
 
 			convertView.setTag(holder);
 		} else {
@@ -62,8 +59,7 @@ public class FavoriteAdapter extends ArrayAdapter<Favorite> {
 		imageLoader.DisplayImage(imageUrl, holder.UserImage);
 
 		holder.userName.setText(item.getUsername());
-		holder.userAgeGender.setText(item.getAge() + " | "
-				+ Utility.Gender[item.getGender() - 1].substring(0, 1));
+		holder.userAgeGender.setText(item.getAge() + " | " + Utility.Gender[item.getGender() - 1].substring(0, 1));
 
 		return convertView;
 	}

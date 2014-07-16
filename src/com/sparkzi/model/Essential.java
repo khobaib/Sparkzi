@@ -29,8 +29,7 @@ public class Essential {
 		this.value = value;
 	}
 
-	public static List<Essential> parseStaticEssentialList(
-			JSONArray essentialArray) {
+	public static List<Essential> parseStaticEssentialList(JSONArray essentialArray) {
 		List<Essential> essentialList = new ArrayList<Essential>();
 
 		GsonBuilder gsonb = new GsonBuilder();
@@ -42,8 +41,7 @@ public class Essential {
 				JSONObject thisEssential = essentialArray.getJSONObject(i);
 				if (thisEssential != null) {
 					String jsonString = thisEssential.toString();
-					Essential essential = gson.fromJson(jsonString,
-							Essential.class);
+					Essential essential = gson.fromJson(jsonString, Essential.class);
 					essentialList.add(essential);
 				}
 			}
@@ -54,8 +52,7 @@ public class Essential {
 		return essentialList;
 	}
 
-	public static List<Essential> parseUserEssential(JSONObject userObj,
-			Context context) {
+	public static List<Essential> parseUserEssential(JSONObject userObj, Context context) {
 		Essential[] eList = new Essential[Utility.ESSENTIAL_TEXTS.length];
 
 		try {

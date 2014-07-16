@@ -11,154 +11,153 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Conversation {
-    
-    private int mid;
-    private int cid;
-    private int ufrom;
-    private int uto;
-    private String message;
-    private String isread;
-    private String timestamp;
-    private String username;
-    private int gender;
-    private int age;
-    private String picUrl;
-    
-    public Conversation() {
-        // TODO Auto-generated constructor stub
-    }
 
-    public Conversation(int mid, int cid, int ufrom, int uto, String message, String isread, String timestamp,
-            String username, int gender, int age, String picUrl) {
-        this.mid = mid;
-        this.cid = cid;
-        this.ufrom = ufrom;
-        this.uto = uto;
-        this.message = message;
-        this.isread = isread;
-        this.timestamp = timestamp;
-        this.username = username;
-        this.gender = gender;
-        this.age = age;
-        this.picUrl = picUrl;
-    }
-    
-    public static List<Conversation> parseConversationList(JSONArray convArray){
-        List<Conversation> convList = new ArrayList<Conversation>();
-        GsonBuilder gsonb = new GsonBuilder();
-        Gson gson = gsonb.create();
-        
-        try {
-            for(int i=0; i<convArray.length(); i++){
+	private int mid;
+	private int cid;
+	private int ufrom;
+	private int uto;
+	private String message;
+	private String isread;
+	private String timestamp;
+	private String username;
+	private int gender;
+	private int age;
+	private String picUrl;
 
-                JSONObject thisConv = convArray.getJSONObject(i);
-                if(thisConv != null){
-                    String jsonString = thisConv.toString();
-                    Conversation conv = gson.fromJson(jsonString, Conversation.class);
-                    
-                    String imageUrl = conv.getPicUrl();
-                    if (imageUrl != null && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")){
-                        imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
-                    }
-                    conv.setPicUrl(imageUrl);
-                    
-                    convList.add(conv);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        
-        return convList;       
-    }
-    
+	public Conversation() {
+		// TODO Auto-generated constructor stub
+	}
 
-    public int getMid() {
-        return mid;
-    }
+	public Conversation(int mid, int cid, int ufrom, int uto, String message, String isread, String timestamp,
+			String username, int gender, int age, String picUrl) {
+		this.mid = mid;
+		this.cid = cid;
+		this.ufrom = ufrom;
+		this.uto = uto;
+		this.message = message;
+		this.isread = isread;
+		this.timestamp = timestamp;
+		this.username = username;
+		this.gender = gender;
+		this.age = age;
+		this.picUrl = picUrl;
+	}
 
-    public void setMid(int mid) {
-        this.mid = mid;
-    }
+	public static List<Conversation> parseConversationList(JSONArray convArray) {
+		List<Conversation> convList = new ArrayList<Conversation>();
+		GsonBuilder gsonb = new GsonBuilder();
+		Gson gson = gsonb.create();
 
-    public int getCid() {
-        return cid;
-    }
+		try {
+			for (int i = 0; i < convArray.length(); i++) {
 
-    public void setCid(int cid) {
-        this.cid = cid;
-    }
+				JSONObject thisConv = convArray.getJSONObject(i);
+				if (thisConv != null) {
+					String jsonString = thisConv.toString();
+					Conversation conv = gson.fromJson(jsonString, Conversation.class);
 
-    public int getUfrom() {
-        return ufrom;
-    }
+					String imageUrl = conv.getPicUrl();
+					if (imageUrl != null && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+						imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
+					}
+					conv.setPicUrl(imageUrl);
 
-    public void setUfrom(int ufrom) {
-        this.ufrom = ufrom;
-    }
+					convList.add(conv);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-    public int getUto() {
-        return uto;
-    }
+		return convList;
+	}
 
-    public void setUto(int uto) {
-        this.uto = uto;
-    }
+	public int getMid() {
+		return mid;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public void setMid(int mid) {
+		this.mid = mid;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public int getCid() {
+		return cid;
+	}
 
-    public String getIsread() {
-        return isread;
-    }
+	public void setCid(int cid) {
+		this.cid = cid;
+	}
 
-    public void setIsread(String isread) {
-        this.isread = isread;
-    }
+	public int getUfrom() {
+		return ufrom;
+	}
 
-    public String getTimestamp() {
-        return timestamp;
-    }
+	public void setUfrom(int ufrom) {
+		this.ufrom = ufrom;
+	}
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+	public int getUto() {
+		return uto;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public void setUto(int uto) {
+		this.uto = uto;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public int getGender() {
-        return gender;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
+	public String getIsread() {
+		return isread;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public void setIsread(String isread) {
+		this.isread = isread;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public String getTimestamp() {
+		return timestamp;
+	}
 
-    public String getPicUrl() {
-        return picUrl;
-    }
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public int getGender() {
+		return gender;
+	}
+
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
 
 }

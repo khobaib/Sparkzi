@@ -40,13 +40,11 @@ public class SettingsFragment extends Fragment {
 	RelativeLayout rlChangePassword, rlBlockList;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		View view = inflater.inflate(R.layout.settings_fragment, null);
 
-		rlChangePassword = (RelativeLayout) view
-				.findViewById(R.id.rl_change_pass);
+		rlChangePassword = (RelativeLayout) view.findViewById(R.id.rl_change_pass);
 		rlChangePassword.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -76,8 +74,7 @@ public class SettingsFragment extends Fragment {
 
 		activity = getActivity();
 		if (activity != null) {
-			UserCred userCred = ((SparkziApplication) activity.getApplication())
-					.getUserCred();
+			UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 			token = userCred.getToken();
 
 			jsonParser = new JsonParser();
@@ -87,17 +84,13 @@ public class SettingsFragment extends Fragment {
 	public void onClickChangePassword() {
 
 		LayoutInflater inflater = (LayoutInflater) activity.getLayoutInflater();
-		View textEntryView = inflater.inflate(R.layout.dialog_change_password,
-				null);
+		View textEntryView = inflater.inflate(R.layout.dialog_change_password, null);
 		final AlertDialog alert = new AlertDialog.Builder(activity).create();
 		alert.setView(textEntryView, 0, 0, 0, 0);
 
-		final EditText CurrentPass = (EditText) textEntryView
-				.findViewById(R.id.et_current_password);
-		final EditText NewPass = (EditText) textEntryView
-				.findViewById(R.id.et_new_password);
-		final EditText ConfirmNewPass = (EditText) textEntryView
-				.findViewById(R.id.et_confirm_new_password);
+		final EditText CurrentPass = (EditText) textEntryView.findViewById(R.id.et_current_password);
+		final EditText NewPass = (EditText) textEntryView.findViewById(R.id.et_new_password);
+		final EditText ConfirmNewPass = (EditText) textEntryView.findViewById(R.id.et_confirm_new_password);
 
 		Button OK = (Button) textEntryView.findViewById(R.id.b_ok);
 
@@ -109,17 +102,14 @@ public class SettingsFragment extends Fragment {
 				String newPass = NewPass.getText().toString();
 				String confirmNewPass = ConfirmNewPass.getText().toString();
 				if (curPass.trim().equals("")) {
-					Toast.makeText(activity, "Current password field is null.",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "Current password field is null.", Toast.LENGTH_SHORT).show();
 				} else if (newPass.trim().equals("")) {
-					Toast.makeText(activity, "New password field is null.",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "New password field is null.", Toast.LENGTH_SHORT).show();
 				} else if (newPass.equals(confirmNewPass)) {
 					alert.dismiss();
 					new ChangePasswordReq().execute(curPass, newPass);
 				} else {
-					Toast.makeText(activity, "password confirmation mismatch.",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, "password confirmation mismatch.", Toast.LENGTH_SHORT).show();
 				}
 			}
 
@@ -148,8 +138,8 @@ public class SettingsFragment extends Fragment {
 				passwordObj.put("password", params[1]);
 				String content = passwordObj.toString();
 
-				ServerResponse response = jsonParser.retrieveServerData(
-						Constants.REQUEST_TYPE_POST, url, null, content, token);
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, url, null,
+						content, token);
 				if (response.getStatus() == 200) {
 					Log.d(">>>><<<<", "success in updating password");
 					JSONObject responseObj = response.getjObj();

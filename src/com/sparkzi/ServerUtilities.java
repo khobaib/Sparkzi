@@ -27,77 +27,63 @@ import com.sparkzi.utility.Utility;
  */
 public final class ServerUtilities {
 
-    private static final int MAX_ATTEMPTS = 5;
-    private static final int BACKOFF_MILLI_SECONDS = 2000;
-    private static final Random random = new Random();
+	private static final int MAX_ATTEMPTS = 5;
+	private static final int BACKOFF_MILLI_SECONDS = 2000;
+	private static final Random random = new Random();
 
-    /**
-     * Register this account/device pair within the server.
-     *
-     * @return whether the registration succeeded or not.
-     */
-    static boolean register(final Context context, final String regId) {
-       
-    	 long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
-        // Once GCM returns a registration id, we need to register it in the
-        // demo server. As the server might be down, we will retry it a couple
-        // times.
+	/**
+	 * Register this account/device pair within the server.
+	 * 
+	 * @return whether the registration succeeded or not.
+	 */
+	@SuppressWarnings("unused")
+	static boolean register(final Context context, final String regId) {
 
-        for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-          
-        
-        	sendRegistrationIdToBackend(regId);
-        	 return true;
-        }
+		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
+		// Once GCM returns a registration id, we need to register it in the
+		// demo server. As the server might be down, we will retry it a couple
+		// times.
 
-        return false;
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+		for (int i = 1; i <= MAX_ATTEMPTS; i++) {
 
-    /**
-     * Unregister this account/device pair within the server.
-     */
-   static void unregister(final Context context, final String regId) {
-     /*   Log.i(Utility.TAG, "unregistering device (regId = " + regId + ")");
-        String serverUrl = Utility.SERVER_URL + "/unregister";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("regId", regId);
-        JsonParser jsonParser = new JsonParser();
+			sendRegistrationIdToBackend(regId);
+			return true;
+		}
 
-        String unregData = null;
+		return false;
+	}
 
-        JSONObject unregObj = new JSONObject();
-        try {
-            unregObj.put("GCM", regId);
+	/**
+	 * Unregister this account/device pair within the server.
+	 */
+	static void unregister(final Context context, final String regId) {
+		/*
+		 * Log.i(Utility.TAG, "unregistering device (regId = " + regId + ")");
+		 * String serverUrl = Utility.SERVER_URL + "/unregister"; Map<String,
+		 * String> params = new HashMap<String, String>(); params.put("regId",
+		 * regId); JsonParser jsonParser = new JsonParser();
+		 * 
+		 * String unregData = null;
+		 * 
+		 * JSONObject unregObj = new JSONObject(); try { unregObj.put("GCM",
+		 * regId);
+		 * 
+		 * unregData = unregObj.toString(); ServerResponse response =
+		 * jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, serverUrl,
+		 * null, unregData, null); if(response.getStatus() ==
+		 * Constants.RESPONSE_STATUS_CODE_SUCCESS){
+		 * GCMRegistrar.setRegisteredOnServer(context, false); }
+		 * 
+		 * } catch (JSONException e) { e.printStackTrace(); }
+		 */
 
-            unregData = unregObj.toString();
-            ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_POST, serverUrl,
-                    null, unregData, null);
-            if(response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS){
-                GCMRegistrar.setRegisteredOnServer(context, false);
-            }
+	}
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } */
+	private static void sendRegistrationIdToBackend(String regid) {
+		Log.d("Start", "Start");
 
-    }
-    
-    
-    
-    private static  void sendRegistrationIdToBackend(String regid) {
-  	  Log.d("Start", "Start");
-  	
-  	  AsynctaskSendregIdToServer senddata=new AsynctaskSendregIdToServer(regid, Utility.token); 
-  	  senddata.execute();
+		AsynctaskSendregIdToServer senddata = new AsynctaskSendregIdToServer(regid, Utility.token);
+		senddata.execute();
 
-     }
+	}
 }

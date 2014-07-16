@@ -59,11 +59,9 @@ public class LastNightFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		getActivity().getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 		View view = inflater.inflate(R.layout.last_night_fragment, null);
 
@@ -109,8 +107,7 @@ public class LastNightFragment extends Fragment {
 			sTemplate.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
-				public void onItemSelected(AdapterView<?> parent, View v,
-						int position, long id) {
+				public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 					templateIndex = position;
 					String activityText = Utility.ACTIVITY_QUESTION[templateIndex];
 					tvActivity.setText(activityText);
@@ -148,16 +145,14 @@ public class LastNightFragment extends Fragment {
 	}
 
 	private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
-		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity,
-				R.layout.my_simple_spinner_item, arrayToSpinner);
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(activity, R.layout.my_simple_spinner_item,
+				arrayToSpinner);
 		spinner.setAdapter(myAdapter);
-		myAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 	}
 
-	public class SendLastNightActivity extends
-			AsyncTask<String, Void, JSONObject> {
+	public class SendLastNightActivity extends AsyncTask<String, Void, JSONObject> {
 
 		@Override
 		protected void onPreExecute() {
@@ -181,8 +176,8 @@ public class LastNightFragment extends Fragment {
 
 				String feedData = feedObj.toString();
 				// Log.d("<<>>", "req data = " + regData);
-				ServerResponse response = jsonParser.retrieveServerData(
-						Constants.REQUEST_TYPE_PUT, url, null, feedData, token);
+				ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_PUT, url, null,
+						feedData, token);
 				if (response.getStatus() == 200) {
 					JSONObject responseObj = response.getjObj();
 					return responseObj;
@@ -208,11 +203,9 @@ public class LastNightFragment extends Fragment {
 					} else {
 						String desc = responseObj.getString("description");
 						if (desc.equals("User already exists"))
-							alert("This user already exists, please choose another username.",
-									false);
+							alert("This user already exists, please choose another username.", false);
 						else
-							alert("Please check all the info & try again.",
-									false);
+							alert("Please check all the info & try again.", false);
 					}
 				} catch (JSONException e) {
 					alert("Registration Exception.", false);

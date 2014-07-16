@@ -24,111 +24,109 @@ import com.sparkzi.model.UserCred;
 import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.SparkziApplication;
 
-public class ConversationsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Conversation>>{
-    
-    private static final int LOADER_ID = 1;
+public class ConversationsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Conversation>> {
 
-    private Activity activity;
-    String token;
+	private static final int LOADER_ID = 1;
 
-    private ConversationListAdapter conversationListAdapter;
+	private Activity activity;
+	String token;
 
-    //    @Override
-    //    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-    //            Bundle savedInstanceState) {
-    //    View view = inflater.inflate(R.layout.home_fragment, null);
-    //    return view;
-    //    }
-    
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+	private ConversationListAdapter conversationListAdapter;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-//        setHasOptionsMenu(true);
+	// @Override
+	// public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	// Bundle savedInstanceState) {
+	// View view = inflater.inflate(R.layout.home_fragment, null);
+	// return view;
+	// }
 
-        activity = getActivity();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
-        UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
-        token = userCred.getToken();
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		// setHasOptionsMenu(true);
 
-        ListView lv = getListView();
-        lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
-        lv.setDividerHeight(3);
+		activity = getActivity();
 
-        conversationListAdapter = new ConversationListAdapter(activity, null);
-        setEmptyText("No conversations");
-        setListAdapter(conversationListAdapter);
-        setListShown(false);
+		UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
+		token = userCred.getToken();
 
+		ListView lv = getListView();
+		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
+		lv.setDividerHeight(3);
 
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
-    
-    @Override
-    public void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-    
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-       inflater.inflate(R.menu.menu_conversation, menu);
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-       // handle item selection
-       switch (item.getItemId()) {
-          case R.id.action_settings:
-             startActivity(new Intent(activity, NewConversationActivity.class));
-             return true;
-          default:
-             return super.onOptionsItemSelected(item);
-       }
-    }
-    
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Conversation selectedConv = (Conversation) l.getItemAtPosition(position);
-        String username = selectedConv.getUsername();
-        
-        UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
-        int myUId = userCred.getUid();
-        
-        
-        Intent i = new Intent(activity, ThreadMessageActivity.class);
-        i.putExtra("user_name", username);
-        i.putExtra("user_id", (myUId == selectedConv.getUfrom()) ? selectedConv.getUto() : selectedConv.getUfrom());
-        startActivity(i);
-    }
+		conversationListAdapter = new ConversationListAdapter(activity, null);
+		setEmptyText("No conversations");
+		setListAdapter(conversationListAdapter);
+		setListShown(false);
 
-    @Override
-    public Loader<List<Conversation>> onCreateLoader(int id, Bundle args) {
-        return new ConversationListLoader(activity, token, Constants.RETRIEVE_ALL_CONVERSATIONS, "");
-    }
+		getLoaderManager().initLoader(LOADER_ID, null, this);
+	}
 
-    @Override
-    public void onLoadFinished(Loader<List<Conversation>> loader, List<Conversation> data) {
-        conversationListAdapter.setData(data);
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getLoaderManager().restartLoader(LOADER_ID, null, this);
+	}
 
-        if (isResumed()) {
-            setListShown(true);
-        } else {
-            setListShownNoAnimation(true);
-        }
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_conversation, menu);
+	}
 
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_settings:
+			startActivity(new Intent(activity, NewConversationActivity.class));
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-    @Override
-    public void onLoaderReset(Loader<List<Conversation>> loader) {
-        conversationListAdapter.setData(null);
-    }
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		Conversation selectedConv = (Conversation) l.getItemAtPosition(position);
+		String username = selectedConv.getUsername();
+
+		UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
+		int myUId = userCred.getUid();
+
+		Intent i = new Intent(activity, ThreadMessageActivity.class);
+		i.putExtra("user_name", username);
+		i.putExtra("user_id", (myUId == selectedConv.getUfrom()) ? selectedConv.getUto() : selectedConv.getUfrom());
+		startActivity(i);
+	}
+
+	@Override
+	public Loader<List<Conversation>> onCreateLoader(int id, Bundle args) {
+		return new ConversationListLoader(activity, token, Constants.RETRIEVE_ALL_CONVERSATIONS, "");
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Conversation>> loader, List<Conversation> data) {
+		conversationListAdapter.setData(data);
+
+		if (isResumed()) {
+			setListShown(true);
+		} else {
+			setListShownNoAnimation(true);
+		}
+
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Conversation>> loader) {
+		conversationListAdapter.setData(null);
+	}
 
 }

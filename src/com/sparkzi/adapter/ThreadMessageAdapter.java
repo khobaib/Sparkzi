@@ -27,12 +27,10 @@ public class ThreadMessageAdapter extends BaseAdapter {
 	private int myUId;
 	private String myImageUrl;
 
-	public ThreadMessageAdapter(Context context,
-			List<Conversation> messageList, int myUId, String myImageUrl) {
+	public ThreadMessageAdapter(Context context, List<Conversation> messageList, int myUId, String myImageUrl) {
 		this.mContext = context;
 		this.messageList = messageList;
-		this.mInflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageLoader = new ImageLoader(mContext);
 		this.myUId = myUId;
 		this.myImageUrl = myImageUrl;
@@ -108,16 +106,13 @@ public class ThreadMessageAdapter extends BaseAdapter {
 			if (itemViewType == MSG_SENT_BY_ME)
 				row = mInflater.inflate(R.layout.row_sent_message_item, null);
 			else
-				row = mInflater.inflate(R.layout.row_received_message_item,
-						null);
+				row = mInflater.inflate(R.layout.row_received_message_item, null);
 
 			holder = new MessageHolder();
 
 			holder.UserPic = (ImageView) row.findViewById(R.id.iv_user_pp);
-			holder.MessageBody = (TextView) row
-					.findViewById(R.id.tv_message_body);
-			holder.MessageTime = (TextView) row
-					.findViewById(R.id.tv_message_time);
+			holder.MessageBody = (TextView) row.findViewById(R.id.tv_message_body);
+			holder.MessageTime = (TextView) row.findViewById(R.id.tv_message_time);
 			row.setTag(holder);
 		} else {
 			holder = (MessageHolder) row.getTag();
@@ -126,8 +121,7 @@ public class ThreadMessageAdapter extends BaseAdapter {
 		Conversation message = (Conversation) getItem(position);
 
 		holder.MessageBody.setText(message.getMessage());
-		holder.MessageTime.setText(Utility.getFormattedTime(message
-				.getTimestamp()));
+		holder.MessageTime.setText(Utility.getFormattedTime(message.getTimestamp()));
 		// holder.MessageTime.setText(message.getTimestamp());
 
 		if (message.getUfrom() == myUId)

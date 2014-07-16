@@ -40,8 +40,7 @@ public class ImageLoader {
 	@SuppressWarnings("unused")
 	private Context mContext;
 	// private ProgressBar mProgressBar;
-	private Map<ImageView, String> imageViews = Collections
-			.synchronizedMap(new WeakHashMap<ImageView, String>());
+	private Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
 	private ExecutorService executorService;
 	private Handler handler = new Handler();// handler to display images in UI
 											// thread
@@ -59,8 +58,7 @@ public class ImageLoader {
 		fileCache = new FileCache(context);
 		executorService = Executors.newFixedThreadPool(5);
 		// this.defaultFrame = defaultFrame;
-		this.defaultFrame = BitmapFactory.decodeResource(
-				((Activity) context).getResources(),
+		this.defaultFrame = BitmapFactory.decodeResource(((Activity) context).getResources(),
 				R.drawable.ic_contact_picture_holo_light);
 		this.imageWidth = 0;
 	}
@@ -70,8 +68,7 @@ public class ImageLoader {
 		fileCache = new FileCache(context);
 		executorService = Executors.newFixedThreadPool(5);
 		// this.defaultFrame = defaultFrame;
-		this.defaultFrame = BitmapFactory.decodeResource(
-				((Activity) context).getResources(),
+		this.defaultFrame = BitmapFactory.decodeResource(((Activity) context).getResources(),
 				R.drawable.ic_contact_picture_holo_light);
 
 		this.imageWidth = imageWidth;
@@ -110,8 +107,7 @@ public class ImageLoader {
 			if (imageWidth == 0)
 				imageView.setImageBitmap(bitmap);
 			else {
-				Bitmap resizedBitmap = getResizedBannerBitmapWidth(bitmap,
-						imageWidth);
+				Bitmap resizedBitmap = getResizedBannerBitmapWidth(bitmap, imageWidth);
 				imageView.setImageBitmap(resizedBitmap);
 				// resizedBitmap = null;
 				// if(resizedBitmap != null)
@@ -124,8 +120,7 @@ public class ImageLoader {
 			if (imageWidth == 0)
 				imageView.setImageBitmap(defaultFrame);
 			else {
-				Bitmap resizedBitmap = getResizedBannerBitmapWidth(
-						defaultFrame, imageWidth);
+				Bitmap resizedBitmap = getResizedBannerBitmapWidth(defaultFrame, imageWidth);
 				imageView.setImageBitmap(resizedBitmap);
 				// resizedBitmap = null;
 				// if(resizedBitmap != null)
@@ -151,8 +146,7 @@ public class ImageLoader {
 				retBitmap = getRoundedImage(bitmap, 200);
 			} else {
 				Log.d("getRoundedProfilePic()", "bitmap != null & imgWidth!=0");
-				Bitmap resizedBitmap = getResizedBannerBitmapWidth(bitmap,
-						imageWidth);
+				Bitmap resizedBitmap = getResizedBannerBitmapWidth(bitmap, imageWidth);
 				retBitmap = getRoundedImage(resizedBitmap, 200);
 				// resizedBitmap = null;
 				// if(resizedBitmap != null)
@@ -165,14 +159,11 @@ public class ImageLoader {
 			queuePhoto(url, imageView, 200, true);
 
 			if (imageWidth == 0) {
-				Log.d("getRoundedProfilePic()",
-						"bitmap = null & imgWidth=0, returning defaultFrame");
+				Log.d("getRoundedProfilePic()", "bitmap = null & imgWidth=0, returning defaultFrame");
 				retBitmap = getRoundedImage(defaultFrame, 200);
 			} else {
-				Log.d("getRoundedProfilePic()",
-						"bitmap = null & imgWidth!=0, returning resized defaultFrame");
-				Bitmap resizedBitmap = getResizedBannerBitmapWidth(
-						defaultFrame, imageWidth);
+				Log.d("getRoundedProfilePic()", "bitmap = null & imgWidth!=0, returning resized defaultFrame");
+				Bitmap resizedBitmap = getResizedBannerBitmapWidth(defaultFrame, imageWidth);
 				retBitmap = getRoundedImage(resizedBitmap, 200);
 				// resizedBitmap = null;
 				// if(resizedBitmap != null)
@@ -184,10 +175,8 @@ public class ImageLoader {
 
 	/** @author Touhid */
 	public Bitmap getRoundedImage(Bitmap bitmap, int cornerRadius) {
-		Bitmap scaled = Bitmap.createScaledBitmap(bitmap, cornerRadius,
-				cornerRadius, false);
-		return RoundedDrawable.fromBitmap(scaled)
-				.setScaleType(ImageView.ScaleType.CENTER_CROP)
+		Bitmap scaled = Bitmap.createScaledBitmap(bitmap, cornerRadius, cornerRadius, false);
+		return RoundedDrawable.fromBitmap(scaled).setScaleType(ImageView.ScaleType.CENTER_CROP)
 				.setCornerRadius(cornerRadius).setOval(true).toBitmap();
 	}
 
@@ -211,8 +200,7 @@ public class ImageLoader {
 		// if(resizedBitmap != null)
 		// resizedBitmap.recycle();
 		// Bitmap resizedBitmap = bm;
-		Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, (int) dstWidth,
-				(int) dstHeight, false);
+		Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, (int) dstWidth, (int) dstHeight, false);
 		// Logger.e("ImageLoader -> getResizedBitmapWidth",
 		// "resizedBitmap width, height " + resizedBitmap.getWidth() + ", " +
 		// resizedBitmap.getHeight());
@@ -308,8 +296,7 @@ public class ImageLoader {
 		executorService.submit(new PhotosLoader(p, imageQuality));
 	}
 
-	private void queuePhoto(String url, ImageView imageView, int imageQuality,
-			boolean isRounded) {
+	private void queuePhoto(String url, ImageView imageView, int imageQuality, boolean isRounded) {
 		PhotoToLoad p = new PhotoToLoad(url, imageView);
 		executorService.submit(new PhotosLoader(p, imageQuality, isRounded));
 	}
@@ -330,8 +317,7 @@ public class ImageLoader {
 			Bitmap bitmap = null;
 			Log.d("-------", url);
 			URL imageUrl = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection) imageUrl
-					.openConnection();
+			HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
 			conn.setConnectTimeout(30000);
 			conn.setReadTimeout(30000);
 			conn.setInstanceFollowRedirects(true);
@@ -366,8 +352,7 @@ public class ImageLoader {
 			int scale = 1;
 
 			while (true) {
-				if (width_tmp / 2 < REQUIRED_SIZE
-						|| height_tmp / 2 < REQUIRED_SIZE)
+				if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
 					break;
 				width_tmp /= 2;
 				height_tmp /= 2;
@@ -411,8 +396,7 @@ public class ImageLoader {
 			isRounded = false;
 		}
 
-		public PhotosLoader(PhotoToLoad photoToLoad, int imageQuality,
-				boolean _isRounded) {
+		public PhotosLoader(PhotoToLoad photoToLoad, int imageQuality, boolean _isRounded) {
 			this.photoToLoad = photoToLoad;
 			this.imageQuality = imageQuality;
 			this.isRounded = _isRounded;
@@ -431,8 +415,7 @@ public class ImageLoader {
 
 				if (imageViewReused(photoToLoad))
 					return;
-				BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad,
-						isRounded);
+				BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad, isRounded);
 				handler.post(bd);
 			} catch (Throwable th) {
 				th.printStackTrace();
@@ -478,8 +461,7 @@ public class ImageLoader {
 				if (imageWidth == 0)
 					photoToLoad.imageView.setImageBitmap(circleBitmap);
 				else {
-					Bitmap resizedBitmap = getResizedBannerBitmapWidth(
-							circleBitmap, imageWidth);
+					Bitmap resizedBitmap = getResizedBannerBitmapWidth(circleBitmap, imageWidth);
 					photoToLoad.imageView.setImageBitmap(resizedBitmap);
 					// resizedBitmap = null;
 				}
@@ -487,8 +469,7 @@ public class ImageLoader {
 				if (imageWidth == 0) {
 					photoToLoad.imageView.setImageBitmap(defaultFrame);
 				} else {
-					Bitmap resizedBitmap = getResizedBannerBitmapWidth(
-							defaultFrame, imageWidth);
+					Bitmap resizedBitmap = getResizedBannerBitmapWidth(defaultFrame, imageWidth);
 					photoToLoad.imageView.setImageBitmap(resizedBitmap);
 					// resizedBitmap = null;
 				}
@@ -506,8 +487,7 @@ public class ImageLoader {
 
 	@SuppressWarnings("unused")
 	private static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
-		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-				bitmap.getHeight(), Config.ARGB_8888);
+		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 
 		final int color = 0xff424242;
@@ -520,8 +500,7 @@ public class ImageLoader {
 		canvas.drawARGB(0, 0, 0, 0);
 		paint.setColor(color);
 		// canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-		canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-				bitmap.getWidth() / 2, paint);
+		canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
 
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, rect, rect, paint);

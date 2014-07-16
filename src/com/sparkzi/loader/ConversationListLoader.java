@@ -17,8 +17,7 @@ import com.sparkzi.utility.Constants;
 
 public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>> {
 
-	private static final String TAG = ConversationListLoader.class
-			.getSimpleName();
+	private static final String TAG = ConversationListLoader.class.getSimpleName();
 
 	private JsonParser jsonParser;
 
@@ -29,8 +28,7 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>> 
 	private List<Conversation> mConvs; // holder to keep previous conv while
 										// copying new ones
 
-	public ConversationListLoader(Context context, String token, int listType,
-			String userName) {
+	public ConversationListLoader(Context context, String token, int listType, String userName) {
 		super(context);
 		jsonParser = new JsonParser();
 		this.username = userName;
@@ -48,8 +46,7 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>> 
 			rootUrl = rootUrl + "messages/" + username;
 		Log.d(TAG, "token - " + token);
 
-		ServerResponse response = jsonParser.retrieveServerData(
-				Constants.REQUEST_TYPE_GET, rootUrl, null, null, token);
+		ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, rootUrl, null, null, token);
 
 		if (response.getStatus() == Constants.RESPONSE_STATUS_CODE_SUCCESS) {
 			JSONObject responseObj = response.getjObj();
@@ -58,8 +55,7 @@ public class ConversationListLoader extends AsyncTaskLoader<List<Conversation>> 
 				String desc = responseObj.getString("description");
 				JSONArray msgArray = responseObj.getJSONArray("messages");
 
-				List<Conversation> convList = Conversation
-						.parseConversationList(msgArray);
+				List<Conversation> convList = Conversation.parseConversationList(msgArray);
 				return convList;
 
 			} catch (JSONException e) {

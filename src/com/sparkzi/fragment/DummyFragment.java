@@ -6,32 +6,31 @@ import android.support.v4.app.ListFragment;
 import android.widget.ListView;
 
 public class DummyFragment extends ListFragment {
-    
-    private Activity activity;
-    
-    public DummyFragment() {
-    }
 
-    public static DummyFragment newInstance() {
-        final DummyFragment fragment = new DummyFragment();
-        return fragment;
-    }
-    
-    
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
+	private Activity activity;
 
-        activity = getActivity();    
+	public DummyFragment() {
+	}
 
-        ListView lv = getListView();
-        lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
-        lv.setDividerHeight(3);
+	public static DummyFragment newInstance() {
+		final DummyFragment fragment = new DummyFragment();
+		return fragment;
+	}
 
-        setEmptyText("To be implemented");
-        setListShown(true);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		setHasOptionsMenu(true);
 
-    }
+		activity = getActivity();
+
+		ListView lv = getListView();
+		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
+		lv.setDividerHeight(3);
+
+		setEmptyText("To be implemented");
+		setListShown(true);
+
+	}
 
 }

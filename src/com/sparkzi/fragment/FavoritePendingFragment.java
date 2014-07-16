@@ -25,8 +25,7 @@ import com.sparkzi.utility.SparkziApplication;
 public class FavoritePendingFragment extends ListFragment {
 
 	@SuppressWarnings("unused")
-	private static final String TAG = FavoritePendingFragment.class
-			.getSimpleName();
+	private static final String TAG = FavoritePendingFragment.class.getSimpleName();
 	private Activity activity;
 	JsonParser jsonParser;
 
@@ -41,12 +40,10 @@ public class FavoritePendingFragment extends ListFragment {
 		activity = getActivity();
 		jsonParser = new JsonParser();
 
-		UserCred userCred = ((SparkziApplication) activity.getApplication())
-				.getUserCred();
+		UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 		token = userCred.getToken();
 		ListView lv = getListView();
-		lv.setDivider(activity.getResources().getDrawable(
-				com.sparkzi.R.color.app_theme));
+		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
 		lv.setDividerHeight(3);
 
 		favPendingAdapter = new FavoritePendingAdapter(activity, null);
@@ -61,8 +58,7 @@ public class FavoritePendingFragment extends ListFragment {
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "favs/all/1";
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, token);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving favorite info");
 				JSONObject responseObj = response.getjObj();
@@ -79,10 +75,8 @@ public class FavoritePendingFragment extends ListFragment {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
 						JSONObject favObj = responseObj.getJSONObject("favs");
-						JSONArray addedFavArray = favObj
-								.getJSONArray("pendingForMe");
-						final List<Favorite> fList = Favorite
-								.parseFavorite(addedFavArray);
+						JSONArray addedFavArray = favObj.getJSONArray("pendingForMe");
+						final List<Favorite> fList = Favorite.parseFavorite(addedFavArray);
 						favPendingAdapter.setData(fList);
 						if (isResumed()) {
 							setListShown(true);

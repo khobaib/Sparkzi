@@ -52,12 +52,10 @@ public class OtherProfileEssentialsfragment extends ListFragment {
 		activity = getActivity();
 		jsonParser = new JsonParser();
 
-		UserCred userCred = ((SparkziApplication) activity.getApplication())
-				.getUserCred();
+		UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 		token = userCred.getToken();
 		ListView lv = getListView();
-		lv.setDivider(activity.getResources().getDrawable(
-				com.sparkzi.R.color.app_theme));
+		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
 		lv.setDividerHeight(0);
 
 		// lv.setOnItemClickListener(new OnItemClickListener() {
@@ -99,8 +97,7 @@ public class OtherProfileEssentialsfragment extends ListFragment {
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "user/" + uName;
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, token);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, token);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving user info");
 				JSONObject responseObj = response.getjObj();

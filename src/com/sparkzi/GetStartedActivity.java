@@ -55,8 +55,7 @@ import com.sparkzi.utility.Constants;
 import com.sparkzi.utility.Utility;
 
 @SuppressLint("NewApi")
-public class GetStartedActivity extends FragmentActivity implements
-		OnDateSetListener {
+public class GetStartedActivity extends FragmentActivity implements OnDateSetListener {
 
 	Spinner sWhoIAm, sStartAge, sEndAge;
 	AutoCompleteTextView sCountry1, sCity1;
@@ -109,8 +108,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		});
 
 		tvDoB = (TextView) findViewById(R.id.tv_dob);
-		tvDoB.setText(String.format("%04d-%02d-%02d",
-				calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+		tvDoB.setText(String.format("%04d-%02d-%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
 				calendar.get(Calendar.DAY_OF_MONTH)));
 
 		sWhoIAm = (Spinner) findViewById(R.id.s_who_i_am);
@@ -118,8 +116,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		sWhoIAm.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 				whoAmI = (String) parent.getItemAtPosition(position);
 			}
 
@@ -134,8 +131,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		sStartAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 				startAge = (String) parent.getItemAtPosition(position);
 			}
 
@@ -150,8 +146,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		sEndAge.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 				endAge = (String) parent.getItemAtPosition(position);
 			}
 
@@ -167,8 +162,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		sCity1.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				selectedCityName = (String) parent.getItemAtPosition(position);
 
 			}
@@ -179,30 +173,26 @@ public class GetStartedActivity extends FragmentActivity implements
 		sCountry1.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
-				
-				 String selection = (String) parent.getItemAtPosition(position);
-			        int pos = -1;
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-			        for (int i = 0; i < countryList.size(); i++) {
-			            if (countryList.get(i).getValue().equals(selection)) {
-			                pos = i;
-			                break;
-			            }
-			        }
+				String selection = (String) parent.getItemAtPosition(position);
+				int pos = -1;
+
+				for (int i = 0; i < countryList.size(); i++) {
+					if (countryList.get(i).getValue().equals(selection)) {
+						pos = i;
+						break;
+					}
+				}
 				countryId = countryList.get(pos).getId();
-				List<String> cityList = getCityList(countryList.get(pos)
-						.getId());
-				generateautocomplete(sCity1,
-						cityList.toArray(new String[cityList.size()]));
+				List<String> cityList = getCityList(countryList.get(pos).getId());
+				generateautocomplete(sCity1, cityList.toArray(new String[cityList.size()]));
 
 			}
 		});
-		
+
 		((TextView) findViewById(R.id.tv_fb_warning)).setFocusableInTouchMode(true);
 		((TextView) findViewById(R.id.tv_fb_warning)).requestFocus();
-
 
 		new GetCountryList().execute();
 	}
@@ -240,14 +230,12 @@ public class GetStartedActivity extends FragmentActivity implements
 			// countrylist
 			List<String> cityList = new ArrayList<String>();
 			for (int position = 0; position < countryList.size(); position++) {
-				if (countryList.get(position).getValue()
-						.equalsIgnoreCase(country)) {
+				if (countryList.get(position).getValue().equalsIgnoreCase(country)) {
 					sCountry1.setText(country);
 					countryId = countryList.get(position).getId();
 					cityList = getCityList(countryList.get(position).getId());
 					Log.e(">>>", "city list size = " + cityList);
-					generateautocomplete(sCity1,
-							cityList.toArray(new String[cityList.size()]));
+					generateautocomplete(sCity1, cityList.toArray(new String[cityList.size()]));
 				}
 			}
 
@@ -297,36 +285,29 @@ public class GetStartedActivity extends FragmentActivity implements
 	}
 
 	private void generateSpinner(Spinner spinner, String[] arrayToSpinner) {
-		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
-				GetStartedActivity.this, R.layout.my_simple_spinner_item,
-				arrayToSpinner);
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(GetStartedActivity.this,
+				R.layout.my_simple_spinner_item, arrayToSpinner);
 		spinner.setAdapter(myAdapter);
-		myAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 	}
 
-	private void generateautocomplete(AutoCompleteTextView autextview,
-			String[] arrayToSpinner) {
-		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(
-				GetStartedActivity.this, R.layout.my_autocomplete_text_style,
-				arrayToSpinner);
+	private void generateautocomplete(AutoCompleteTextView autextview, String[] arrayToSpinner) {
+		ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(GetStartedActivity.this,
+				R.layout.my_autocomplete_text_style, arrayToSpinner);
 		autextview.setAdapter(myAdapter);
 
 	}
 
 	@SuppressWarnings("static-access")
 	public void onClickCalendar(View v) {
-		DialogFragment newFragment = new DatePickerFragment().newInstance(
-				calendar, "get_started");
+		DialogFragment newFragment = new DatePickerFragment().newInstance(calendar, "get_started");
 		newFragment.show(getSupportFragmentManager(), "datePicker");
 	}
 
 	@Override
-	public void onDateSet(DatePicker view, int year, int monthOfYear,
-			int dayOfMonth) {
-		tvDoB.setText(String.format("%04d-%02d-%02d", year, (monthOfYear + 1),
-				dayOfMonth));
+	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+		tvDoB.setText(String.format("%04d-%02d-%02d", year, (monthOfYear + 1), dayOfMonth));
 		calendar.set(year, monthOfYear, dayOfMonth);
 		// selectedDate = DoB.getText().toString();
 	}
@@ -335,15 +316,11 @@ public class GetStartedActivity extends FragmentActivity implements
 	public void onClickNext(View v) {
 		String dob = tvDoB.getText().toString().trim();
 		if (dob == null || dob.isEmpty()) {
-			Toast.makeText(GetStartedActivity.this,
-					"Please select your birthday.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(GetStartedActivity.this, "Please select your birthday.", Toast.LENGTH_SHORT).show();
 		} else if (Integer.parseInt(startAge) >= Integer.parseInt(endAge)) {
-			Toast.makeText(GetStartedActivity.this,
-					"Please choose a valid age interval.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(GetStartedActivity.this, "Please choose a valid age interval.", Toast.LENGTH_SHORT).show();
 		} else {
-			Intent i = new Intent(GetStartedActivity.this,
-					RegistrationActivity.class);
+			Intent i = new Intent(GetStartedActivity.this, RegistrationActivity.class);
 			i.putExtra("who_am_i", whoAmI);
 			i.putExtra("min_age", startAge);
 			i.putExtra("max_age", endAge);
@@ -357,15 +334,11 @@ public class GetStartedActivity extends FragmentActivity implements
 	private void onClickNext() {
 		String dob = tvDoB.getText().toString().trim();
 		if (dob == null || dob.isEmpty()) {
-			Toast.makeText(GetStartedActivity.this,
-					"Please select your birthday.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(GetStartedActivity.this, "Please select your birthday.", Toast.LENGTH_SHORT).show();
 		} else if (Integer.parseInt(startAge) >= Integer.parseInt(endAge)) {
-			Toast.makeText(GetStartedActivity.this,
-					"Please choose a valid age interval.", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(GetStartedActivity.this, "Please choose a valid age interval.", Toast.LENGTH_SHORT).show();
 		} else {
-			Intent i = new Intent(GetStartedActivity.this,
-					RegistrationActivity.class);
+			Intent i = new Intent(GetStartedActivity.this, RegistrationActivity.class);
 			i.putExtra("who_am_i", whoAmI);
 			i.putExtra("min_age", startAge);
 			i.putExtra("max_age", endAge);
@@ -392,8 +365,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "enum/country";
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, null);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, null);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving user info");
 				JSONObject responseObj = response.getjObj();
@@ -410,8 +382,7 @@ public class GetStartedActivity extends FragmentActivity implements
 				try {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
-						JSONArray countryArray = responseObj
-								.getJSONArray("feeds");
+						JSONArray countryArray = responseObj.getJSONArray("feeds");
 						countryList = Country.parseCountry(countryArray);
 					} else {
 						alert("Invalid token.");
@@ -430,8 +401,7 @@ public class GetStartedActivity extends FragmentActivity implements
 		@Override
 		protected JSONObject doInBackground(Void... params) {
 			String url = Constants.URL_ROOT + "enum/city";
-			ServerResponse response = jsonParser.retrieveServerData(
-					Constants.REQUEST_TYPE_GET, url, null, null, null);
+			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, null);
 			if (response.getStatus() == 200) {
 				Log.d(">>>><<<<", "success in retrieving user info");
 				JSONObject responseObj = response.getjObj();
@@ -457,8 +427,7 @@ public class GetStartedActivity extends FragmentActivity implements
 						}
 						// generateSpinner(sCountry, cntryList.toArray(new
 						// String[cntryList.size()]));
-						generateautocomplete(sCountry1,
-								cntryList.toArray(new String[cntryList.size()]));
+						generateautocomplete(sCountry1, cntryList.toArray(new String[cntryList.size()]));
 					} else {
 						alert("Invalid token.");
 					}
@@ -473,8 +442,7 @@ public class GetStartedActivity extends FragmentActivity implements
 	}
 
 	void alert(String message) {
-		AlertDialog.Builder bld = new AlertDialog.Builder(
-				GetStartedActivity.this);
+		AlertDialog.Builder bld = new AlertDialog.Builder(GetStartedActivity.this);
 		bld.setMessage(message);
 		bld.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 
@@ -497,104 +465,90 @@ public class GetStartedActivity extends FragmentActivity implements
 		session1 = openActiveSession(this, true, new Session.StatusCallback() {
 			@SuppressWarnings("deprecation")
 			@Override
-			public void call(final Session session, SessionState state,
-					Exception exception) {
+			public void call(final Session session, SessionState state, Exception exception) {
 
 				if (session.isOpened()) {
 
-					Request.executeMeRequestAsync(session,
-							new Request.GraphUserCallback() {
+					Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
 
-								@SuppressWarnings("static-access")
-								@Override
-								public void onCompleted(GraphUser user,
-										Response response) {
-									// TODO Auto-generated method stub
+						@SuppressWarnings("static-access")
+						@Override
+						public void onCompleted(GraphUser user, Response response) {
+							// TODO Auto-generated method stub
 
-									if (user != null) {
-										// / graphuser.ge
-										graphuser = user;
-										String Name = user.getUsername();
-										Log.d("result", Name);
-										@SuppressWarnings("unused")
-										String lastName = user.getLastName();
-										String id = user.getId();
+							if (user != null) {
+								// / graphuser.ge
+								graphuser = user;
+								String Name = user.getUsername();
+								Log.d("result", Name);
+								@SuppressWarnings("unused")
+								String lastName = user.getLastName();
+								String id = user.getId();
 
-										try {
-											GraphObject go = graphuser
-													.getLocation();
-											setAllAutotextview(go);
+								try {
+									GraphObject go = graphuser.getLocation();
+									setAllAutotextview(go);
 
-										} catch (Throwable t) {
-											t.printStackTrace();
-										}
+								} catch (Throwable t) {
+									t.printStackTrace();
+								}
 
-										// GraphObject{graphObjectClass=GraphLocation,
-										// state={"id":"101889586519301","name":"Dhaka, Bangladesh"}}
+								// GraphObject{graphObjectClass=GraphLocation,
+								// state={"id":"101889586519301","name":"Dhaka, Bangladesh"}}
 
-										/*
-										 * if(graphuser.getLocation().getCountry(
-										 * )!=null){ String
-										 * country=graphuser.getLocation
-										 * ().getCountry();
-										 * Toast.makeText(GetStartedActivity
-										 * .this,country, 1000).show(); for(int
-										 * i=0;i<countryList.size();i++){
-										 * Log.i("country",
-										 * countryList.get(i).getValue());
-										 * if(countryList
-										 * .get(i).getValue().equalsIgnoreCase
-										 * (country)){
-										 * 
-										 * }
-										 * 
-										 * }
-										 * 
-										 * }
-										 */
+								/*
+								 * if(graphuser.getLocation().getCountry(
+								 * )!=null){ String
+								 * country=graphuser.getLocation
+								 * ().getCountry();
+								 * Toast.makeText(GetStartedActivity
+								 * .this,country, 1000).show(); for(int
+								 * i=0;i<countryList.size();i++){
+								 * Log.i("country",
+								 * countryList.get(i).getValue());
+								 * if(countryList
+								 * .get(i).getValue().equalsIgnoreCase
+								 * (country)){
+								 * 
+								 * }
+								 * 
+								 * }
+								 * 
+								 * }
+								 */
 
-										String email = user
-												.getProperty("email")
-												.toString();
-										Log.d("resonse", Name + "  " + id + " "
-												+ email);
-										b_facebook.setVisibility(View.GONE);
-										String birthdate = user.getBirthday();
-										if (birthdate != null) {
+								String email = user.getProperty("email").toString();
+								Log.d("resonse", Name + "  " + id + " " + email);
+								b_facebook.setVisibility(View.GONE);
+								String birthdate = user.getBirthday();
+								if (birthdate != null) {
 
-											Log.d("birthdate", birthdate);
-											String date = birthdate.substring(
-													0, birthdate.indexOf('/'));
-											String month = birthdate.substring(
-													birthdate.indexOf('/') + 1,
-													birthdate.lastIndexOf('/'));
-											String year = birthdate.substring(birthdate
-													.lastIndexOf('/') + 1);
-											Log.d("Date", date + "   " + month
-													+ "  " + year);
-											birthdate = year + "-" + month
-													+ "-" + date;
-											tvDoB.setText(birthdate);
+									Log.d("birthdate", birthdate);
+									String date = birthdate.substring(0, birthdate.indexOf('/'));
+									String month = birthdate.substring(birthdate.indexOf('/') + 1,
+											birthdate.lastIndexOf('/'));
+									String year = birthdate.substring(birthdate.lastIndexOf('/') + 1);
+									Log.d("Date", date + "   " + month + "  " + year);
+									birthdate = year + "-" + month + "-" + date;
+									tvDoB.setText(birthdate);
 
-										}
-										String get_gender = (String) user
-												.getProperty("gender");
-										if (get_gender != null) {
-											if (get_gender.equals("male")) {
-												sWhoIAm.setSelection(0);
-											} else {
-												sWhoIAm.setSelection(1);
-											}
-										}
-										session.getActiveSession()
-												.closeAndClearTokenInformation();
-
+								}
+								String get_gender = (String) user.getProperty("gender");
+								if (get_gender != null) {
+									if (get_gender.equals("male")) {
+										sWhoIAm.setSelection(0);
 									} else {
-										Log.d("resonse", "not found");
-
+										sWhoIAm.setSelection(1);
 									}
 								}
-							});
+								session.getActiveSession().closeAndClearTokenInformation();
+
+							} else {
+								Log.d("resonse", "not found");
+
+							}
+						}
+					});
 
 				} else {
 
@@ -605,14 +559,12 @@ public class GetStartedActivity extends FragmentActivity implements
 
 	}
 
-	private static Session openActiveSession(Activity activity,
-			boolean allowLoginUI, Session.StatusCallback callback,
+	private static Session openActiveSession(Activity activity, boolean allowLoginUI, Session.StatusCallback callback,
 			List<String> permissions) {
-		Session.OpenRequest openRequest = new Session.OpenRequest(activity)
-				.setPermissions(permissions).setCallback(callback);
+		Session.OpenRequest openRequest = new Session.OpenRequest(activity).setPermissions(permissions).setCallback(
+				callback);
 		Session session = new Session.Builder(activity).build();
-		if (SessionState.CREATED_TOKEN_LOADED.equals(session.getState())
-				|| allowLoginUI) {
+		if (SessionState.CREATED_TOKEN_LOADED.equals(session.getState()) || allowLoginUI) {
 			Session.setActiveSession(session);
 			session.openForRead(openRequest);
 			return session;
@@ -623,8 +575,7 @@ public class GetStartedActivity extends FragmentActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 
 	}
 

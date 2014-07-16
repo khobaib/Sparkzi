@@ -11,123 +11,122 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class HomeFeed {
-    
-    private String username;
-    private String timestamp;
-    private int template;
-    private String feed;
-    private String elaborated;
-    private int age;
-    private int gender;
-    private String picUrl;
-    
-    public HomeFeed() {
-        // TODO Auto-generated constructor stub
-    }
 
-    public HomeFeed(String username, String timestamp, int template, String feed, String elaborated, int age,
-            int gender, String picUrl) {
-        this.username = username;
-        this.timestamp = timestamp;
-        this.template = template;
-        this.feed = feed;
-        this.elaborated = elaborated;
-        this.age = age;
-        this.gender = gender;
-        this.picUrl = picUrl;
-    }
-    
-    
-    public static List<HomeFeed> parseFeeds(JSONArray feedArray){
-        List<HomeFeed> feedList = new ArrayList<HomeFeed>();
-        GsonBuilder gsonb = new GsonBuilder();
-        Gson gson = gsonb.create();
+	private String username;
+	private String timestamp;
+	private int template;
+	private String feed;
+	private String elaborated;
+	private int age;
+	private int gender;
+	private String picUrl;
 
-        try {
-            for(int i=0; i<feedArray.length(); i++){
+	public HomeFeed() {
+		// TODO Auto-generated constructor stub
+	}
 
-                JSONObject thisFeed = feedArray.getJSONObject(i);
-                if(thisFeed != null){
-                    String jsonString = thisFeed.toString();
-                    HomeFeed feed = gson.fromJson(jsonString, HomeFeed.class);
-                    
-                    String imageUrl = feed.getPicUrl();
-                    if (imageUrl != null && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")){
-                        imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
-                    }
-                    feed.setPicUrl(imageUrl);
-                    
-                    feedList.add(feed);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return feedList;
-    }
+	public HomeFeed(String username, String timestamp, int template, String feed, String elaborated, int age,
+			int gender, String picUrl) {
+		this.username = username;
+		this.timestamp = timestamp;
+		this.template = template;
+		this.feed = feed;
+		this.elaborated = elaborated;
+		this.age = age;
+		this.gender = gender;
+		this.picUrl = picUrl;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public static List<HomeFeed> parseFeeds(JSONArray feedArray) {
+		List<HomeFeed> feedList = new ArrayList<HomeFeed>();
+		GsonBuilder gsonb = new GsonBuilder();
+		Gson gson = gsonb.create();
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+		try {
+			for (int i = 0; i < feedArray.length(); i++) {
 
-    public String getTimestamp() {
-        return timestamp;
-    }
+				JSONObject thisFeed = feedArray.getJSONObject(i);
+				if (thisFeed != null) {
+					String jsonString = thisFeed.toString();
+					HomeFeed feed = gson.fromJson(jsonString, HomeFeed.class);
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+					String imageUrl = feed.getPicUrl();
+					if (imageUrl != null && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+						imageUrl = "http://sparkzi.com/api/apinew/" + imageUrl;
+					}
+					feed.setPicUrl(imageUrl);
 
-    public int getTemplate() {
-        return template;
-    }
+					feedList.add(feed);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return feedList;
+	}
 
-    public void setTemplate(int template) {
-        this.template = template;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public String getFeed() {
-        return feed;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setFeed(String feed) {
-        this.feed = feed;
-    }
+	public String getTimestamp() {
+		return timestamp;
+	}
 
-    public String getElaborated() {
-        return elaborated;
-    }
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
 
-    public void setElaborated(String elaborated) {
-        this.elaborated = elaborated;
-    }
+	public int getTemplate() {
+		return template;
+	}
 
-    public int getAge() {
-        return age;
-    }
+	public void setTemplate(int template) {
+		this.template = template;
+	}
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+	public String getFeed() {
+		return feed;
+	}
 
-    public int getGender() {
-        return gender;
-    }
+	public void setFeed(String feed) {
+		this.feed = feed;
+	}
 
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
+	public String getElaborated() {
+		return elaborated;
+	}
 
-    public String getPicUrl() {
-        return picUrl;
-    }
+	public void setElaborated(String elaborated) {
+		this.elaborated = elaborated;
+	}
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }   
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public int getGender() {
+		return gender;
+	}
+
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
 
 }
