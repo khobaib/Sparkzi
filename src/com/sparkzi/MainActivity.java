@@ -164,8 +164,8 @@ public class MainActivity extends FragmentActivity {
 
 		Utility.token = token;
 
-		// FIXME uncomment
-//		 newgetGCMDeviceID();
+		// FIX_ME uncomment
+		newgetGCMDeviceID();
 	}
 
 	@Override
