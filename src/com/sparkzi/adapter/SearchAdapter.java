@@ -155,7 +155,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 
 		@Override
 		protected JSONObject doInBackground(Favorite... params) {
-			fav = (Favorite)params[0];
+			fav = (Favorite) params[0];
 			String url = Constants.URL_ROOT + "favs/" + fav.getUsername();
 
 			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
@@ -219,7 +219,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 
 		@Override
 		protected JSONObject doInBackground(Favorite... params) {
-			favItem = (Favorite)params[0];
+			favItem = (Favorite) params[0];
 			String url = Constants.URL_ROOT + "favs/" + favItem.getUsername();
 
 			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();

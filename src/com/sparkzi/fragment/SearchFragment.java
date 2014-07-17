@@ -188,7 +188,7 @@ public class SearchFragment extends Fragment {
 		if (resultCode == Activity.RESULT_OK && requestCode == PROFILE_SHOW_REQ) {
 			boolean favStatusChange = data.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
 			Log.d(TAG, "onActiivtyResult : favStatusChange=" + favStatusChange);
-			if(favStatusChange){
+			if (favStatusChange) {
 				new GetSearchResult().execute();
 			}
 		}
