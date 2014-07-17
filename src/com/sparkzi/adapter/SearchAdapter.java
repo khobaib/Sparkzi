@@ -107,11 +107,10 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 					alert("You already sent a request.");
 					return;
 				}
-				String username = item.getUsername();
 				if (favStatus == Constants.FAVORITE_STATUS_WAITING)
-					new RequestApproveFav(holder.bAddToFav).execute(username);
+					new RequestApproveFav(holder.bAddToFav).execute(item);
 				else
-					new RequestAddFav(holder.bAddToFav).execute(username);
+					new RequestAddFav(holder.bAddToFav).execute(item);
 
 			}
 		});
@@ -134,15 +133,13 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 		}
 	}
 
-	private class RequestAddFav extends AsyncTask<String, Void, JSONObject> {
+	private class RequestAddFav extends AsyncTask<Favorite, Void, JSONObject> {
 
-		private View v;
-
-		// public RequestAddFav() {
-		// }
+		private Button btn;
+		private Favorite fav;
 
 		public RequestAddFav(View v) {
-			this.v = v;
+			this.btn = (Button) v;
 		}
 
 		@Override
@@ -157,8 +154,9 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 		}
 
 		@Override
-		protected JSONObject doInBackground(String... params) {
-			String url = Constants.URL_ROOT + "favs/" + params[0];
+		protected JSONObject doInBackground(Favorite... params) {
+			fav = (Favorite)params[0];
+			String url = Constants.URL_ROOT + "favs/" + fav.getUsername();
 
 			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
 			String token = userCred.getToken();
@@ -179,7 +177,11 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 				try {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
-						((Button) v).setText("Request sent");
+						btn.setText("Request sent");
+						btn.setVisibility(View.VISIBLE);
+						btn.setTextColor(Color.GRAY);
+						btn.setEnabled(false);
+						fav.setFavStatus(Constants.FAVORITE_STATUS_SENT);
 					} else {
 						alert("Invalid token.");
 					}
@@ -195,12 +197,10 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 
 	}
 
-	private class RequestApproveFav extends AsyncTask<String, Void, JSONObject> {
+	private class RequestApproveFav extends AsyncTask<Favorite, Void, JSONObject> {
 
 		private Button btn;
-
-		// public RequestAddFav() {
-		// }
+		private Favorite fav;
 
 		public RequestApproveFav(View v) {
 			this.btn = (Button) v;
@@ -218,8 +218,9 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 		}
 
 		@Override
-		protected JSONObject doInBackground(String... params) {
-			String url = Constants.URL_ROOT + "favs/" + params[0];
+		protected JSONObject doInBackground(Favorite... params) {
+			fav = (Favorite)params[0];
+			String url = Constants.URL_ROOT + "favs/" + fav.getUsername();
 
 			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
 			String token = userCred.getToken();
@@ -242,6 +243,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
 						((Button) btn).setVisibility(View.INVISIBLE);
+						fav.setFavStatus(Constants.FAVORITE_STATUS_FRIEND);
 					} else {
 						alert("Invalid token.");
 					}
