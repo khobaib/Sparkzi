@@ -112,7 +112,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 		favStatusChange = false;
 		switch (favStatus) {
 		case Constants.FAVORITE_STATUS_STRANGER:
-			// TODO Check whether the same API handles both cases or not
+			// TO_DO the same API handles both cases
 		case Constants.FAVORITE_STATUS_WAITING:
 			new RequestAddFav().execute(uName);
 			break;
@@ -128,15 +128,6 @@ public class OtherProfileShowActivity extends FragmentActivity {
 			break;
 		}
 	}
-
-	// @Override
-	// public void onBackPressed() {
-	// Log.d(TAG, "onBackPressed()");
-	// Intent data = new Intent();
-	// data.putExtra(Constants.EXTRA_MESSAGE, favStatusChange);
-	// setResult(RESULT_OK, data);
-	// super.onBackPressed();
-	// }
 
 	@Override
 	public void finish() {
@@ -160,7 +151,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-				finish();
+				// finish();
 			}
 		});
 		bld.create().show();
@@ -246,6 +237,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 						// ((Button) v).setText("Request sent");
 						favStatus = Constants.FAVORITE_STATUS_SENT;
 						favStatusChange = true;
+						alert("Your request is sent successfully.");
 					} else {
 						alert("Invalid token.");
 					}

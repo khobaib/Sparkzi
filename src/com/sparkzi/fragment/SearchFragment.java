@@ -184,6 +184,7 @@ public class SearchFragment extends Fragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG, "onActiivtyResult");
 		if (resultCode == Activity.RESULT_OK && requestCode == PROFILE_SHOW_REQ) {
 			boolean favStatusChange = data.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
 			Log.d(TAG, "onActiivtyResult : favStatusChange=" + favStatusChange);
@@ -333,7 +334,6 @@ public class SearchFragment extends Fragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
-
 			}
 		});
 		bld.create().show();
