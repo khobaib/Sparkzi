@@ -200,7 +200,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 	private class RequestApproveFav extends AsyncTask<Favorite, Void, JSONObject> {
 
 		private Button btn;
-		private Favorite fav;
+		private Favorite favItem;
 
 		public RequestApproveFav(View v) {
 			this.btn = (Button) v;
@@ -219,8 +219,8 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 
 		@Override
 		protected JSONObject doInBackground(Favorite... params) {
-			fav = (Favorite)params[0];
-			String url = Constants.URL_ROOT + "favs/" + fav.getUsername();
+			favItem = (Favorite)params[0];
+			String url = Constants.URL_ROOT + "favs/" + favItem.getUsername();
 
 			UserCred userCred = ((SparkziApplication) ((Activity) mContext).getApplication()).getUserCred();
 			String token = userCred.getToken();
@@ -243,7 +243,7 @@ public class SearchAdapter extends ArrayAdapter<Favorite> {
 					String status = responseObj.getString("status");
 					if (status.equals("OK")) {
 						((Button) btn).setVisibility(View.INVISIBLE);
-						fav.setFavStatus(Constants.FAVORITE_STATUS_FRIEND);
+						favItem.setFavStatus(Constants.FAVORITE_STATUS_FRIEND);
 					} else {
 						alert("Invalid token.");
 					}
