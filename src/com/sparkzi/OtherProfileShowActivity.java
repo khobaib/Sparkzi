@@ -109,7 +109,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 	}
 
 	private void handleAddFavReq() {
-		favStatusChange = false;
+		// favStatusChange = false;
 		switch (favStatus) {
 		case Constants.FAVORITE_STATUS_STRANGER:
 			// TO_DO the same API handles both cases
