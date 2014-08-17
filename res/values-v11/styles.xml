@@ -1,8 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <item name="actionMenuTextColor">@color/white</item>
@@ -55,7 +55,7 @@
         <item name="tabLayout">@layout/tab_indicator_holo</item>
     </style>
 
-    <style name="TabAppTheme" parent="@android:style/Widget.ActionBar.TabView">
+    <style name="TabAppTheme" parent="@android:style/Widget.ActionBar.TabView" tools:ignore="NewApi">
         <item name="android:paddingLeft">16dip</item>
         <item name="android:paddingRight">16dip</item>
         <item name="android:background">@drawable/tab_indicator_holo</item>
@@ -68,7 +68,7 @@
         <item name="android:textColor">#000000</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textAllCaps" tools:ignore="NewApi">true</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:maxLines">2</item>
         <item name="android:maxWidth">180dip</item>

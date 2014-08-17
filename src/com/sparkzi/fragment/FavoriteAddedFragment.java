@@ -9,12 +9,17 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.sparkzi.OtherProfileShowActivity;
 import com.sparkzi.adapter.FavoriteAdapter;
 import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
@@ -25,8 +30,8 @@ import com.sparkzi.utility.SparkziApplication;
 
 public class FavoriteAddedFragment extends ListFragment {
 
-	@SuppressWarnings("unused")
 	private static final String TAG = FavoriteAddedFragment.class.getSimpleName();
+	private static final int PROFILE_SHOW_REQ = 101;
 	private Activity activity;
 	JsonParser jsonParser;
 
@@ -46,12 +51,44 @@ public class FavoriteAddedFragment extends ListFragment {
 		ListView lv = getListView();
 		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
 		lv.setDividerHeight(3);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Log.i(TAG, "OnItemClick");
+				showUserProfile((Favorite) parent.getItemAtPosition(position));
+			}
+		});
 
 		favAdapter = new FavoriteAdapter(activity, null);
 		setListAdapter(favAdapter);
 		setListShown(false);
 
 		new GetFavoriteInfo().execute();
+	}
+	
+	private void showUserProfile(Favorite user) {
+		Log.d(TAG, "Showing user profile for: " + user.getUsername());
+		Intent intent = new Intent(getActivity(), OtherProfileShowActivity.class);
+		intent.putExtra(Constants.USER_NAME, user.getUsername());
+		intent.putExtra(Constants.PROFILE_PIC_URL, user.getPicUrl());
+		intent.putExtra(Constants.HOME_TOWN, user.getHometown());
+		intent.putExtra(Constants.AGE, user.getAge());
+		intent.putExtra(Constants.GENDER, user.getGender());
+		intent.putExtra(Constants.COUNTRY, user.getCountry());
+		intent.putExtra(Constants.EXTRA_MESSAGE, user.getFavStatus());
+		startActivityForResult(intent, PROFILE_SHOW_REQ);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG, "onActiivtyResult");
+		if (resultCode == Activity.RESULT_OK && requestCode == PROFILE_SHOW_REQ) {
+			boolean favStatusChange = data.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
+			Log.d(TAG, "onActiivtyResult : favStatusChange=" + favStatusChange);
+			if (favStatusChange) {
+				new GetFavoriteInfo().execute();
+			}
+		}
 	}
 
 	private class GetFavoriteInfo extends AsyncTask<Void, Void, JSONObject> {

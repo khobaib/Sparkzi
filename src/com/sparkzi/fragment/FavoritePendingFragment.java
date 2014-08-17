@@ -9,12 +9,18 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.sparkzi.OtherProfileShowActivity;
 import com.sparkzi.model.Favorite;
 import com.sparkzi.model.ServerResponse;
 import com.sparkzi.model.UserCred;
@@ -24,10 +30,10 @@ import com.sparkzi.utility.SparkziApplication;
 
 public class FavoritePendingFragment extends ListFragment {
 
-	@SuppressWarnings("unused")
 	private static final String TAG = FavoritePendingFragment.class.getSimpleName();
+	private static final int PROFILE_SHOW_REQ = 101;
 	private Activity activity;
-	JsonParser jsonParser;
+	private JsonParser jsonParser;
 
 	private FavoritePendingAdapter favPendingAdapter;
 
@@ -36,6 +42,7 @@ public class FavoritePendingFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Log.i(TAG, "onActivityCreated");
 
 		activity = getActivity();
 		jsonParser = new JsonParser();
@@ -43,14 +50,50 @@ public class FavoritePendingFragment extends ListFragment {
 		UserCred userCred = ((SparkziApplication) activity.getApplication()).getUserCred();
 		token = userCred.getToken();
 		ListView lv = getListView();
+		// getListView().setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+		// getListView().setFocusableInTouchMode(true);
+		lv.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+		lv.setFocusableInTouchMode(true);
 		lv.setDivider(activity.getResources().getDrawable(com.sparkzi.R.color.app_theme));
 		lv.setDividerHeight(3);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Log.i(TAG, "OnItemClick");
+				showUserProfile((Favorite) parent.getItemAtPosition(position));
+			}
+		});
 
 		favPendingAdapter = new FavoritePendingAdapter(activity, null);
 		setListAdapter(favPendingAdapter);
 		setListShown(false);
 
 		new GetFavoriteInfo().execute();
+	}
+
+	private void showUserProfile(Favorite user) {
+		Log.d(TAG, "Showing user profile for: " + user.getUsername());
+		Intent intent = new Intent(getActivity(), OtherProfileShowActivity.class);
+		intent.putExtra(Constants.USER_NAME, user.getUsername());
+		intent.putExtra(Constants.PROFILE_PIC_URL, user.getPicUrl());
+		intent.putExtra(Constants.HOME_TOWN, user.getHometown());
+		intent.putExtra(Constants.AGE, user.getAge());
+		intent.putExtra(Constants.GENDER, user.getGender());
+		intent.putExtra(Constants.COUNTRY, user.getCountry());
+		intent.putExtra(Constants.EXTRA_MESSAGE, Constants.FAVORITE_STATUS_WAITING);
+		startActivityForResult(intent, PROFILE_SHOW_REQ);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG, "onActiivtyResult");
+		if (resultCode == Activity.RESULT_OK && requestCode == PROFILE_SHOW_REQ) {
+			boolean favStatusChange = data.getBooleanExtra(Constants.EXTRA_MESSAGE, false);
+			Log.d(TAG, "onActivityResult : favStatusChange=" + favStatusChange);
+			if (favStatusChange) {
+				new GetFavoriteInfo().execute();
+			}
+		}
 	}
 
 	private class GetFavoriteInfo extends AsyncTask<Void, Void, JSONObject> {
@@ -60,7 +103,7 @@ public class FavoritePendingFragment extends ListFragment {
 			String url = Constants.URL_ROOT + "favs/all/1";
 			ServerResponse response = jsonParser.retrieveServerData(Constants.REQUEST_TYPE_GET, url, null, null, token);
 			if (response.getStatus() == 200) {
-				Log.d(">>>><<<<", "success in retrieving favorite info");
+				Log.d(TAG, "success in retrieving favorite info");
 				JSONObject responseObj = response.getjObj();
 				return responseObj;
 			} else

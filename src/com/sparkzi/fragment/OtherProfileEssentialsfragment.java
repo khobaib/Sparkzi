@@ -46,7 +46,6 @@ public class OtherProfileEssentialsfragment extends ListFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 
 		activity = getActivity();

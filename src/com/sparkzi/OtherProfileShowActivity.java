@@ -91,7 +91,10 @@ public class OtherProfileShowActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.fav_add, menu);
+		if (favStatus == Constants.FAVORITE_STATUS_WAITING)
+			getMenuInflater().inflate(R.menu.fav_accept, menu);
+		else
+			getMenuInflater().inflate(R.menu.fav_add, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -101,9 +104,10 @@ public class OtherProfileShowActivity extends FragmentActivity {
 		if (id == android.R.id.home) {
 			finish();
 			return true;
-		} else if (id == R.id.action_add_fav) {
+		} else if (id == R.id.action_add_fav || id == R.id.action_accept_fav) {
 			Log.d(TAG, "Add to favorite: favStatus=" + favStatus);
 			handleAddFavReq();
+			return true;
 		}
 		return false;
 	}
@@ -112,15 +116,14 @@ public class OtherProfileShowActivity extends FragmentActivity {
 		// favStatusChange = false;
 		switch (favStatus) {
 		case Constants.FAVORITE_STATUS_STRANGER:
-			// TO_DO the same API handles both cases
-		case Constants.FAVORITE_STATUS_WAITING:
 			new RequestAddFav().execute(uName);
+		case Constants.FAVORITE_STATUS_WAITING:
+			new RequestApproveFav().execute(uName);
 			break;
 		case Constants.FAVORITE_STATUS_SENT:
 			alert("You've already sent a request!");
 			break;
 		case Constants.FAVORITE_STATUS_FRIEND:
-			// FIXME may be hide/deactivate the button
 			alert("You two are already friends!");
 			break;
 
@@ -238,6 +241,68 @@ public class OtherProfileShowActivity extends FragmentActivity {
 						favStatus = Constants.FAVORITE_STATUS_SENT;
 						favStatusChange = true;
 						alert("Your request is sent successfully.");
+					} else {
+						alert("Invalid token.");
+					}
+				} catch (JSONException e) {
+					alert("Exception.");
+					e.printStackTrace();
+				}
+			}
+
+			if (pDialog.isShowing())
+				pDialog.dismiss();
+		}
+
+	}
+
+	private class RequestApproveFav extends AsyncTask<String, Void, JSONObject> {
+
+		// private Favorite favItem;
+
+		public RequestApproveFav() {
+			// this.btn = (Button) v;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!pDialog.isShowing()) {
+				pDialog.setMessage("A moment...");
+				pDialog.setCancelable(false);
+				pDialog.setIndeterminate(true);
+				pDialog.show();
+			}
+		}
+
+		@Override
+		protected JSONObject doInBackground(String... params) {
+			// favItem = (Favorite) params[0];
+			String url = Constants.URL_ROOT + "favs/" + params[0];
+
+			UserCred userCred = ((SparkziApplication) (OtherProfileShowActivity.this).getApplication()).getUserCred();
+			String token = userCred.getToken();
+
+			ServerResponse response = jsonParser
+					.retrieveServerData(Constants.REQUEST_TYPE_POST, url, null, null, token);
+			if (response.getStatus() == 200) {
+				Log.d(">>>><<<<", "success - getting response");
+				JSONObject responseObj = response.getjObj();
+				return responseObj;
+			} else
+				return null;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject responseObj) {
+			super.onPostExecute(responseObj);
+			if (responseObj != null) {
+				try {
+					String status = responseObj.getString("status");
+					if (status.equals("OK")) {
+						favStatus = Constants.FAVORITE_STATUS_FRIEND;
+						favStatusChange = true;
+						alert("Your two are now friends.");
 					} else {
 						alert("Invalid token.");
 					}
