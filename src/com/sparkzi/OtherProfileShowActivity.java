@@ -99,6 +99,15 @@ public class OtherProfileShowActivity extends FragmentActivity {
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (favStatus == Constants.FAVORITE_STATUS_FRIEND)
+			menu.getItem(0).setTitle("FRIEND");
+		else if (favStatus == Constants.FAVORITE_STATUS_SENT)
+			menu.getItem(0).setTitle("PENDING");
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
@@ -114,9 +123,13 @@ public class OtherProfileShowActivity extends FragmentActivity {
 
 	private void handleAddFavReq() {
 		// favStatusChange = false;
+		// FIXME_ hide/change the menu's ADD button
+		// :-> FIXED: ACCEPT for my-pending user, PENDING for req.-sent & FRIEND
+		// for already added user
 		switch (favStatus) {
 		case Constants.FAVORITE_STATUS_STRANGER:
 			new RequestAddFav().execute(uName);
+			break;
 		case Constants.FAVORITE_STATUS_WAITING:
 			new RequestApproveFav().execute(uName);
 			break;

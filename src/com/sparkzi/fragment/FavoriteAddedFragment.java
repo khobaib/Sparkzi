@@ -75,7 +75,7 @@ public class FavoriteAddedFragment extends ListFragment {
 		intent.putExtra(Constants.AGE, user.getAge());
 		intent.putExtra(Constants.GENDER, user.getGender());
 		intent.putExtra(Constants.COUNTRY, user.getCountry());
-		intent.putExtra(Constants.EXTRA_MESSAGE, user.getFavStatus());
+		intent.putExtra(Constants.EXTRA_MESSAGE, Constants.FAVORITE_STATUS_FRIEND);
 		startActivityForResult(intent, PROFILE_SHOW_REQ);
 	}
 
