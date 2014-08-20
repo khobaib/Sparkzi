@@ -45,6 +45,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 	private int favStatus;
 	private String uName;
 	private boolean favStatusChange = false;
+	Menu menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		this.menu = menu;
 		if (favStatus == Constants.FAVORITE_STATUS_FRIEND)
 			menu.getItem(0).setTitle("FRIEND");
 		else if (favStatus == Constants.FAVORITE_STATUS_SENT)
@@ -254,6 +256,7 @@ public class OtherProfileShowActivity extends FragmentActivity {
 						favStatus = Constants.FAVORITE_STATUS_SENT;
 						favStatusChange = true;
 						alert("Your request is sent successfully.");
+						onPrepareOptionsMenu(menu);
 					} else {
 						alert("Invalid token.");
 					}
